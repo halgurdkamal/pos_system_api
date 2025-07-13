@@ -21,20 +21,22 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/drugs", () =>
+app.MapGet("/drug/{id}", (string id) =>
 {
 
     return SampleDrugProvider.GetDrug() ?? new Dictionary<string, object>
     {
         { "error", "No drug data available" }
     };
-})
-;
+});
+
+// list of drugs
+app.MapGet("/drugs", () =>
+{
+    return SampleDrugProvider.GetDrugList();
+});
+
+
 
 app.MapGet("/", () =>
 {
