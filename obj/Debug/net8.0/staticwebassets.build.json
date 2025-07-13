@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "GgNs/iTcR0HRxKGWWBcbb6sXzJf9RJgcsNQ+2y1JYBg=",
+  "Source": "pos_system_api",
+  "BasePath": "_content/pos_system_api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

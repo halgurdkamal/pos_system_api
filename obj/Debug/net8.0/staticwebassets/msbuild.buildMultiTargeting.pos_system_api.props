@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../build/pos_system_api.props" />
+</Project>
