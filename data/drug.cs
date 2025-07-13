@@ -127,7 +127,7 @@ namespace pos_system_api.data
         /// Provides a sample list of drugs.
         /// </summary>
         /// <returns>A list of dictionaries, each representing a drug with a unique ID.</returns>
-        public static List<Dictionary<string, object>> GetDrugList()
+        public static Dictionary<string, object> GetDrugList()
         {
             var drugList = new List<Dictionary<string, object>>();
             
@@ -142,7 +142,14 @@ namespace pos_system_api.data
                     drugList.Add(drug);
                 }
             }
-            return drugList;
+            return 
+            new Dictionary<string, object>
+            {
+                { "page", 1 },
+                { "limit", 20 },
+                { "total", 100 },
+                { "drugs", drugList }
+            };;
         }
     }
 }
