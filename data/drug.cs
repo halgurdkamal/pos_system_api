@@ -148,7 +148,7 @@ namespace pos_system_api.data
                 { "page", 1 },
                 { "limit", 20 },
                 { "total", 100 },
-                { "drugs", drugList }
+                { "data", drugList }
             };;
         }
     }

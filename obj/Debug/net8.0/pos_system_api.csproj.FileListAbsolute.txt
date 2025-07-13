@@ -31,3 +31,4 @@
 /Users/mac/MyProject/pos_system_api/obj/Debug/net8.0/pos_system_api.pdb
 /Users/mac/MyProject/pos_system_api/obj/Debug/net8.0/pos_system_api.genruntimeconfig.cache
 /Users/mac/MyProject/pos_system_api/obj/Debug/net8.0/ref/pos_system_api.dll
+/Users/mac/MyProject/pos_system_api/obj/Debug/net8.0/pos_system_api.sourcelink.json
