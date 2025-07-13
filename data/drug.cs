@@ -14,6 +14,17 @@ namespace pos_system_api.data
         // that it produces different numbers over a short time span.
         private static readonly Random _random = new Random();
 
+        private static readonly (string BrandName, string GenericName)[] _sampleDrugs = new[]
+        {
+            ("Lipitor", "Atorvastatin"), ("Advil", "Ibuprofen"), ("Tylenol", "Acetaminophen"),
+            ("Xanax", "Alprazolam"), ("Zoloft", "Sertraline"), ("Prozac", "Fluoxetine"),
+            ("Amoxil", "Amoxicillin"), ("Augmentin", "Amoxicillin/clavulanate"), ("Crestor", "Rosuvastatin"),
+            ("Nexium", "Esomeprazole"), ("Singulair", "Montelukast"), ("Plavix", "Clopidogrel"),
+            ("Ventolin", "Albuterol"), ("Lyrica", "Pregabalin"), ("Celebrex", "Celecoxib"),
+            ("Viagra", "Sildenafil"), ("Cialis", "Tadalafil"), ("Lexapro", "Escitalopram"),
+            ("Wellbutrin", "Bupropion"), ("Ambien", "Zolpidem")
+        };
+
         /// <summary>
         /// Generates a raw JSON string for a single drug with a randomized ID.
         /// </summary>
@@ -34,6 +45,7 @@ namespace pos_system_api.data
                 "https://cdn01.pharmeasy.in/dam/products_otc/192351/i-pill-emergency-contraceptive-pill-2-1736842745.jpg?dim=1440x0",
                 "https://cdn01.pharmeasy.in/dam/products_otc/T70695/supradyn-daily-multivitamin-for-men-women-builds-energy-immunity-strip-of-15-tablets-6.01-1739962331.jpg?dim=1440x0"
             ];
+            var (brandName, genericName) = _sampleDrugs[_random.Next(_sampleDrugs.Length)];
             // Use C# raw string literals with interpolation ($"") to build the JSON.
             // This correctly injects the randomId into the string.
             return $$"""
@@ -41,8 +53,8 @@ namespace pos_system_api.data
               "drugId": "DRG-{{randomId}}",
               "barcode": "{{barcode}}",
               "barcodeType": "EAN-13",
-              "brandName": "CardioGuard",
-              "genericName": "Dolo 650mg Strip Of 15 Tablets",
+              "brandName": "{{brandName}}",
+              "genericName": "{{genericName}}",
               "manufacturer": "PharmaGlobal Inc.",
               "originCountry": "Germany",
               "category": "Cardiovascular",
