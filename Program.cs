@@ -2,6 +2,12 @@ using pos_system_api.data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure Kestrel for IIS hosting
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.AddServerHeader = false;
+});
+
 // builder.WebHost.UseUrls("http://*:8080");
 
 // Add CORS support
