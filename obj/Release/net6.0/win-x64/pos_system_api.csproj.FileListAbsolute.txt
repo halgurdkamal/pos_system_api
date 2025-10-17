@@ -389,3 +389,9 @@ C:\Users\pc\Documents\My Projects\pos_system_api\obj\Release\net6.0\win-x64\refi
 C:\Users\pc\Documents\My Projects\pos_system_api\obj\Release\net6.0\win-x64\pos_system_api.pdb
 C:\Users\pc\Documents\My Projects\pos_system_api\obj\Release\net6.0\win-x64\pos_system_api.genruntimeconfig.cache
 C:\Users\pc\Documents\My Projects\pos_system_api\obj\Release\net6.0\win-x64\ref\pos_system_api.dll
+C:\Users\pc\Documents\My Projects\pos_system_api\bin\Release\net6.0\win-x64\publish\web.config
+C:\Users\pc\Documents\My Projects\pos_system_api\bin\Release\net6.0\win-x64\publish\appsettings.Development.json
+C:\Users\pc\Documents\My Projects\pos_system_api\bin\Release\net6.0\win-x64\publish\appsettings.json
+C:\Users\pc\Documents\My Projects\pos_system_api\bin\Release\net6.0\win-x64\publish\pos_system_api.deps.json
+C:\Users\pc\Documents\My Projects\pos_system_api\bin\Release\net6.0\win-x64\publish\pos_system_api.runtimeconfig.json
+C:\Users\pc\Documents\My Projects\pos_system_api\bin\Release\net6.0\win-x64\publish\pos_system_api.staticwebassets.endpoints.json

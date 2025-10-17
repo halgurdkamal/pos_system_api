@@ -1,7 +1,13 @@
 C:\Users\pc\Documents\My Projects\pos_system_api\publish\pos_system_api.exe
+C:\Users\pc\Documents\My Projects\pos_system_api\publish\publish\web.config
 C:\Users\pc\Documents\My Projects\pos_system_api\publish\web.config
 C:\Users\pc\Documents\My Projects\pos_system_api\publish\appsettings.Development.json
 C:\Users\pc\Documents\My Projects\pos_system_api\publish\appsettings.json
+C:\Users\pc\Documents\My Projects\pos_system_api\publish\publish\appsettings.Development.json
+C:\Users\pc\Documents\My Projects\pos_system_api\publish\publish\appsettings.json
+C:\Users\pc\Documents\My Projects\pos_system_api\publish\publish\pos_system_api.deps.json
+C:\Users\pc\Documents\My Projects\pos_system_api\publish\publish\pos_system_api.runtimeconfig.json
+C:\Users\pc\Documents\My Projects\pos_system_api\publish\publish\pos_system_api.staticwebassets.endpoints.json
 C:\Users\pc\Documents\My Projects\pos_system_api\publish\pos_system_api.dll
 C:\Users\pc\Documents\My Projects\pos_system_api\publish\pos_system_api.deps.json
 C:\Users\pc\Documents\My Projects\pos_system_api\publish\pos_system_api.runtimeconfig.json
