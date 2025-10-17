@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Use this web.config if your hosting has .NET runtime installed -->
+<!-- Rename to web.config to use this version -->
+<configuration>
+  <location path="." inheritInChildApplications="false">
+    <system.webServer>
+      <handlers>
+        <add name="aspNetCore" path="*" verb="*" modules="AspNetCoreModuleV2" resourceType="Unspecified" />
+      </handlers>
+      <aspNetCore processPath="dotnet" 
+                  arguments=".\pos_system_api.dll" 
+                  stdoutLogEnabled="true" 
+                  stdoutLogFile=".\logs\stdout" 
+                  hostingModel="inprocess">
+        <environmentVariables>
+          <environmentVariable name="ASPNETCORE_ENVIRONMENT" value="Production" />
+        </environmentVariables>
+      </aspNetCore>
+      <security>
+        <requestFiltering>
+          <hiddenSegments>
+            <remove segment="bin" />
+          </hiddenSegments>
+        </requestFiltering>
+      </security>
+    </system.webServer>
+  </location>
+</configuration>
