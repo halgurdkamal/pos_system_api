@@ -61,17 +61,30 @@ app.UseCors();
 
 app.MapGet("/drug/{id}", (string id) =>
 {
-
-    return SampleDrugProvider.GetDrug() ?? new Dictionary<string, object>
+    try
     {
-        { "error", "No drug data available" }
-    };
+        return Results.Ok(SampleDrugProvider.GetDrug() ?? new Dictionary<string, object>
+        {
+            { "error", "No drug data available" }
+        });
+    }
+    catch (Exception ex)
+    {
+        return Results.Json(new { error = ex.Message }, statusCode: 500);
+    }
 });
 
 // list of drugs
 app.MapGet("/drugs", () =>
 {
-    return SampleDrugProvider.GetDrugList();
+    try
+    {
+        return Results.Ok(SampleDrugProvider.GetDrugList());
+    }
+    catch (Exception ex)
+    {
+        return Results.Json(new { error = ex.Message }, statusCode: 500);
+    }
 });
 
 
