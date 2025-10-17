@@ -14,6 +14,10 @@ if (Test-Path "./publish") {
 Write-Host "Publishing..." -ForegroundColor Cyan
 dotnet publish -c Release -r win-x64 --self-contained true -o ./publish
 
+# Create logs directory
+Write-Host "Creating logs directory..." -ForegroundColor Cyan
+New-Item -ItemType Directory -Force -Path "./publish/logs" | Out-Null
+
 if ($LASTEXITCODE -eq 0) {
     Write-Host ""
     Write-Host "✓ Publish successful!" -ForegroundColor Green
