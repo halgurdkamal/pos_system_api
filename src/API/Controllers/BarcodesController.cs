@@ -157,7 +157,7 @@ public class SearchByBarcodeHandler : IRequestHandler<SearchByBarcodeQuery, Drug
 [ApiController]
 [Route("api/barcodes")]
 [Produces("application/json")]
-public class BarcodesController : ControllerBase
+public class BarcodesController : BaseApiController
 {
     private readonly IMediator _mediator;
     private readonly IBarcodeService _barcodeService;

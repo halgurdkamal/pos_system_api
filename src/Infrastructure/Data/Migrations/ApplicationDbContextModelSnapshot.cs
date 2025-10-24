@@ -120,6 +120,69 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
+            modelBuilder.Entity("pos_system_api.Core.Domain.Categories.Entities.Category", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CategoryId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("ColorCode")
+                        .HasMaxLength(7)
+                        .HasColumnType("character varying(7)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<int>("DisplayOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LogoUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId")
+                        .IsUnique();
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Categories", (string)null);
+                });
+
             modelBuilder.Entity("pos_system_api.Core.Domain.Drugs.Entities.Drug", b =>
                 {
                     b.Property<string>("Id")
@@ -144,6 +207,9 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<string>("CategoryId")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -209,6 +275,8 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
 
                     b.HasIndex("Barcode")
                         .IsUnique();
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("DrugId")
                         .IsUnique();
@@ -1320,6 +1388,10 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("pos_system_api.Core.Domain.Drugs.Entities.Drug", b =>
                 {
+                    b.HasOne("pos_system_api.Core.Domain.Categories.Entities.Category", null)
+                        .WithMany("Drugs")
+                        .HasForeignKey("CategoryId");
+
                     b.OwnsOne("pos_system_api.Core.Domain.Drugs.ValueObjects.BasePricing", "BasePricing", b1 =>
                         {
                             b1.Property<string>("DrugId")
@@ -1876,6 +1948,11 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
             modelBuilder.Entity("pos_system_api.Core.Domain.Auth.Entities.User", b =>
                 {
                     b.Navigation("ShopMemberships");
+                });
+
+            modelBuilder.Entity("pos_system_api.Core.Domain.Categories.Entities.Category", b =>
+                {
+                    b.Navigation("Drugs");
                 });
 
             modelBuilder.Entity("pos_system_api.Core.Domain.PurchaseOrders.Entities.PurchaseOrder", b =>

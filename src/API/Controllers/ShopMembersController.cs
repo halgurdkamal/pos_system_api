@@ -18,7 +18,7 @@ namespace pos_system_api.API.Controllers;
 [Route("api/shops/{shopId}/members")]
 [Produces("application/json")]
 [Authorize]
-public class ShopMembersController : ControllerBase
+public class ShopMembersController : BaseApiController
 {
     private readonly IMediator _mediator;
     private readonly ILogger<ShopMembersController> _logger;

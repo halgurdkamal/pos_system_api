@@ -12,14 +12,45 @@ namespace pos_system_api.Core.Application.Inventory.Commands.AddStock;
 public class AddStockCommandHandler : IRequestHandler<AddStockCommand, InventoryDto>
 {
     private readonly IInventoryRepository _inventoryRepository;
+    private readonly IDrugRepository _drugRepository;
+    private readonly ISupplierRepository _supplierRepository;
 
-    public AddStockCommandHandler(IInventoryRepository inventoryRepository)
+    public AddStockCommandHandler(
+        IInventoryRepository inventoryRepository,
+        IDrugRepository drugRepository,
+        ISupplierRepository supplierRepository)
     {
         _inventoryRepository = inventoryRepository;
+        _drugRepository = drugRepository;
+        _supplierRepository = supplierRepository;
     }
 
     public async Task<InventoryDto> Handle(AddStockCommand request, CancellationToken cancellationToken)
     {
+        // LOG THE INCOMING REQUEST
+        Console.WriteLine($"[AddStockCommandHandler] Received request:");
+        Console.WriteLine($"  ShopId: {request.ShopId}");
+        Console.WriteLine($"  DrugId: {request.DrugId}");
+        Console.WriteLine($"  SupplierId: {request.SupplierId}");
+        
+        // Validate that the drug exists
+        var drug = await _drugRepository.GetByIdAsync(request.DrugId, cancellationToken);
+        if (drug == null)
+        {
+            throw new InvalidOperationException($"Drug with ID '{request.DrugId}' does not exist. Please verify the drug ID is correct.");
+        }
+        
+        Console.WriteLine($"[AddStockCommandHandler] Drug found: {drug.BrandName}");
+
+        // Validate that the supplier exists
+        var supplier = await _supplierRepository.GetByIdAsync(request.SupplierId, cancellationToken);
+        if (supplier == null)
+        {
+            throw new InvalidOperationException($"Supplier with ID '{request.SupplierId}' does not exist. Please verify the supplier ID is correct.");
+        }
+        
+        Console.WriteLine($"[AddStockCommandHandler] Supplier found: {supplier.SupplierName}");
+
         // Check if inventory already exists for this shop-drug combination
         var existingInventory = await _inventoryRepository.GetByShopAndDrugAsync(
             request.ShopId,

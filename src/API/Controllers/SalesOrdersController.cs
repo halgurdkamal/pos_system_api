@@ -5,6 +5,7 @@ using pos_system_api.Core.Application.Sales.Commands.CreateSalesOrder;
 using pos_system_api.Core.Application.Sales.Commands.ProcessPayment;
 using pos_system_api.Core.Application.Sales.Queries.GetSalesOrder;
 using pos_system_api.Core.Application.Sales.Queries.GetSalesDashboard;
+using pos_system_api.Core.Application.Sales.Queries.GetDraftOrders;
 using pos_system_api.Core.Application.Sales.DTOs;
 using pos_system_api.Core.Application.Common.Interfaces;
 using pos_system_api.Core.Domain.Sales.Entities;
@@ -15,7 +16,7 @@ namespace pos_system_api.API.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class SalesOrdersController : ControllerBase
+public class SalesOrdersController : BaseApiController
 {
     private readonly IMediator _mediator;
     private readonly ISalesOrderRepository _repository;
@@ -290,7 +291,80 @@ public class SalesOrdersController : ControllerBase
         return Ok(result);
     }
 
-    private static SalesOrderSummaryDto MapToSummaryDto(SalesOrder so)
+        /// <summary>
+    /// Get all draft (pending/paused) orders for multi-order cashier workflow
+    /// Cashiers can see all their paused orders to resume later
+    /// </summary>
+    /// <param name="shopId">Optional: Filter by shop</param>
+    /// <param name="cashierId">Optional: Filter by cashier (defaults to current user)</param>
+    /// <returns>List of draft orders</returns>
+    [HttpGet("drafts")]
+    [Authorize(Policy = "ShopAccess")]
+    [ProducesResponseType(typeof(List<SalesOrderSummaryDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<SalesOrderSummaryDto>>> GetDraftOrders(
+        [FromQuery] string? shopId = null,
+        [FromQuery] string? cashierId = null)
+    {
+        // If no cashier specified, use current user
+        if (string.IsNullOrEmpty(cashierId))
+        {
+            cashierId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+
+        var query = new GetDraftOrdersQuery(shopId, cashierId);
+        var result = await _mediator.Send(query);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Save current order as draft (pause it to start another order)
+    /// Note: Creating an order already sets it as Draft, this is just for updating
+    /// </summary>
+    /// <param name="id">Order ID</param>
+    /// <returns>Updated order</returns>
+    [HttpPost("{id}/save-draft")]
+    [Authorize(Policy = "ShopAccess")]
+    [ProducesResponseType(typeof(SalesOrderDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<SalesOrderDto>> SaveDraft(string id)
+    {
+        var salesOrder = await _repository.GetByIdAsync(id);
+        
+        if (salesOrder == null)
+            return NotFound(new { error = "Order not found" });
+
+        // Draft orders are already saved, just return it
+        // This endpoint exists for explicit "pause" action in UI
+        var result = await _mediator.Send(new GetSalesOrderQuery(id));
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Resume/Continue working on a draft order
+    /// </summary>
+    /// <param name="id">Draft order ID to resume</param>
+    /// <returns>Full order details</returns>
+    [HttpGet("{id}/resume")]
+    [Authorize(Policy = "ShopAccess")]
+    [ProducesResponseType(typeof(SalesOrderDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<SalesOrderDto>> ResumeOrder(string id)
+    {
+        var salesOrder = await _repository.GetByIdAsync(id);
+        
+        if (salesOrder == null)
+            return NotFound(new { error = "Order not found" });
+
+        // Check if order is in Draft status
+        if (salesOrder.Status != SalesOrderStatus.Draft)
+            return BadRequest(new { error = $"Cannot resume order in status {salesOrder.Status}. Only draft orders can be resumed." });
+
+        var result = await _mediator.Send(new GetSalesOrderQuery(id));
+        return Ok(result);
+    }
+
+    private SalesOrderSummaryDto MapToSummaryDto(SalesOrder so)
     {
         return new SalesOrderSummaryDto
         {

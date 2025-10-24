@@ -735,3 +735,501 @@ FluentValidation.ValidationException: Validation failed:
 2025-10-24 18:51:05.615 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/Auth/login responded 200 in 443.3898ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","UserName":"halgurd","UserId":"603b60a5-211a-49ba-8a59-2326480f5790","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGJ2K6GELPS:00000004","ConnectionId":"0HNGJ2K6GELPS","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
 2025-10-24 18:51:05.619 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Auth/login responded 200 in 450ms {"RequestId":"0HNGJ2K6GELPS:00000004","ConnectionId":"0HNGJ2K6GELPS","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
 2025-10-24 18:52:53.233 +03:00 [INF] [] Shutting down POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 19:59:05.304 +03:00 [INF] [] Starting POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 19:59:06.115 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The property 'ShopInventory.Batches' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly. {"EventId":{"Id":10620,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.CollectionWithoutComparer"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 19:59:06.121 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The property 'ShopUser.Permissions' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly. {"EventId":{"Id":10620,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.CollectionWithoutComparer"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 19:59:06.160 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'User' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 19:59:06.164 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'ShopUser' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 19:59:07.644 +03:00 [INF] [] POS System API started successfully {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 19:59:07.975 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.html started {"RequestId":"0HNGJ3QINGSUD:00000002","ConnectionId":"0HNGJ3QINGSUD","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 19:59:08.070 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/index.html responded 200 in 87.9620ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGJ3QINGSUD:00000002","ConnectionId":"0HNGJ3QINGSUD","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 19:59:08.077 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.html responded 200 in 107ms {"RequestId":"0HNGJ3QINGSUD:00000002","ConnectionId":"0HNGJ3QINGSUD","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 19:59:08.114 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.js started {"RequestId":"0HNGJ3QINGSUD:00000003","ConnectionId":"0HNGJ3QINGSUD","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 19:59:08.118 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/index.js responded 200 in 0.5453ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGJ3QINGSUD:00000003","ConnectionId":"0HNGJ3QINGSUD","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 19:59:08.122 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.js responded 200 in 7ms {"RequestId":"0HNGJ3QINGSUD:00000003","ConnectionId":"0HNGJ3QINGSUD","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 19:59:08.542 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/v1/swagger.json started {"RequestId":"0HNGJ3QINGSUD:00000004","ConnectionId":"0HNGJ3QINGSUD","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 19:59:08.694 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/v1/swagger.json responded 200 in 149.2181ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGJ3QINGSUD:00000004","ConnectionId":"0HNGJ3QINGSUD","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 19:59:08.698 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/v1/swagger.json responded 200 in 155ms {"RequestId":"0HNGJ3QINGSUD:00000004","ConnectionId":"0HNGJ3QINGSUD","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 19:59:31.014 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Auth/login started {"RequestId":"0HNGJ3QINGSUD:00000005","ConnectionId":"0HNGJ3QINGSUD","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 19:59:31.820 +03:00 [INF] [pos_system_api.API.Controllers.AuthController] User halgurd logged in successfully {"ActionId":"8c64b9f0-e93b-4836-8dcb-8413fad18cf3","ActionName":"pos_system_api.API.Controllers.AuthController.Login (pos_system_api)","RequestId":"0HNGJ3QINGSUD:00000005","RequestPath":"/api/Auth/login","ConnectionId":"0HNGJ3QINGSUD","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RequestQuery":"","RequestMethod":"POST","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 19:59:31.841 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/Auth/login responded 200 in 825.1914ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGJ3QINGSUD:00000005","ConnectionId":"0HNGJ3QINGSUD","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 19:59:31.845 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Auth/login responded 200 in 831ms {"RequestId":"0HNGJ3QINGSUD:00000005","ConnectionId":"0HNGJ3QINGSUD","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:00:20.482 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock started {"RequestId":"0HNGJ3QINGSUD:00000006","ConnectionId":"0HNGJ3QINGSUD","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:00:20.498 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock responded 401 in 10.8343ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGJ3QINGSUD:00000006","ConnectionId":"0HNGJ3QINGSUD","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:00:20.502 +03:00 [WRN] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock responded 401 in 19ms {"RequestId":"0HNGJ3QINGSUD:00000006","ConnectionId":"0HNGJ3QINGSUD","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:01:29.155 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock started {"RequestId":"0HNGJ3QINGSUD:00000007","ConnectionId":"0HNGJ3QINGSUD","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:01:29.159 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock responded 401 in 1.5431ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGJ3QINGSUD:00000007","ConnectionId":"0HNGJ3QINGSUD","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:01:29.163 +03:00 [WRN] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock responded 401 in 7ms {"RequestId":"0HNGJ3QINGSUD:00000007","ConnectionId":"0HNGJ3QINGSUD","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:03:48.805 +03:00 [INF] [] Shutting down POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:04:00.311 +03:00 [INF] [] Starting POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:04:01.102 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The property 'ShopInventory.Batches' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly. {"EventId":{"Id":10620,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.CollectionWithoutComparer"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:04:01.107 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The property 'ShopUser.Permissions' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly. {"EventId":{"Id":10620,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.CollectionWithoutComparer"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:04:01.146 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'User' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:04:01.148 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'ShopUser' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:04:02.471 +03:00 [INF] [] POS System API started successfully {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:04:17.045 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock started {"RequestId":"0HNGJ3TER1DTP:00000002","ConnectionId":"0HNGJ3TER1DTP","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:04:17.243 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock responded 400 in 191.6294ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGJ3TER1DTP:00000002","ConnectionId":"0HNGJ3TER1DTP","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:04:17.246 +03:00 [WRN] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock responded 400 in 206ms {"RequestId":"0HNGJ3TER1DTP:00000002","ConnectionId":"0HNGJ3TER1DTP","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:04:24.667 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock started {"RequestId":"0HNGJ3TER1DTP:00000003","ConnectionId":"0HNGJ3TER1DTP","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:04:25.046 +03:00 [ERR] [Microsoft.EntityFrameworkCore.Database.Command] Failed executing DbCommand (107ms) [Parameters=[@p0='?', @p1='?' (DbType = Object), @p2='?' (DbType = DateTime), @p3='?', @p4='?', @p5='?' (DbType = Boolean), @p6='?' (DbType = DateTime), @p7='?' (DbType = DateTime), @p8='?' (DbType = Int32), @p9='?', @p10='?', @p11='?' (DbType = Int32), @p12='?', @p13='?' (DbType = Decimal), @p14='?', @p15='?' (DbType = Decimal), @p16='?' (DbType = DateTime), @p17='?' (DbType = Decimal), @p18='?' (DbType = Decimal)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "ShopInventory" ("Id", "Batches", "CreatedAt", "CreatedBy", "DrugId", "IsAvailable", "LastRestockDate", "LastUpdated", "ReorderPoint", "ShopId", "StorageLocation", "TotalStock", "UpdatedBy", "Pricing_CostPrice", "Pricing_Currency", "Pricing_Discount", "Pricing_LastPriceUpdate", "Pricing_SellingPrice", "Pricing_TaxRate")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18); {"EventId":{"Id":20102,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandError"},"ActionId":"b2037f35-012a-437c-a946-fea2098cd0e5","ActionName":"pos_system_api.API.Controllers.InventoryController.AddStock (pos_system_api)","RequestId":"0HNGJ3TER1DTP:00000003","RequestPath":"/api/inventory/shops/SHOP-764C0CB3/stock","ConnectionId":"0HNGJ3TER1DTP","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RequestQuery":"","RequestMethod":"POST","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:04:25.144 +03:00 [ERR] [Microsoft.EntityFrameworkCore.Update] An exception occurred in the database while saving changes for context type 'pos_system_api.Infrastructure.Data.ApplicationDbContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Npgsql.PostgresException (0x80004005): 23503: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+  Exception data:
+    Severity: ERROR
+    SqlState: 23503
+    MessageText: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+    Detail: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    SchemaName: public
+    TableName: ShopInventory
+    ConstraintName: FK_ShopInventory_Drugs_DrugId
+    File: ri_triggers.c
+    Line: 2599
+    Routine: ri_ReportViolation
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken) {"EventId":{"Id":10000,"Name":"Microsoft.EntityFrameworkCore.Update.SaveChangesFailed"},"ActionId":"b2037f35-012a-437c-a946-fea2098cd0e5","ActionName":"pos_system_api.API.Controllers.InventoryController.AddStock (pos_system_api)","RequestId":"0HNGJ3TER1DTP:00000003","RequestPath":"/api/inventory/shops/SHOP-764C0CB3/stock","ConnectionId":"0HNGJ3TER1DTP","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RequestQuery":"","RequestMethod":"POST","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Npgsql.PostgresException (0x80004005): 23503: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+  Exception data:
+    Severity: ERROR
+    SqlState: 23503
+    MessageText: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+    Detail: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    SchemaName: public
+    TableName: ShopInventory
+    ConstraintName: FK_ShopInventory_Drugs_DrugId
+    File: ri_triggers.c
+    Line: 2599
+    Routine: ri_ReportViolation
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2025-10-24 20:04:25.159 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock responded 400 in 489.0560ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGJ3TER1DTP:00000003","ConnectionId":"0HNGJ3TER1DTP","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:04:25.164 +03:00 [WRN] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock responded 400 in 497ms {"RequestId":"0HNGJ3TER1DTP:00000003","ConnectionId":"0HNGJ3TER1DTP","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:07:39.459 +03:00 [INF] [] Shutting down POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:08:30.021 +03:00 [INF] [] Starting POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:08:30.861 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The property 'ShopInventory.Batches' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly. {"EventId":{"Id":10620,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.CollectionWithoutComparer"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:08:30.865 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The property 'ShopUser.Permissions' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly. {"EventId":{"Id":10620,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.CollectionWithoutComparer"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:08:30.903 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'User' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:08:30.905 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'ShopUser' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:08:32.277 +03:00 [INF] [] POS System API started successfully {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:08:42.144 +03:00 [INF] [] Starting POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:08:42.951 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The property 'ShopInventory.Batches' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly. {"EventId":{"Id":10620,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.CollectionWithoutComparer"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:08:42.955 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The property 'ShopUser.Permissions' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly. {"EventId":{"Id":10620,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.CollectionWithoutComparer"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:08:42.993 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'User' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:08:42.995 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'ShopUser' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:08:44.298 +03:00 [INF] [] POS System API started successfully {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:08:51.235 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock started {"RequestId":"0HNGJ400HU40F:00000002","ConnectionId":"0HNGJ400HU40F","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:08:51.804 +03:00 [ERR] [Microsoft.EntityFrameworkCore.Database.Command] Failed executing DbCommand (110ms) [Parameters=[@p0='?', @p1='?' (DbType = Object), @p2='?' (DbType = DateTime), @p3='?', @p4='?', @p5='?' (DbType = Boolean), @p6='?' (DbType = DateTime), @p7='?' (DbType = DateTime), @p8='?' (DbType = Int32), @p9='?', @p10='?', @p11='?' (DbType = Int32), @p12='?', @p13='?' (DbType = Decimal), @p14='?', @p15='?' (DbType = Decimal), @p16='?' (DbType = DateTime), @p17='?' (DbType = Decimal), @p18='?' (DbType = Decimal)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "ShopInventory" ("Id", "Batches", "CreatedAt", "CreatedBy", "DrugId", "IsAvailable", "LastRestockDate", "LastUpdated", "ReorderPoint", "ShopId", "StorageLocation", "TotalStock", "UpdatedBy", "Pricing_CostPrice", "Pricing_Currency", "Pricing_Discount", "Pricing_LastPriceUpdate", "Pricing_SellingPrice", "Pricing_TaxRate")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18); {"EventId":{"Id":20102,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandError"},"ActionId":"1742995a-d7e3-4105-aee2-8084f215a75a","ActionName":"pos_system_api.API.Controllers.InventoryController.AddStock (pos_system_api)","RequestId":"0HNGJ400HU40F:00000002","RequestPath":"/api/inventory/shops/SHOP-764C0CB3/stock","ConnectionId":"0HNGJ400HU40F","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RequestQuery":"","RequestMethod":"POST","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:08:51.903 +03:00 [ERR] [Microsoft.EntityFrameworkCore.Update] An exception occurred in the database while saving changes for context type 'pos_system_api.Infrastructure.Data.ApplicationDbContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Npgsql.PostgresException (0x80004005): 23503: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+  Exception data:
+    Severity: ERROR
+    SqlState: 23503
+    MessageText: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+    Detail: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    SchemaName: public
+    TableName: ShopInventory
+    ConstraintName: FK_ShopInventory_Drugs_DrugId
+    File: ri_triggers.c
+    Line: 2599
+    Routine: ri_ReportViolation
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken) {"EventId":{"Id":10000,"Name":"Microsoft.EntityFrameworkCore.Update.SaveChangesFailed"},"ActionId":"1742995a-d7e3-4105-aee2-8084f215a75a","ActionName":"pos_system_api.API.Controllers.InventoryController.AddStock (pos_system_api)","RequestId":"0HNGJ400HU40F:00000002","RequestPath":"/api/inventory/shops/SHOP-764C0CB3/stock","ConnectionId":"0HNGJ400HU40F","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RequestQuery":"","RequestMethod":"POST","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Npgsql.PostgresException (0x80004005): 23503: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+  Exception data:
+    Severity: ERROR
+    SqlState: 23503
+    MessageText: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+    Detail: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    SchemaName: public
+    TableName: ShopInventory
+    ConstraintName: FK_ShopInventory_Drugs_DrugId
+    File: ri_triggers.c
+    Line: 2599
+    Routine: ri_ReportViolation
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2025-10-24 20:08:51.957 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock responded 400 in 716.3791ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGJ400HU40F:00000002","ConnectionId":"0HNGJ400HU40F","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:08:51.960 +03:00 [WRN] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock responded 400 in 730ms {"RequestId":"0HNGJ400HU40F:00000002","ConnectionId":"0HNGJ400HU40F","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:15:49.938 +03:00 [INF] [] Starting POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:15:50.803 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The property 'ShopInventory.Batches' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly. {"EventId":{"Id":10620,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.CollectionWithoutComparer"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:15:50.808 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The property 'ShopUser.Permissions' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly. {"EventId":{"Id":10620,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.CollectionWithoutComparer"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:15:50.855 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'User' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:15:50.857 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'ShopUser' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:15:52.798 +03:00 [INF] [] POS System API started successfully {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:15:54.952 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock started {"RequestId":"0HNGJ43UQOU68:00000002","ConnectionId":"0HNGJ43UQOU68","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:15:55.543 +03:00 [ERR] [Microsoft.EntityFrameworkCore.Database.Command] Failed executing DbCommand (133ms) [Parameters=[@p0='?', @p1='?' (DbType = Object), @p2='?' (DbType = DateTime), @p3='?', @p4='?', @p5='?' (DbType = Boolean), @p6='?' (DbType = DateTime), @p7='?' (DbType = DateTime), @p8='?' (DbType = Int32), @p9='?', @p10='?', @p11='?' (DbType = Int32), @p12='?', @p13='?' (DbType = Decimal), @p14='?', @p15='?' (DbType = Decimal), @p16='?' (DbType = DateTime), @p17='?' (DbType = Decimal), @p18='?' (DbType = Decimal)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "ShopInventory" ("Id", "Batches", "CreatedAt", "CreatedBy", "DrugId", "IsAvailable", "LastRestockDate", "LastUpdated", "ReorderPoint", "ShopId", "StorageLocation", "TotalStock", "UpdatedBy", "Pricing_CostPrice", "Pricing_Currency", "Pricing_Discount", "Pricing_LastPriceUpdate", "Pricing_SellingPrice", "Pricing_TaxRate")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18); {"EventId":{"Id":20102,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandError"},"ActionId":"dc5bcc5d-02bb-4944-a823-42e5b16c3b72","ActionName":"pos_system_api.API.Controllers.InventoryController.AddStock (pos_system_api)","RequestId":"0HNGJ43UQOU68:00000002","RequestPath":"/api/inventory/shops/SHOP-764C0CB3/stock","ConnectionId":"0HNGJ43UQOU68","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RequestQuery":"","RequestMethod":"POST","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:15:55.639 +03:00 [ERR] [Microsoft.EntityFrameworkCore.Update] An exception occurred in the database while saving changes for context type 'pos_system_api.Infrastructure.Data.ApplicationDbContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Npgsql.PostgresException (0x80004005): 23503: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+  Exception data:
+    Severity: ERROR
+    SqlState: 23503
+    MessageText: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+    Detail: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    SchemaName: public
+    TableName: ShopInventory
+    ConstraintName: FK_ShopInventory_Drugs_DrugId
+    File: ri_triggers.c
+    Line: 2599
+    Routine: ri_ReportViolation
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken) {"EventId":{"Id":10000,"Name":"Microsoft.EntityFrameworkCore.Update.SaveChangesFailed"},"ActionId":"dc5bcc5d-02bb-4944-a823-42e5b16c3b72","ActionName":"pos_system_api.API.Controllers.InventoryController.AddStock (pos_system_api)","RequestId":"0HNGJ43UQOU68:00000002","RequestPath":"/api/inventory/shops/SHOP-764C0CB3/stock","ConnectionId":"0HNGJ43UQOU68","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RequestQuery":"","RequestMethod":"POST","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Npgsql.PostgresException (0x80004005): 23503: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+  Exception data:
+    Severity: ERROR
+    SqlState: 23503
+    MessageText: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+    Detail: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    SchemaName: public
+    TableName: ShopInventory
+    ConstraintName: FK_ShopInventory_Drugs_DrugId
+    File: ri_triggers.c
+    Line: 2599
+    Routine: ri_ReportViolation
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2025-10-24 20:15:55.686 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock responded 400 in 727.6942ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGJ43UQOU68:00000002","ConnectionId":"0HNGJ43UQOU68","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:15:55.690 +03:00 [WRN] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock responded 400 in 743ms {"RequestId":"0HNGJ43UQOU68:00000002","ConnectionId":"0HNGJ43UQOU68","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:17:12.938 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Admin/seed started {"RequestId":"0HNGJ43UQOU68:00000003","ConnectionId":"0HNGJ43UQOU68","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:17:12.946 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/Admin/seed responded 401 in 5.9239ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGJ43UQOU68:00000003","ConnectionId":"0HNGJ43UQOU68","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:17:12.951 +03:00 [WRN] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Admin/seed responded 401 in 12ms {"RequestId":"0HNGJ43UQOU68:00000003","ConnectionId":"0HNGJ43UQOU68","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:19:17.472 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-91724F16/stock started {"RequestId":"0HNGJ43UQOU68:00000004","ConnectionId":"0HNGJ43UQOU68","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:19:17.684 +03:00 [ERR] [Microsoft.EntityFrameworkCore.Database.Command] Failed executing DbCommand (86ms) [Parameters=[@p0='?', @p1='?' (DbType = Object), @p2='?' (DbType = DateTime), @p3='?', @p4='?', @p5='?' (DbType = Boolean), @p6='?' (DbType = DateTime), @p7='?' (DbType = DateTime), @p8='?' (DbType = Int32), @p9='?', @p10='?', @p11='?' (DbType = Int32), @p12='?', @p13='?' (DbType = Decimal), @p14='?', @p15='?' (DbType = Decimal), @p16='?' (DbType = DateTime), @p17='?' (DbType = Decimal), @p18='?' (DbType = Decimal)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "ShopInventory" ("Id", "Batches", "CreatedAt", "CreatedBy", "DrugId", "IsAvailable", "LastRestockDate", "LastUpdated", "ReorderPoint", "ShopId", "StorageLocation", "TotalStock", "UpdatedBy", "Pricing_CostPrice", "Pricing_Currency", "Pricing_Discount", "Pricing_LastPriceUpdate", "Pricing_SellingPrice", "Pricing_TaxRate")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18); {"EventId":{"Id":20102,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandError"},"ActionId":"dc5bcc5d-02bb-4944-a823-42e5b16c3b72","ActionName":"pos_system_api.API.Controllers.InventoryController.AddStock (pos_system_api)","RequestId":"0HNGJ43UQOU68:00000004","RequestPath":"/api/inventory/shops/SHOP-91724F16/stock","ConnectionId":"0HNGJ43UQOU68","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RequestQuery":"","RequestMethod":"POST","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:19:17.763 +03:00 [ERR] [Microsoft.EntityFrameworkCore.Update] An exception occurred in the database while saving changes for context type 'pos_system_api.Infrastructure.Data.ApplicationDbContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Npgsql.PostgresException (0x80004005): 23503: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+  Exception data:
+    Severity: ERROR
+    SqlState: 23503
+    MessageText: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+    Detail: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    SchemaName: public
+    TableName: ShopInventory
+    ConstraintName: FK_ShopInventory_Drugs_DrugId
+    File: ri_triggers.c
+    Line: 2599
+    Routine: ri_ReportViolation
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken) {"EventId":{"Id":10000,"Name":"Microsoft.EntityFrameworkCore.Update.SaveChangesFailed"},"ActionId":"dc5bcc5d-02bb-4944-a823-42e5b16c3b72","ActionName":"pos_system_api.API.Controllers.InventoryController.AddStock (pos_system_api)","RequestId":"0HNGJ43UQOU68:00000004","RequestPath":"/api/inventory/shops/SHOP-91724F16/stock","ConnectionId":"0HNGJ43UQOU68","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RequestQuery":"","RequestMethod":"POST","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Npgsql.PostgresException (0x80004005): 23503: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+  Exception data:
+    Severity: ERROR
+    SqlState: 23503
+    MessageText: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+    Detail: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    SchemaName: public
+    TableName: ShopInventory
+    ConstraintName: FK_ShopInventory_Drugs_DrugId
+    File: ri_triggers.c
+    Line: 2599
+    Routine: ri_ReportViolation
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2025-10-24 20:19:17.776 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-91724F16/stock responded 400 in 300.5574ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGJ43UQOU68:00000004","ConnectionId":"0HNGJ43UQOU68","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:19:17.780 +03:00 [WRN] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-91724F16/stock responded 400 in 308ms {"RequestId":"0HNGJ43UQOU68:00000004","ConnectionId":"0HNGJ43UQOU68","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:19:26.039 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock started {"RequestId":"0HNGJ43UQOU68:00000005","ConnectionId":"0HNGJ43UQOU68","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:19:26.192 +03:00 [ERR] [Microsoft.EntityFrameworkCore.Database.Command] Failed executing DbCommand (73ms) [Parameters=[@p0='?', @p1='?' (DbType = Object), @p2='?' (DbType = DateTime), @p3='?', @p4='?', @p5='?' (DbType = Boolean), @p6='?' (DbType = DateTime), @p7='?' (DbType = DateTime), @p8='?' (DbType = Int32), @p9='?', @p10='?', @p11='?' (DbType = Int32), @p12='?', @p13='?' (DbType = Decimal), @p14='?', @p15='?' (DbType = Decimal), @p16='?' (DbType = DateTime), @p17='?' (DbType = Decimal), @p18='?' (DbType = Decimal)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "ShopInventory" ("Id", "Batches", "CreatedAt", "CreatedBy", "DrugId", "IsAvailable", "LastRestockDate", "LastUpdated", "ReorderPoint", "ShopId", "StorageLocation", "TotalStock", "UpdatedBy", "Pricing_CostPrice", "Pricing_Currency", "Pricing_Discount", "Pricing_LastPriceUpdate", "Pricing_SellingPrice", "Pricing_TaxRate")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18); {"EventId":{"Id":20102,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandError"},"ActionId":"dc5bcc5d-02bb-4944-a823-42e5b16c3b72","ActionName":"pos_system_api.API.Controllers.InventoryController.AddStock (pos_system_api)","RequestId":"0HNGJ43UQOU68:00000005","RequestPath":"/api/inventory/shops/SHOP-764C0CB3/stock","ConnectionId":"0HNGJ43UQOU68","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RequestQuery":"","RequestMethod":"POST","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:19:26.270 +03:00 [ERR] [Microsoft.EntityFrameworkCore.Update] An exception occurred in the database while saving changes for context type 'pos_system_api.Infrastructure.Data.ApplicationDbContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Npgsql.PostgresException (0x80004005): 23503: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+  Exception data:
+    Severity: ERROR
+    SqlState: 23503
+    MessageText: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+    Detail: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    SchemaName: public
+    TableName: ShopInventory
+    ConstraintName: FK_ShopInventory_Drugs_DrugId
+    File: ri_triggers.c
+    Line: 2599
+    Routine: ri_ReportViolation
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken) {"EventId":{"Id":10000,"Name":"Microsoft.EntityFrameworkCore.Update.SaveChangesFailed"},"ActionId":"dc5bcc5d-02bb-4944-a823-42e5b16c3b72","ActionName":"pos_system_api.API.Controllers.InventoryController.AddStock (pos_system_api)","RequestId":"0HNGJ43UQOU68:00000005","RequestPath":"/api/inventory/shops/SHOP-764C0CB3/stock","ConnectionId":"0HNGJ43UQOU68","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RequestQuery":"","RequestMethod":"POST","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Npgsql.PostgresException (0x80004005): 23503: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+  Exception data:
+    Severity: ERROR
+    SqlState: 23503
+    MessageText: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+    Detail: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    SchemaName: public
+    TableName: ShopInventory
+    ConstraintName: FK_ShopInventory_Drugs_DrugId
+    File: ri_triggers.c
+    Line: 2599
+    Routine: ri_ReportViolation
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2025-10-24 20:19:26.280 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock responded 400 in 238.1468ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGJ43UQOU68:00000005","ConnectionId":"0HNGJ43UQOU68","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:19:26.285 +03:00 [WRN] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock responded 400 in 245ms {"RequestId":"0HNGJ43UQOU68:00000005","ConnectionId":"0HNGJ43UQOU68","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:19:40.909 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /api/Drugs?page=1&limit=20 started {"RequestId":"0HNGJ43UQOU68:00000006","ConnectionId":"0HNGJ43UQOU68","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:19:41.201 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/Drugs responded 200 in 288.6443ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"?page=1&limit=20","RequestId":"0HNGJ43UQOU68:00000006","ConnectionId":"0HNGJ43UQOU68","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:19:41.205 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /api/Drugs?page=1&limit=20 responded 200 in 295ms {"RequestId":"0HNGJ43UQOU68:00000006","ConnectionId":"0HNGJ43UQOU68","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:19:51.082 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /api/Drugs/DRG-632 started {"RequestId":"0HNGJ43UQOU68:00000007","ConnectionId":"0HNGJ43UQOU68","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:19:51.169 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/Drugs/DRG-632 responded 404 in 84.6868ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGJ43UQOU68:00000007","ConnectionId":"0HNGJ43UQOU68","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:19:51.174 +03:00 [WRN] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /api/Drugs/DRG-632 responded 404 in 92ms {"RequestId":"0HNGJ43UQOU68:00000007","ConnectionId":"0HNGJ43UQOU68","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:20:16.644 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /api/Drugs/04913499-b72f-434b-b948-fd49e1e8b276 started {"RequestId":"0HNGJ43UQOU68:00000008","ConnectionId":"0HNGJ43UQOU68","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:20:16.720 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/Drugs/04913499-b72f-434b-b948-fd49e1e8b276 responded 404 in 72.9188ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGJ43UQOU68:00000008","ConnectionId":"0HNGJ43UQOU68","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:20:16.723 +03:00 [WRN] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /api/Drugs/04913499-b72f-434b-b948-fd49e1e8b276 responded 404 in 78ms {"RequestId":"0HNGJ43UQOU68:00000008","ConnectionId":"0HNGJ43UQOU68","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:20:29.607 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /api/Drugs/DRG-632 started {"RequestId":"0HNGJ43UQOU68:00000009","ConnectionId":"0HNGJ43UQOU68","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:20:29.685 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/Drugs/DRG-632 responded 404 in 74.2167ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGJ43UQOU68:00000009","ConnectionId":"0HNGJ43UQOU68","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:20:29.691 +03:00 [WRN] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /api/Drugs/DRG-632 responded 404 in 84ms {"RequestId":"0HNGJ43UQOU68:00000009","ConnectionId":"0HNGJ43UQOU68","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:29:02.491 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /api/Drugs/DRG-6326 started {"RequestId":"0HNGJ43UQOU69:00000002","ConnectionId":"0HNGJ43UQOU69","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:29:03.204 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /api/Drugs/DRG-6326 responded 200 in 705.5932ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGJ43UQOU69:00000002","ConnectionId":"0HNGJ43UQOU69","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:29:03.209 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /api/Drugs/DRG-6326 responded 200 in 718ms {"RequestId":"0HNGJ43UQOU69:00000002","ConnectionId":"0HNGJ43UQOU69","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:29:12.098 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock started {"RequestId":"0HNGJ43UQOU69:00000003","ConnectionId":"0HNGJ43UQOU69","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:29:12.339 +03:00 [ERR] [Microsoft.EntityFrameworkCore.Database.Command] Failed executing DbCommand (106ms) [Parameters=[@p0='?', @p1='?' (DbType = Object), @p2='?' (DbType = DateTime), @p3='?', @p4='?', @p5='?' (DbType = Boolean), @p6='?' (DbType = DateTime), @p7='?' (DbType = DateTime), @p8='?' (DbType = Int32), @p9='?', @p10='?', @p11='?' (DbType = Int32), @p12='?', @p13='?' (DbType = Decimal), @p14='?', @p15='?' (DbType = Decimal), @p16='?' (DbType = DateTime), @p17='?' (DbType = Decimal), @p18='?' (DbType = Decimal)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "ShopInventory" ("Id", "Batches", "CreatedAt", "CreatedBy", "DrugId", "IsAvailable", "LastRestockDate", "LastUpdated", "ReorderPoint", "ShopId", "StorageLocation", "TotalStock", "UpdatedBy", "Pricing_CostPrice", "Pricing_Currency", "Pricing_Discount", "Pricing_LastPriceUpdate", "Pricing_SellingPrice", "Pricing_TaxRate")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18); {"EventId":{"Id":20102,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandError"},"ActionId":"dc5bcc5d-02bb-4944-a823-42e5b16c3b72","ActionName":"pos_system_api.API.Controllers.InventoryController.AddStock (pos_system_api)","RequestId":"0HNGJ43UQOU69:00000003","RequestPath":"/api/inventory/shops/SHOP-764C0CB3/stock","ConnectionId":"0HNGJ43UQOU69","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RequestQuery":"","RequestMethod":"POST","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:29:12.450 +03:00 [ERR] [Microsoft.EntityFrameworkCore.Update] An exception occurred in the database while saving changes for context type 'pos_system_api.Infrastructure.Data.ApplicationDbContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Npgsql.PostgresException (0x80004005): 23503: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+  Exception data:
+    Severity: ERROR
+    SqlState: 23503
+    MessageText: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+    Detail: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    SchemaName: public
+    TableName: ShopInventory
+    ConstraintName: FK_ShopInventory_Drugs_DrugId
+    File: ri_triggers.c
+    Line: 2599
+    Routine: ri_ReportViolation
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken) {"EventId":{"Id":10000,"Name":"Microsoft.EntityFrameworkCore.Update.SaveChangesFailed"},"ActionId":"dc5bcc5d-02bb-4944-a823-42e5b16c3b72","ActionName":"pos_system_api.API.Controllers.InventoryController.AddStock (pos_system_api)","RequestId":"0HNGJ43UQOU69:00000003","RequestPath":"/api/inventory/shops/SHOP-764C0CB3/stock","ConnectionId":"0HNGJ43UQOU69","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RequestQuery":"","RequestMethod":"POST","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Npgsql.PostgresException (0x80004005): 23503: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+  Exception data:
+    Severity: ERROR
+    SqlState: 23503
+    MessageText: insert or update on table "ShopInventory" violates foreign key constraint "FK_ShopInventory_Drugs_DrugId"
+    Detail: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    SchemaName: public
+    TableName: ShopInventory
+    ConstraintName: FK_ShopInventory_Drugs_DrugId
+    File: ri_triggers.c
+    Line: 2599
+    Routine: ri_ReportViolation
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2025-10-24 20:29:12.460 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock responded 400 in 357.9844ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGJ43UQOU69:00000003","ConnectionId":"0HNGJ43UQOU69","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-24 20:29:12.465 +03:00 [WRN] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/inventory/shops/SHOP-764C0CB3/stock responded 400 in 366ms {"RequestId":"0HNGJ43UQOU69:00000003","ConnectionId":"0HNGJ43UQOU69","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}

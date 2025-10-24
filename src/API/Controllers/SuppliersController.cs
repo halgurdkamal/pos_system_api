@@ -19,7 +19,7 @@ namespace pos_system_api.API.Controllers;
 [Route("api/[controller]")]
 [Produces("application/json")]
 [Authorize] // All endpoints require authentication
-public class SuppliersController : ControllerBase
+public class SuppliersController : BaseApiController
 {
     private readonly IMediator _mediator;
 

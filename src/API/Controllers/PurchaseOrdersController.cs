@@ -16,7 +16,7 @@ namespace pos_system_api.API.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class PurchaseOrdersController : ControllerBase
+public class PurchaseOrdersController : BaseApiController
 {
     private readonly IMediator _mediator;
     private readonly IPurchaseOrderRepository _repository;

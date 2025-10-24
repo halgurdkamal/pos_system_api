@@ -11,7 +11,7 @@ namespace pos_system_api.API.Controllers;
 [Route("api/stock-transfers")]
 [Produces("application/json")]
 [Authorize(Policy = "ShopAccess")]
-public class StockTransfersController : ControllerBase
+public class StockTransfersController : BaseApiController
 {
     private readonly IMediator _mediator;
 

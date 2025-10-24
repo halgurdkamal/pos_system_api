@@ -534,7 +534,7 @@ public class GetDeadStockHandler : IRequestHandler<GetDeadStockQuery, DeadStockR
 [Route("api/inventory-reports")]
 [Produces("application/json")]
 [Authorize(Policy = "ShopAccess")]
-public class InventoryReportsController : ControllerBase
+public class InventoryReportsController : BaseApiController
 {
     private readonly IMediator _mediator;
 

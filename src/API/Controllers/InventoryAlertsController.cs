@@ -185,7 +185,7 @@ public class GetAlertSummaryHandler : IRequestHandler<GetAlertSummaryQuery, Aler
 [Route("api/inventory-alerts")]
 [Produces("application/json")]
 [Authorize(Policy = "ShopAccess")]
-public class InventoryAlertsController : ControllerBase
+public class InventoryAlertsController : BaseApiController
 {
     private readonly IMediator _mediator;
 

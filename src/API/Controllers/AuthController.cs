@@ -11,7 +11,7 @@ namespace pos_system_api.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthController : ControllerBase
+public class AuthController : BaseApiController
 {
     private readonly IMediator _mediator;
     private readonly ILogger<AuthController> _logger;

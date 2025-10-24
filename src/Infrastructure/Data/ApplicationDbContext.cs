@@ -6,6 +6,7 @@ using pos_system_api.Core.Domain.Inventory.Entities;
 using pos_system_api.Core.Domain.Auth.Entities;
 using pos_system_api.Core.Domain.PurchaseOrders.Entities;
 using pos_system_api.Core.Domain.Sales.Entities;
+using pos_system_api.Core.Domain.Categories.Entities;
 
 namespace pos_system_api.Infrastructure.Data;
 
@@ -18,6 +19,7 @@ public class ApplicationDbContext : DbContext
 
     // DbSets for all entities
     public DbSet<Drug> Drugs { get; set; } = null!;
+    public DbSet<Category> Categories { get; set; } = null!;
     public DbSet<Shop> Shops { get; set; } = null!;
     public DbSet<Supplier> Suppliers { get; set; } = null!;
     public DbSet<ShopInventory> ShopInventory { get; set; } = null!;

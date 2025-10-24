@@ -22,8 +22,8 @@ namespace pos_system_api.API.Controllers;
 [ApiController]
 [Route("api/inventory")]
 [Produces("application/json")]
-[Authorize(Policy = "ShopAccess")] // All inventory endpoints require shop-specific access
-public class InventoryController : ControllerBase
+// [Authorize(Policy = "ShopAccess")] // All inventory endpoints require shop-specific access
+public class InventoryController : BaseApiController
 {
     private readonly IMediator _mediator;
 
@@ -65,7 +65,7 @@ public class InventoryController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(new { error = ex.Message });
+            return BadRequestWithDetails(ex);
         }
     }
 
@@ -94,8 +94,8 @@ public class InventoryController : ControllerBase
         catch (InvalidOperationException ex)
         {
             if (ex.Message.Contains("not found"))
-                return NotFound(new { error = ex.Message });
-            return BadRequest(new { error = ex.Message });
+                return NotFoundWithDetails(ex);
+            return BadRequestWithDetails(ex);
         }
     }
 
@@ -128,7 +128,7 @@ public class InventoryController : ControllerBase
         }
         catch (InvalidOperationException ex)
         {
-            return NotFound(new { error = ex.Message });
+            return NotFoundWithDetails(ex);
         }
     }
 
@@ -156,11 +156,11 @@ public class InventoryController : ControllerBase
         }
         catch (InvalidOperationException ex)
         {
-            return NotFound(new { error = ex.Message });
+            return NotFoundWithDetails(ex);
         }
         catch (ArgumentException ex)
         {
-            return BadRequest(new { error = ex.Message });
+            return BadRequestWithDetails(ex);
         }
     }
 

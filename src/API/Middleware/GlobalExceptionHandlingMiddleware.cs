@@ -99,7 +99,13 @@ public class GlobalExceptionHandlingMiddleware
             Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
             Title = "Bad Request",
             Status = (int)HttpStatusCode.BadRequest,
-            Detail = exception.Message
+            Detail = exception.Message,
+            Extensions = 
+            { 
+                ["stackTrace"] = exception.StackTrace,
+                ["innerException"] = exception.InnerException?.Message,
+                ["innerStackTrace"] = exception.InnerException?.StackTrace
+            }
         };
     }
 
@@ -143,8 +149,14 @@ public class GlobalExceptionHandlingMiddleware
             Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
             Title = "Internal Server Error",
             Status = (int)HttpStatusCode.InternalServerError,
-            Detail = "An unexpected error occurred. Please try again later."
-            // Do not expose internal error details in production
+            Detail = exception.Message,
+            Extensions = 
+            { 
+                ["stackTrace"] = exception.StackTrace,
+                ["innerException"] = exception.InnerException?.Message,
+                ["innerStackTrace"] = exception.InnerException?.StackTrace,
+                ["exceptionType"] = exception.GetType().FullName
+            }
         };
     }
 

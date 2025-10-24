@@ -17,13 +17,16 @@ public class GetCashierItemsQueryHandler : IRequestHandler<GetCashierItemsQuery,
 {
     private readonly IInventoryRepository _inventoryRepository;
     private readonly IDrugRepository _drugRepository;
+    private readonly ICategoryRepository _categoryRepository;
 
     public GetCashierItemsQueryHandler(
         IInventoryRepository inventoryRepository,
-        IDrugRepository drugRepository)
+        IDrugRepository drugRepository,
+        ICategoryRepository categoryRepository)
     {
         _inventoryRepository = inventoryRepository;
         _drugRepository = drugRepository;
+        _categoryRepository = categoryRepository;
     }
 
     public async Task<PagedResult<CashierItemDto>> Handle(GetCashierItemsQuery request, CancellationToken cancellationToken)
@@ -42,6 +45,10 @@ public class GetCashierItemsQueryHandler : IRequestHandler<GetCashierItemsQuery,
         var drugsDict = allDrugsResult.Data
             .Where(d => drugIds.Contains(d.Id))
             .ToDictionary(d => d.Id);
+        
+        // Get all categories for logo/color lookup
+        var allCategories = await _categoryRepository.GetAllAsync(true, cancellationToken);
+        var categoriesDict = allCategories.ToDictionary(c => c.Name, StringComparer.OrdinalIgnoreCase);
         
         // Apply search and category filters
         var query = availableInventory.AsQueryable();
@@ -85,6 +92,9 @@ public class GetCashierItemsQueryHandler : IRequestHandler<GetCashierItemsQuery,
             var discount = inv.ShopPricing?.Discount ?? 0;
             var finalPrice = unitPrice * (1 - discount / 100);
             
+            // Get category details (logo and color)
+            var categoryInfo = categoriesDict.GetValueOrDefault(drug.Category);
+            
             return new CashierItemDto
             {
                 DrugId = drug.Id,
@@ -92,6 +102,8 @@ public class GetCashierItemsQueryHandler : IRequestHandler<GetCashierItemsQuery,
                 GenericName = drug.GenericName,
                 Barcode = drug.Barcode,
                 Category = drug.Category,
+                CategoryLogoUrl = categoryInfo?.LogoUrl, // Category logo
+                CategoryColorCode = categoryInfo?.ColorCode, // Category color
                 Manufacturer = drug.Manufacturer,
                 ImageUrls = drug.ImageUrls,
                 

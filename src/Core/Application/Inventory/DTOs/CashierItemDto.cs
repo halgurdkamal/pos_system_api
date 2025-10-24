@@ -12,6 +12,8 @@ public record CashierItemDto
     public string GenericName { get; init; } = string.Empty;
     public string Barcode { get; init; } = string.Empty;
     public string Category { get; init; } = string.Empty;
+    public string? CategoryLogoUrl { get; init; } // NEW: Category logo for UI
+    public string? CategoryColorCode { get; init; } // NEW: Category color for UI theming
     public string Manufacturer { get; init; } = string.Empty;
     public List<string> ImageUrls { get; init; } = new();
     

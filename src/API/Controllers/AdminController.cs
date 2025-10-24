@@ -13,7 +13,7 @@ namespace pos_system_api.API.Controllers;
 [Route("api/[controller]")]
 [Produces("application/json")]
 [Authorize(Policy = "AdminOnly")]
-public class AdminController : ControllerBase
+public class AdminController : BaseApiController
 {
     private readonly ApplicationDbContext _context;
 

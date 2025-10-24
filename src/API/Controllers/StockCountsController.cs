@@ -177,7 +177,7 @@ public class GetStockCountsHandler : IRequestHandler<GetStockCountsQuery, IEnume
 [Route("api/stock-counts")]
 [Produces("application/json")]
 [Authorize(Policy = "ShopAccess")]
-public class StockCountsController : ControllerBase
+public class StockCountsController : BaseApiController
 {
     private readonly IMediator _mediator;
 

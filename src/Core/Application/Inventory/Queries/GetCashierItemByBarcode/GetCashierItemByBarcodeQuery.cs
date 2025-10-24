@@ -12,13 +12,16 @@ public class GetCashierItemByBarcodeQueryHandler : IRequestHandler<GetCashierIte
 {
     private readonly IInventoryRepository _inventoryRepository;
     private readonly IDrugRepository _drugRepository;
+    private readonly ICategoryRepository _categoryRepository;
 
     public GetCashierItemByBarcodeQueryHandler(
         IInventoryRepository inventoryRepository,
-        IDrugRepository drugRepository)
+        IDrugRepository drugRepository,
+        ICategoryRepository categoryRepository)
     {
         _inventoryRepository = inventoryRepository;
         _drugRepository = drugRepository;
+        _categoryRepository = categoryRepository;
     }
 
     public async Task<CashierItemDto?> Handle(GetCashierItemByBarcodeQuery request, CancellationToken cancellationToken)
@@ -42,6 +45,9 @@ public class GetCashierItemByBarcodeQueryHandler : IRequestHandler<GetCashierIte
             return null;
         }
         
+        // Get category details (logo and color)
+        var categoryInfo = await _categoryRepository.GetByNameAsync(drug.Category, cancellationToken);
+        
         // Get oldest batch info
         var oldestBatch = shopInventory.Batches.OrderBy(b => b.ExpiryDate).FirstOrDefault();
         
@@ -57,6 +63,8 @@ public class GetCashierItemByBarcodeQueryHandler : IRequestHandler<GetCashierIte
             GenericName = drug.GenericName,
             Barcode = drug.Barcode,
             Category = drug.Category,
+            CategoryLogoUrl = categoryInfo?.LogoUrl, // Category logo
+            CategoryColorCode = categoryInfo?.ColorCode, // Category color
             Manufacturer = drug.Manufacturer,
             ImageUrls = drug.ImageUrls,
             

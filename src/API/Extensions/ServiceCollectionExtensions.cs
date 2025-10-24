@@ -49,6 +49,8 @@ public static class ServiceCollectionExtensions
         // Register repositories
         services.AddScoped<pos_system_api.Core.Application.Common.Interfaces.IDrugRepository, 
                           pos_system_api.Infrastructure.Data.Repositories.DrugRepository>();
+        services.AddScoped<pos_system_api.Core.Application.Common.Interfaces.ICategoryRepository,
+                          pos_system_api.Infrastructure.Data.Repositories.CategoryRepository>();
         services.AddScoped<pos_system_api.Core.Application.Common.Interfaces.IShopRepository,
                           pos_system_api.Infrastructure.Data.Repositories.ShopRepository>();
         services.AddScoped<pos_system_api.Core.Application.Common.Interfaces.ISupplierRepository,
