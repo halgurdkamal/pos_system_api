@@ -1,103 +1,127 @@
-using pos_system_api.data;
+using pos_system_api.API.Extensions;
+using pos_system_api.API.Middleware;
+using Serilog;
+using Serilog.Events;
 
-var builder = WebApplication.CreateBuilder(args);
+// Configure Serilog before building the app
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
+    .MinimumLevel.Override("System", LogEventLevel.Warning)
+    .Enrich.FromLogContext()
+    .Enrich.WithMachineName()
+    .Enrich.WithEnvironmentName()
+    .WriteTo.Console(
+        outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}")
+    .WriteTo.File(
+        path: "logs/pos-system-.log",
+        rollingInterval: RollingInterval.Day,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext}] {Message:lj} {Properties:j}{NewLine}{Exception}",
+        retainedFileCountLimit: 30,
+        fileSizeLimitBytes: 10485760) // 10MB
+    .CreateLogger();
 
-// Configure Kestrel for IIS hosting
-builder.WebHost.ConfigureKestrel(options =>
+try
 {
-    options.AddServerHeader = false;
-});
+    Log.Information("Starting POS System API...");
 
-// builder.WebHost.UseUrls("http://*:8080");
+    var builder = WebApplication.CreateBuilder(args);
 
-// Add CORS support
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
+    // Use Serilog for logging
+    builder.Host.UseSerilog();
+
+    // Configure Kestrel for IIS hosting
+    builder.WebHost.ConfigureKestrel(options =>
     {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
+        options.AddServerHeader = false;
     });
-});
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+    // Add layers (Clean Architecture)
+    builder.Services.AddApplicationLayer();
+    builder.Services.AddInfrastructureLayer(builder.Configuration);
+    builder.Services.AddAPILayer(builder.Configuration);
 
 var app = builder.Build();
 
-// Add global exception handler
-app.UseExceptionHandler(errorApp =>
+// Seed database on startup (Development only)
+if (app.Environment.IsDevelopment())
 {
-    errorApp.Run(async context =>
+    using (var scope = app.Services.CreateScope())
     {
-        context.Response.StatusCode = 500;
-        context.Response.ContentType = "application/json";
-        var error = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
-        if (error != null)
+        var services = scope.ServiceProvider;
+        try
         {
-            await context.Response.WriteAsJsonAsync(new 
-            { 
-                error = "Internal Server Error", 
-                message = error.Error.Message,
-                details = app.Environment.IsDevelopment() ? error.Error.StackTrace : null
-            });
+            var context = services.GetRequiredService<pos_system_api.Infrastructure.Data.ApplicationDbContext>();
+            var seeder = new pos_system_api.Infrastructure.Data.Seeders.DatabaseSeeder(context);
+            await seeder.SeedAllAsync();
         }
-    });
-});
+        catch (Exception ex)
+        {
+            var logger = services.GetRequiredService<ILogger<Program>>();
+            logger.LogError(ex, "An error occurred while seeding the database.");
+        }
+    }
+}
 
 // Configure the HTTP request pipeline.
-// Enable Swagger in all environments for testing
+
+// Global exception handling (must be first)
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
+
+// Request/Response logging (after exception handling)
+app.UseMiddleware<RequestResponseLoggingMiddleware>();
+
+// Use Serilog request logging
+app.UseSerilogRequestLogging(options =>
+{
+    options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000}ms";
+    options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+    {
+        diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value);
+        diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
+        diagnosticContext.Set("UserAgent", httpContext.Request.Headers["User-Agent"].ToString());
+        
+        // Add user info if authenticated
+        if (httpContext.User.Identity?.IsAuthenticated == true)
+        {
+            diagnosticContext.Set("UserName", httpContext.User.Identity.Name);
+            diagnosticContext.Set("UserId", httpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value);
+        }
+    };
+});
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
 // Enable CORS
 app.UseCors();
 
-// Comment out HTTPS redirection for hosting compatibility
-// app.UseHttpsRedirection();
+// Authentication & Authorization
+app.UseAuthentication();
+app.UseAuthorization();
 
-app.MapGet("/drug/{id}", (string id) =>
-{
-    try
-    {
-        return Results.Ok(SampleDrugProvider.GetDrug() ?? new Dictionary<string, object>
-        {
-            { "error", "No drug data available" }
-        });
-    }
-    catch (Exception ex)
-    {
-        return Results.Json(new { error = ex.Message }, statusCode: 500);
-    }
-});
+// Map controllers (Clean Architecture endpoints)
+app.MapControllers();
 
-// list of drugs
-app.MapGet("/drugs", () =>
-{
-    try
-    {
-        return Results.Ok(SampleDrugProvider.GetDrugList());
-    }
-    catch (Exception ex)
-    {
-        return Results.Json(new { error = ex.Message }, statusCode: 500);
-    }
-});
+// Health check endpoint
+app.MapGet("/health", () => Results.Ok(new 
+{ 
+    status = "Healthy", 
+    timestamp = DateTime.UtcNow
+}));
 
+app.MapGet("/", () => "Welcome to the POS System API! Visit /swagger for API documentation.");
 
-
-app.MapGet("/", () =>
-{
-
-return "Welcome to the POS System API! Use /drugs to get sample drug data.";
-});
-
+Log.Information("POS System API started successfully");
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+}
+catch (Exception ex)
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.Information("Shutting down POS System API...");
+    Log.CloseAndFlush();
 }
