@@ -1,0 +1,85 @@
+# ===========================
+# .NET / C# Project Defaults
+# ===========================
+
+# Build directories
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Tt]emp/
+
+# Visual Studio files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build outputs
+*.dll
+*.exe
+*.pdb
+*.mdb
+*.cache
+*.log
+*.db
+*.bak
+
+# ASP.NET temp files
+App_Data/
+App_Browsers/
+App_WebReferences/
+
+# NuGet packages
+*.nupkg
+*.snupkg
+# Exclude packages folder (but keep config files)
+**/packages/*
+!**/packages/build/
+!**/packages/repositories.config
+
+# Publish outputs
+publish/
+out/
+artifacts/
+wwwroot/lib/
+
+# Rider / JetBrains
+.idea/
+*.DotSettings.user
+
+# macOS and Linux
+.DS_Store
+*.swp
+*.swo
+Thumbs.db
+
+# Generated files
+*.generated.cs
+*_i.c
+*_p.c
+*.ilk
+*.meta
+*.obj
+*.tmp
+*.tlog
+
+# Node / Frontend (if your API includes Swagger UI or a front-end)
+node_modules/
+dist/
+.env
+
+# Local configuration overrides
+appsettings.Development.json
+appsettings.Local.json
+
+# ===========================
+# Bytewises / Pharmacy POS
+# ===========================
+# Ignore compiled files and packaging artifacts
+**/bin/
+**/obj/
+**/Migrations/Backup/
+**/wwwroot/uploads/
+**/Logs/
+**/Snapshots/
