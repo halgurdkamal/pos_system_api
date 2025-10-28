@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using pos_system_api.Core.Application.Common.Behaviors;
+using pos_system_api.Core.Application.Inventory.Services;
 using pos_system_api.Infrastructure.Auth;
 using pos_system_api.Infrastructure.Auth.Authorization;
 using pos_system_api.Infrastructure.Data;
@@ -32,6 +33,8 @@ public static class ServiceCollectionExtensions
 
         // Register MediatR pipeline behaviors
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+        services.AddScoped<IEffectivePackagingService, EffectivePackagingService>();
 
         return services;
     }
@@ -69,6 +72,8 @@ public static class ServiceCollectionExtensions
                           pos_system_api.Infrastructure.Data.Repositories.UserRepository>();
         services.AddScoped<pos_system_api.Core.Application.Common.Interfaces.IShopUserRepository,
                           pos_system_api.Infrastructure.Data.Repositories.ShopUserRepository>();
+        services.AddScoped<pos_system_api.Core.Application.Common.Interfaces.IShopPackagingOverrideRepository,
+                          pos_system_api.Infrastructure.Data.Repositories.ShopPackagingOverrideRepository>();
 
         // Register authentication services
         services.AddScoped<JwtTokenService>();

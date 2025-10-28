@@ -12,4 +12,6 @@ public class ShopPricingDto
     public decimal TaxRate { get; set; } = 0;
     public decimal ProfitMargin { get; set; }
     public decimal ProfitMarginPercentage { get; set; }
+    public DateTime LastPriceUpdate { get; set; }
+    public Dictionary<string, decimal> PackagingLevelPrices { get; set; } = new();
 }

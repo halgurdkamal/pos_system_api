@@ -6,6 +6,8 @@ using pos_system_api.Core.Application.Inventory.Commands.AddStock;
 using pos_system_api.Core.Application.Inventory.Commands.ReduceStock;
 using pos_system_api.Core.Application.Inventory.Commands.UpdatePricing;
 using pos_system_api.Core.Application.Inventory.Commands.UpdateReorderPoint;
+using pos_system_api.Core.Application.Inventory.Commands.UpdatePackagingPricing;
+using pos_system_api.Core.Application.Inventory.Commands.PackagingOverrides;
 using pos_system_api.Core.Application.Inventory.DTOs;
 using pos_system_api.Core.Application.Inventory.Queries.GetExpiringBatches;
 using pos_system_api.Core.Application.Inventory.Queries.GetLowStock;
@@ -13,6 +15,7 @@ using pos_system_api.Core.Application.Inventory.Queries.GetShopInventory;
 using pos_system_api.Core.Application.Inventory.Queries.GetTotalStockValue;
 using pos_system_api.Core.Application.Inventory.Queries.GetCashierItems;
 using pos_system_api.Core.Application.Inventory.Queries.GetCashierItemByBarcode;
+using pos_system_api.Core.Application.Inventory.Queries.GetEffectivePackaging;
 
 namespace pos_system_api.API.Controllers;
 
@@ -30,6 +33,79 @@ public class InventoryController : BaseApiController
     public InventoryController(IMediator mediator)
     {
         _mediator = mediator;
+    }
+
+    /// <summary>
+    /// Get merged packaging configuration for a drug in a specific shop
+    /// </summary>
+    [HttpGet("shops/{shopId}/drugs/{drugId}/packaging")]
+    [ProducesResponseType(typeof(EffectivePackagingDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<EffectivePackagingDto>> GetPackaging(string shopId, string drugId)
+    {
+        try
+        {
+            var result = await _mediator.Send(new GetEffectivePackagingQuery(shopId, drugId));
+            return Ok(result);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { error = ex.Message });
+        }
+    }
+
+    /// <summary>
+    /// Create a packaging override (global override or custom level) for a shop
+    /// </summary>
+    [HttpPost("shops/{shopId}/drugs/{drugId}/packaging-overrides")]
+    [ProducesResponseType(typeof(EffectivePackagingDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<EffectivePackagingDto>> CreatePackagingOverride(
+        string shopId,
+        string drugId,
+        [FromBody] PackagingOverrideInputDto dto)
+    {
+        try
+        {
+            var result = await _mediator.Send(new CreatePackagingOverrideCommand(shopId, drugId, dto));
+            return Ok(result);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { error = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return BadRequestWithDetails(ex);
+        }
+    }
+
+    /// <summary>
+    /// Update packaging override or global linked level for a shop
+    /// </summary>
+    [HttpPut("shops/{shopId}/drugs/{drugId}/packaging-levels/{levelId}")]
+    [ProducesResponseType(typeof(EffectivePackagingDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<EffectivePackagingDto>> UpdatePackagingLevel(
+        string shopId,
+        string drugId,
+        string levelId,
+        [FromBody] PackagingOverrideInputDto dto)
+    {
+        try
+        {
+            var result = await _mediator.Send(new UpdatePackagingLevelCommand(shopId, drugId, levelId, dto));
+            return Ok(result);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { error = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return BadRequestWithDetails(ex);
+        }
     }
 
     /// <summary>
@@ -161,6 +237,33 @@ public class InventoryController : BaseApiController
         catch (ArgumentException ex)
         {
             return BadRequestWithDetails(ex);
+        }
+    }
+
+    /// <summary>
+    /// Update packaging-level pricing for an inventory item
+    /// </summary>
+    /// <param name="shopId">Shop ID</param>
+    /// <param name="drugId">Drug ID</param>
+    /// <param name="packagingPrices">Dictionary of packaging level names to prices</param>
+    /// <returns>Updated inventory details</returns>
+    [HttpPut("shops/{shopId}/drugs/{drugId}/packaging-pricing")]
+    [ProducesResponseType(typeof(InventoryDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<InventoryDto>> UpdatePackagingPricing(
+        string shopId,
+        string drugId,
+        [FromBody] Dictionary<string, decimal> packagingPrices)
+    {
+        try
+        {
+            var command = new UpdatePackagingPricingCommand(shopId, drugId, packagingPrices);
+            var result = await _mediator.Send(command);
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return NotFoundWithDetails(ex);
         }
     }
 

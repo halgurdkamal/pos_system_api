@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using pos_system_api.Core.Domain.Drugs.ValueObjects;
 using pos_system_api.Infrastructure.Data;
 
 #nullable disable
@@ -416,11 +417,18 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<decimal?>("MinimumSaleQuantity")
+                        .HasColumnType("numeric(18,2)");
+
                     b.Property<int>("ReorderPoint")
                         .HasColumnType("integer");
 
                     b.Property<string>("ShopId")
                         .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("ShopSpecificSellUnit")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
@@ -438,6 +446,8 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasAlternateKey("ShopId", "DrugId");
+
                     b.HasIndex("DrugId");
 
                     b.HasIndex("IsAvailable");
@@ -452,6 +462,87 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("ShopInventory", (string)null);
+                });
+
+            modelBuilder.Entity("pos_system_api.Core.Domain.Inventory.Entities.ShopPackagingOverride", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("CustomUnitName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int?>("CustomLevelOrder")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("DrugId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<bool?>("IsDefaultSellUnit")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("IsSellable")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal?>("MinimumSaleQuantity")
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<decimal?>("OverrideQuantityPerParent")
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<string>("PackagingLevelId")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("ParentOverrideId")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("ParentPackagingLevelId")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<decimal?>("SellingPrice")
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<string>("ShopId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentOverrideId");
+
+                    b.HasIndex("ShopId", "DrugId");
+
+                    b.HasIndex("ShopId", "DrugId", "IsDefaultSellUnit")
+                        .HasDatabaseName("IX_ShopPackagingOverride_DefaultSellUnit");
+
+                    b.HasIndex("ShopId", "DrugId", "PackagingLevelId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_ShopPackagingOverride_ShopDrugLevel")
+                        .HasFilter("\"PackagingLevelId\" IS NOT NULL");
+
+                    b.ToTable("ShopPackagingOverrides", (string)null);
                 });
 
             modelBuilder.Entity("pos_system_api.Core.Domain.Inventory.Entities.StockAdjustment", b =>
@@ -1454,6 +1545,45 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
                                 .HasForeignKey("DrugId");
                         });
 
+                    b.OwnsOne("pos_system_api.Core.Domain.Drugs.ValueObjects.PackagingInfo", "PackagingInfo", b1 =>
+                        {
+                            b1.Property<string>("DrugId")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("BaseUnit")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("character varying(50)")
+                                .HasColumnName("PackagingInfo_BaseUnit");
+
+                            b1.Property<string>("BaseUnitDisplayName")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
+                                .HasColumnName("PackagingInfo_BaseUnitDisplayName");
+
+                            b1.Property<bool>("IsSubdivisible")
+                                .HasColumnType("boolean")
+                                .HasColumnName("PackagingInfo_IsSubdivisible");
+
+                            b1.Property<List<PackagingLevel>>("PackagingLevels")
+                                .IsRequired()
+                                .HasColumnType("jsonb")
+                                .HasColumnName("PackagingInfo_PackagingLevels");
+
+                            b1.Property<string>("UnitType")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("PackagingInfo_UnitType");
+
+                            b1.HasKey("DrugId");
+
+                            b1.ToTable("Drugs");
+
+                            b1.WithOwner()
+                                .HasForeignKey("DrugId");
+                        });
+
                     b.OwnsOne("pos_system_api.Core.Domain.Drugs.ValueObjects.Regulatory", "Regulatory", b1 =>
                         {
                             b1.Property<string>("DrugId")
@@ -1495,6 +1625,9 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Formulation")
+                        .IsRequired();
+
+                    b.Navigation("PackagingInfo")
                         .IsRequired();
 
                     b.Navigation("Regulatory")
@@ -1554,7 +1687,18 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
                                 .HasForeignKey("ShopInventoryId");
                         });
 
+                    b.Navigation("PackagingOverrides");
+
                     b.Navigation("ShopPricing")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("pos_system_api.Core.Domain.Inventory.Entities.ShopPackagingOverride", b =>
+                {
+                    b.HasOne("pos_system_api.Core.Domain.Inventory.Entities.ShopInventory", null)
+                        .WithMany("PackagingOverrides")
+                        .HasForeignKey("ShopId", "DrugId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

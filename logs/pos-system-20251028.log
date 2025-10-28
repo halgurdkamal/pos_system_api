@@ -1,0 +1,847 @@
+2025-10-28 01:37:41.071 +03:00 [INF] [] Starting POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 01:37:41.238 +03:00 [FTL] [] Application terminated unexpectedly {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Microsoft.Extensions.Hosting.HostFactoryResolver+HostingListener+StopTheHostException: Exception of type 'Microsoft.Extensions.Hosting.HostFactoryResolver+HostingListener+StopTheHostException' was thrown.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in C:\Users\pc\Documents\My Projects\pos_system_api\Program.cs:line 45
+2025-10-28 01:37:41.262 +03:00 [INF] [] Shutting down POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 01:38:06.036 +03:00 [INF] [] Starting POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 01:38:06.204 +03:00 [FTL] [] Application terminated unexpectedly {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Microsoft.Extensions.Hosting.HostFactoryResolver+HostingListener+StopTheHostException: Exception of type 'Microsoft.Extensions.Hosting.HostFactoryResolver+HostingListener+StopTheHostException' was thrown.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in C:\Users\pc\Documents\My Projects\pos_system_api\Program.cs:line 45
+2025-10-28 01:38:06.228 +03:00 [INF] [] Shutting down POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 01:38:36.908 +03:00 [INF] [] Starting POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 01:38:37.057 +03:00 [FTL] [] Application terminated unexpectedly {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Microsoft.Extensions.Hosting.HostFactoryResolver+HostingListener+StopTheHostException: Exception of type 'Microsoft.Extensions.Hosting.HostFactoryResolver+HostingListener+StopTheHostException' was thrown.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in C:\Users\pc\Documents\My Projects\pos_system_api\Program.cs:line 45
+2025-10-28 01:38:37.081 +03:00 [INF] [] Shutting down POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:48.769 +03:00 [INF] [] Starting POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:49.590 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The property 'ShopInventory.Batches' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly. {"EventId":{"Id":10620,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.CollectionWithoutComparer"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:49.595 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The property 'ShopUser.Permissions' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly. {"EventId":{"Id":10620,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.CollectionWithoutComparer"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:49.632 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'User' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:49.635 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'Category' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:49.638 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'ShopUser' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:51.599 +03:00 [INF] [] POS System API started successfully {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.047 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger started {"RequestId":"0HNGLLINRJRA4:00000002","ConnectionId":"0HNGLLINRJRA4","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.068 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger responded 301 in 14.3460ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLINRJRA4:00000002","ConnectionId":"0HNGLLINRJRA4","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.072 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger responded 301 in 29ms {"RequestId":"0HNGLLINRJRA4:00000002","ConnectionId":"0HNGLLINRJRA4","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.083 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.html started {"RequestId":"0HNGLLINRJRA4:00000003","ConnectionId":"0HNGLLINRJRA4","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.166 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/index.html responded 200 in 79.6756ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLINRJRA4:00000003","ConnectionId":"0HNGLLINRJRA4","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.171 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.html responded 200 in 87ms {"RequestId":"0HNGLLINRJRA4:00000003","ConnectionId":"0HNGLLINRJRA4","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.243 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/swagger-ui.css started {"RequestId":"0HNGLLINRJRA4:00000004","ConnectionId":"0HNGLLINRJRA4","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.253 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/swagger-ui.css responded 200 in 6.6479ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLINRJRA4:00000004","ConnectionId":"0HNGLLINRJRA4","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.257 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/swagger-ui.css responded 200 in 13ms {"RequestId":"0HNGLLINRJRA4:00000004","ConnectionId":"0HNGLLINRJRA4","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.263 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.css started {"RequestId":"0HNGLLINRJRA5:00000002","ConnectionId":"0HNGLLINRJRA5","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.263 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/swagger-ui-bundle.js started {"RequestId":"0HNGLLINRJRA6:00000002","ConnectionId":"0HNGLLINRJRA6","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.264 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/swagger-ui-standalone-preset.js started {"RequestId":"0HNGLLINRJRA7:00000002","ConnectionId":"0HNGLLINRJRA7","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.268 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/index.css responded 200 in 0.3759ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLINRJRA5:00000002","ConnectionId":"0HNGLLINRJRA5","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.269 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.js started {"RequestId":"0HNGLLINRJRA4:00000005","ConnectionId":"0HNGLLINRJRA4","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.275 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/swagger-ui-standalone-preset.js responded 200 in 1.2019ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLINRJRA7:00000002","ConnectionId":"0HNGLLINRJRA7","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.276 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/swagger-ui-bundle.js responded 200 in 5.1617ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLINRJRA6:00000002","ConnectionId":"0HNGLLINRJRA6","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.280 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.css responded 200 in 17ms {"RequestId":"0HNGLLINRJRA5:00000002","ConnectionId":"0HNGLLINRJRA5","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.284 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/index.js responded 200 in 0.5058ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLINRJRA4:00000005","ConnectionId":"0HNGLLINRJRA4","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.286 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/swagger-ui-standalone-preset.js started {"RequestId":"0HNGLLINRJRA8:00000002","ConnectionId":"0HNGLLINRJRA8","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.287 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/swagger-ui-bundle.js started {"RequestId":"0HNGLLINRJRA9:00000002","ConnectionId":"0HNGLLINRJRA9","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.287 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/swagger-ui-standalone-preset.js responded 200 in 23ms {"RequestId":"0HNGLLINRJRA7:00000002","ConnectionId":"0HNGLLINRJRA7","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.292 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/swagger-ui-bundle.js responded 200 in 28ms {"RequestId":"0HNGLLINRJRA6:00000002","ConnectionId":"0HNGLLINRJRA6","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.302 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.js responded 200 in 32ms {"RequestId":"0HNGLLINRJRA4:00000005","ConnectionId":"0HNGLLINRJRA4","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.306 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/swagger-ui-standalone-preset.js responded 200 in 0.6330ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLINRJRA8:00000002","ConnectionId":"0HNGLLINRJRA8","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.313 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/swagger-ui-bundle.js responded 200 in 3.2870ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLINRJRA9:00000002","ConnectionId":"0HNGLLINRJRA9","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.326 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/swagger-ui-standalone-preset.js responded 200 in 39ms {"RequestId":"0HNGLLINRJRA8:00000002","ConnectionId":"0HNGLLINRJRA8","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.331 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/swagger-ui-bundle.js responded 200 in 43ms {"RequestId":"0HNGLLINRJRA9:00000002","ConnectionId":"0HNGLLINRJRA9","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.381 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/favicon-32x32.png started {"RequestId":"0HNGLLINRJRA4:00000006","ConnectionId":"0HNGLLINRJRA4","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.384 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/favicon-32x32.png responded 200 in 0.1181ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLINRJRA4:00000006","ConnectionId":"0HNGLLINRJRA4","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.387 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/favicon-32x32.png responded 200 in 6ms {"RequestId":"0HNGLLINRJRA4:00000006","ConnectionId":"0HNGLLINRJRA4","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.697 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/v1/swagger.json started {"RequestId":"0HNGLLINRJRA4:00000007","ConnectionId":"0HNGLLINRJRA4","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.851 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/v1/swagger.json responded 200 in 152.1389ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLINRJRA4:00000007","ConnectionId":"0HNGLLINRJRA4","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:56.855 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/v1/swagger.json responded 200 in 158ms {"RequestId":"0HNGLLINRJRA4:00000007","ConnectionId":"0HNGLLINRJRA4","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:57.491 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.js started {"RequestId":"0HNGLLINRJRA9:00000003","ConnectionId":"0HNGLLINRJRA9","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:57.494 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/index.js responded 200 in 0.2873ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLINRJRA9:00000003","ConnectionId":"0HNGLLINRJRA9","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:00:57.497 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.js responded 200 in 6ms {"RequestId":"0HNGLLINRJRA9:00000003","ConnectionId":"0HNGLLINRJRA9","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:01:03.987 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Admin/seed started {"RequestId":"0HNGLLINRJRA4:00000008","ConnectionId":"0HNGLLINRJRA4","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:01:04.019 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/Admin/seed responded 401 in 23.8277ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLINRJRA4:00000008","ConnectionId":"0HNGLLINRJRA4","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:01:04.023 +03:00 [WRN] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Admin/seed responded 401 in 35ms {"RequestId":"0HNGLLINRJRA4:00000008","ConnectionId":"0HNGLLINRJRA4","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:01:20.178 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Auth/login started {"RequestId":"0HNGLLINRJRA4:00000009","ConnectionId":"0HNGLLINRJRA4","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:01:20.995 +03:00 [INF] [pos_system_api.API.Controllers.AuthController] User halgurd logged in successfully {"ActionId":"4bb04eb3-6efe-4126-a9a4-c876eb659224","ActionName":"pos_system_api.API.Controllers.AuthController.Login (pos_system_api)","RequestId":"0HNGLLINRJRA4:00000009","RequestPath":"/api/Auth/login","ConnectionId":"0HNGLLINRJRA4","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RequestQuery":"","RequestMethod":"POST","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:01:21.023 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/Auth/login responded 200 in 843.3342ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLINRJRA4:00000009","ConnectionId":"0HNGLLINRJRA4","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:01:21.026 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Auth/login responded 200 in 848ms {"RequestId":"0HNGLLINRJRA4:00000009","ConnectionId":"0HNGLLINRJRA4","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:01:36.837 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Admin/seed started {"RequestId":"0HNGLLINRJRA4:0000000A","ConnectionId":"0HNGLLINRJRA4","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:01:36.887 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/Admin/seed responded 403 in 47.1708ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","UserName":"halgurd","UserId":"603b60a5-211a-49ba-8a59-2326480f5790","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLINRJRA4:0000000A","ConnectionId":"0HNGLLINRJRA4","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:01:36.892 +03:00 [WRN] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Admin/seed responded 403 in 54ms {"RequestId":"0HNGLLINRJRA4:0000000A","ConnectionId":"0HNGLLINRJRA4","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:01:47.413 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Admin/seed started {"RequestId":"0HNGLLINRJRA4:0000000B","ConnectionId":"0HNGLLINRJRA4","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:01:47.417 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/Admin/seed responded 403 in 1.5547ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","UserName":"halgurd","UserId":"603b60a5-211a-49ba-8a59-2326480f5790","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLINRJRA4:0000000B","ConnectionId":"0HNGLLINRJRA4","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:01:47.421 +03:00 [WRN] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Admin/seed responded 403 in 8ms {"RequestId":"0HNGLLINRJRA4:0000000B","ConnectionId":"0HNGLLINRJRA4","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:06:08.488 +03:00 [INF] [] Shutting down POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:06:11.815 +03:00 [INF] [] Starting POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:06:12.585 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The property 'ShopInventory.Batches' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly. {"EventId":{"Id":10620,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.CollectionWithoutComparer"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:06:12.588 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The property 'ShopUser.Permissions' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly. {"EventId":{"Id":10620,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.CollectionWithoutComparer"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:06:12.623 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'User' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:06:12.625 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'Category' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:06:12.628 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'ShopUser' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:06:14.093 +03:00 [INF] [] POS System API started successfully {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:06:37.987 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.html started {"RequestId":"0HNGLLLSDIOSJ:00000002","ConnectionId":"0HNGLLLSDIOSJ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:06:38.078 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/index.html responded 200 in 84.2056ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLLSDIOSJ:00000002","ConnectionId":"0HNGLLLSDIOSJ","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:06:38.084 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.html responded 200 in 102ms {"RequestId":"0HNGLLLSDIOSJ:00000002","ConnectionId":"0HNGLLLSDIOSJ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:06:38.111 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.js started {"RequestId":"0HNGLLLSDIOSJ:00000003","ConnectionId":"0HNGLLLSDIOSJ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:06:38.116 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/index.js responded 200 in 0.5893ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLLSDIOSJ:00000003","ConnectionId":"0HNGLLLSDIOSJ","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:06:38.121 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.js responded 200 in 9ms {"RequestId":"0HNGLLLSDIOSJ:00000003","ConnectionId":"0HNGLLLSDIOSJ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:06:38.165 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.js started {"RequestId":"0HNGLLLSDIOSL:00000002","ConnectionId":"0HNGLLLSDIOSL","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:06:38.168 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/index.js responded 200 in 0.7370ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLLSDIOSL:00000002","ConnectionId":"0HNGLLLSDIOSL","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:06:38.172 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.js responded 200 in 6ms {"RequestId":"0HNGLLLSDIOSL:00000002","ConnectionId":"0HNGLLLSDIOSL","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:06:38.491 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/v1/swagger.json started {"RequestId":"0HNGLLLSDIOSJ:00000004","ConnectionId":"0HNGLLLSDIOSJ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:06:38.641 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/v1/swagger.json responded 200 in 146.7557ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLLSDIOSJ:00000004","ConnectionId":"0HNGLLLSDIOSJ","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:06:38.644 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/v1/swagger.json responded 200 in 153ms {"RequestId":"0HNGLLLSDIOSJ:00000004","ConnectionId":"0HNGLLLSDIOSJ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:07:01.316 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Auth/login started {"RequestId":"0HNGLLLSDIOSJ:00000005","ConnectionId":"0HNGLLLSDIOSJ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:07:01.605 +03:00 [WRN] [pos_system_api.API.Controllers.AuthController] Login failed for user admin: Invalid credentials {"ActionId":"66b9e0e4-f6a5-4511-9aa7-5cfdd2c37277","ActionName":"pos_system_api.API.Controllers.AuthController.Login (pos_system_api)","RequestId":"0HNGLLLSDIOSJ:00000005","RequestPath":"/api/Auth/login","ConnectionId":"0HNGLLLSDIOSJ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RequestQuery":"","RequestMethod":"POST","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:07:01.625 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/Auth/login responded 401 in 306.1811ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLLSDIOSJ:00000005","ConnectionId":"0HNGLLLSDIOSJ","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:07:01.630 +03:00 [WRN] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Auth/login responded 401 in 314ms {"RequestId":"0HNGLLLSDIOSJ:00000005","ConnectionId":"0HNGLLLSDIOSJ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:07:13.295 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Admin/seed-users started {"RequestId":"0HNGLLLSDIOSJ:00000006","ConnectionId":"0HNGLLLSDIOSJ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:07:13.302 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/Admin/seed-users responded 401 in 3.9681ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLLSDIOSJ:00000006","ConnectionId":"0HNGLLLSDIOSJ","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:07:13.305 +03:00 [WRN] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Admin/seed-users responded 401 in 9ms {"RequestId":"0HNGLLLSDIOSJ:00000006","ConnectionId":"0HNGLLLSDIOSJ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:07:53.733 +03:00 [INF] [] Shutting down POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:08:15.791 +03:00 [INF] [] Starting POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:08:16.588 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The property 'ShopInventory.Batches' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly. {"EventId":{"Id":10620,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.CollectionWithoutComparer"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:08:16.593 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The property 'ShopUser.Permissions' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly. {"EventId":{"Id":10620,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.CollectionWithoutComparer"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:08:16.629 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'User' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:08:16.631 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'Category' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:08:16.633 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'ShopUser' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:08:17.912 +03:00 [INF] [] POS System API started successfully {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:09:54.436 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Auth/login started {"RequestId":"0HNGLLNGACRJ5:00000002","ConnectionId":"0HNGLLNGACRJ5","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:09:54.787 +03:00 [WRN] [pos_system_api.API.Controllers.AuthController] Login failed for user admin: Invalid credentials {"ActionId":"8109ae1f-2ade-47e9-ae31-455a6986b025","ActionName":"pos_system_api.API.Controllers.AuthController.Login (pos_system_api)","RequestId":"0HNGLLNGACRJ5:00000002","RequestPath":"/api/Auth/login","ConnectionId":"0HNGLLNGACRJ5","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RequestQuery":"","RequestMethod":"POST","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:09:54.818 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/Auth/login responded 401 in 376.6295ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLNGACRJ5:00000002","ConnectionId":"0HNGLLNGACRJ5","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:09:54.822 +03:00 [WRN] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Auth/login responded 401 in 391ms {"RequestId":"0HNGLLNGACRJ5:00000002","ConnectionId":"0HNGLLNGACRJ5","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:10:07.018 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Auth/login started {"RequestId":"0HNGLLNGACRJ5:00000003","ConnectionId":"0HNGLLNGACRJ5","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:10:07.424 +03:00 [WRN] [pos_system_api.API.Controllers.AuthController] Login failed for user john_doe: Invalid credentials {"ActionId":"8109ae1f-2ade-47e9-ae31-455a6986b025","ActionName":"pos_system_api.API.Controllers.AuthController.Login (pos_system_api)","RequestId":"0HNGLLNGACRJ5:00000003","RequestPath":"/api/Auth/login","ConnectionId":"0HNGLLNGACRJ5","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RequestQuery":"","RequestMethod":"POST","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:10:07.429 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/Auth/login responded 401 in 408.6094ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLNGACRJ5:00000003","ConnectionId":"0HNGLLNGACRJ5","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:10:07.432 +03:00 [WRN] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Auth/login responded 401 in 414ms {"RequestId":"0HNGLLNGACRJ5:00000003","ConnectionId":"0HNGLLNGACRJ5","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:11:26.040 +03:00 [INF] [] Shutting down POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:11:33.367 +03:00 [INF] [] Starting POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:11:33.520 +03:00 [FTL] [] Application terminated unexpectedly {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Microsoft.Extensions.Hosting.HostFactoryResolver+HostingListener+StopTheHostException: Exception of type 'Microsoft.Extensions.Hosting.HostFactoryResolver+HostingListener+StopTheHostException' was thrown.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in C:\Users\pc\Documents\My Projects\pos_system_api\Program.cs:line 45
+2025-10-28 02:11:33.549 +03:00 [INF] [] Shutting down POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:11:39.125 +03:00 [INF] [] Starting POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:11:39.268 +03:00 [FTL] [] Application terminated unexpectedly {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Microsoft.Extensions.Hosting.HostFactoryResolver+HostingListener+StopTheHostException: Exception of type 'Microsoft.Extensions.Hosting.HostFactoryResolver+HostingListener+StopTheHostException' was thrown.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in C:\Users\pc\Documents\My Projects\pos_system_api\Program.cs:line 45
+2025-10-28 02:11:39.290 +03:00 [INF] [] Shutting down POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:11:43.003 +03:00 [INF] [] Starting POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:11:43.791 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The property 'ShopInventory.Batches' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly. {"EventId":{"Id":10620,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.CollectionWithoutComparer"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:11:43.796 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The property 'ShopUser.Permissions' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly. {"EventId":{"Id":10620,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.CollectionWithoutComparer"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:11:43.831 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'User' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:11:43.833 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'Category' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:11:43.835 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'ShopUser' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:11:44.708 +03:00 [ERR] [Microsoft.EntityFrameworkCore.Database.Connection] An error occurred using the connection to database 'neondb' on server ''. {"EventId":{"Id":20004,"Name":"Microsoft.EntityFrameworkCore.Database.Connection.ConnectionError"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:11:44.726 +03:00 [ERR] [Microsoft.EntityFrameworkCore.Query] An exception occurred while iterating over the results of a query for context type 'pos_system_api.Infrastructure.Data.ApplicationDbContext'.
+Npgsql.PostgresException (0x80004005): 08P01: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.PostgresDatabaseInfo.LoadBackendTypes(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfo.LoadPostgresInfo(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfoFactory.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlDatabaseInfo.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlConnector.LoadDatabaseInfo(Boolean forceReload, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.OpenNewConnector(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.<Get>g__RentAsync|28_0(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.<Open>g__OpenAsync|45_0(Boolean async, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenAsync(CancellationToken cancellationToken, Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+  Exception data:
+    Severity: FATAL
+    SqlState: 08P01
+    MessageText: server login has been failing, cached error: database "neondb" does not exist (server_login_retry) {"EventId":{"Id":10100,"Name":"Microsoft.EntityFrameworkCore.Query.QueryIterationFailed"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Npgsql.PostgresException (0x80004005): 08P01: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.PostgresDatabaseInfo.LoadBackendTypes(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfo.LoadPostgresInfo(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfoFactory.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlDatabaseInfo.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlConnector.LoadDatabaseInfo(Boolean forceReload, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.OpenNewConnector(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.<Get>g__RentAsync|28_0(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.<Open>g__OpenAsync|45_0(Boolean async, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenAsync(CancellationToken cancellationToken, Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+  Exception data:
+    Severity: FATAL
+    SqlState: 08P01
+    MessageText: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+2025-10-28 02:11:44.735 +03:00 [ERR] [Program] An error occurred while seeding the database. {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Npgsql.PostgresException (0x80004005): 08P01: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.PostgresDatabaseInfo.LoadBackendTypes(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfo.LoadPostgresInfo(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfoFactory.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlDatabaseInfo.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlConnector.LoadDatabaseInfo(Boolean forceReload, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.OpenNewConnector(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.<Get>g__RentAsync|28_0(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.<Open>g__OpenAsync|45_0(Boolean async, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenAsync(CancellationToken cancellationToken, Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at pos_system_api.Infrastructure.Data.Seeders.DatabaseSeeder.SeedAllAsync() in C:\Users\pc\Documents\My Projects\pos_system_api\src\Infrastructure\Data\Seeders\DatabaseSeeder.cs:line 24
+   at Program.<Main>$(String[] args) in C:\Users\pc\Documents\My Projects\pos_system_api\Program.cs:line 57
+  Exception data:
+    Severity: FATAL
+    SqlState: 08P01
+    MessageText: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+2025-10-28 02:11:44.813 +03:00 [INF] [] POS System API started successfully {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:11:57.072 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.html started {"RequestId":"0HNGLLOSRILHQ:00000002","ConnectionId":"0HNGLLOSRILHQ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:11:57.171 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/index.html responded 200 in 92.2775ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLOSRILHQ:00000002","ConnectionId":"0HNGLLOSRILHQ","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:11:57.177 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.html responded 200 in 106ms {"RequestId":"0HNGLLOSRILHQ:00000002","ConnectionId":"0HNGLLOSRILHQ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:11:57.258 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.js started {"RequestId":"0HNGLLOSRILHQ:00000003","ConnectionId":"0HNGLLOSRILHQ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:11:57.263 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/index.js responded 200 in 0.7464ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLOSRILHQ:00000003","ConnectionId":"0HNGLLOSRILHQ","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:11:57.268 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.js responded 200 in 9ms {"RequestId":"0HNGLLOSRILHQ:00000003","ConnectionId":"0HNGLLOSRILHQ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:11:57.605 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/v1/swagger.json started {"RequestId":"0HNGLLOSRILHQ:00000004","ConnectionId":"0HNGLLOSRILHQ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:11:57.769 +03:00 [INF] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/v1/swagger.json responded 200 in 161.3781ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLOSRILHQ:00000004","ConnectionId":"0HNGLLOSRILHQ","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:11:57.773 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/v1/swagger.json responded 200 in 168ms {"RequestId":"0HNGLLOSRILHQ:00000004","ConnectionId":"0HNGLLOSRILHQ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:12:17.096 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Auth/login started {"RequestId":"0HNGLLOSRILHQ:00000005","ConnectionId":"0HNGLLOSRILHQ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:12:17.811 +03:00 [ERR] [Microsoft.EntityFrameworkCore.Database.Connection] An error occurred using the connection to database 'neondb' on server ''. {"EventId":{"Id":20004,"Name":"Microsoft.EntityFrameworkCore.Database.Connection.ConnectionError"},"ActionId":"9120cce8-076d-4cf7-bd48-e5fff65d2513","ActionName":"pos_system_api.API.Controllers.AuthController.Login (pos_system_api)","RequestId":"0HNGLLOSRILHQ:00000005","RequestPath":"/api/Auth/login","ConnectionId":"0HNGLLOSRILHQ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RequestQuery":"","RequestMethod":"POST","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:12:17.816 +03:00 [ERR] [Microsoft.EntityFrameworkCore.Query] An exception occurred while iterating over the results of a query for context type 'pos_system_api.Infrastructure.Data.ApplicationDbContext'.
+Npgsql.PostgresException (0x80004005): 08P01: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.PostgresDatabaseInfo.LoadBackendTypes(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfo.LoadPostgresInfo(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfoFactory.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlDatabaseInfo.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlConnector.LoadDatabaseInfo(Boolean forceReload, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.OpenNewConnector(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.<Get>g__RentAsync|28_0(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.<Open>g__OpenAsync|45_0(Boolean async, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenAsync(CancellationToken cancellationToken, Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+  Exception data:
+    Severity: FATAL
+    SqlState: 08P01
+    MessageText: server login has been failing, cached error: database "neondb" does not exist (server_login_retry) {"EventId":{"Id":10100,"Name":"Microsoft.EntityFrameworkCore.Query.QueryIterationFailed"},"ActionId":"9120cce8-076d-4cf7-bd48-e5fff65d2513","ActionName":"pos_system_api.API.Controllers.AuthController.Login (pos_system_api)","RequestId":"0HNGLLOSRILHQ:00000005","RequestPath":"/api/Auth/login","ConnectionId":"0HNGLLOSRILHQ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RequestQuery":"","RequestMethod":"POST","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Npgsql.PostgresException (0x80004005): 08P01: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.PostgresDatabaseInfo.LoadBackendTypes(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfo.LoadPostgresInfo(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfoFactory.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlDatabaseInfo.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlConnector.LoadDatabaseInfo(Boolean forceReload, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.OpenNewConnector(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.<Get>g__RentAsync|28_0(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.<Open>g__OpenAsync|45_0(Boolean async, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenAsync(CancellationToken cancellationToken, Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+  Exception data:
+    Severity: FATAL
+    SqlState: 08P01
+    MessageText: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+2025-10-28 02:12:17.828 +03:00 [ERR] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP POST /api/Auth/login responded 500 in 730.1690ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLOSRILHQ:00000005","ConnectionId":"0HNGLLOSRILHQ","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Npgsql.PostgresException (0x80004005): 08P01: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.PostgresDatabaseInfo.LoadBackendTypes(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfo.LoadPostgresInfo(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfoFactory.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlDatabaseInfo.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlConnector.LoadDatabaseInfo(Boolean forceReload, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.OpenNewConnector(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.<Get>g__RentAsync|28_0(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.<Open>g__OpenAsync|45_0(Boolean async, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenAsync(CancellationToken cancellationToken, Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at pos_system_api.Infrastructure.Data.Repositories.UserRepository.GetByIdentifierAsync(String identifier, CancellationToken cancellationToken) in C:\Users\pc\Documents\My Projects\pos_system_api\src\Infrastructure\Data\Repositories\UserRepository.cs:line 59
+   at pos_system_api.Core.Application.Auth.Commands.Login.LoginCommandHandler.Handle(LoginCommand request, CancellationToken cancellationToken) in C:\Users\pc\Documents\My Projects\pos_system_api\src\Core\Application\Auth\Commands\Login\LoginCommandHandler.cs:line 31
+   at pos_system_api.Core.Application.Common.Behaviors.ValidationBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in C:\Users\pc\Documents\My Projects\pos_system_api\src\Core\Application\Common\Behaviors\ValidationBehavior.cs:line 0
+   at pos_system_api.API.Controllers.AuthController.Login(LoginRequestDto request) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Controllers\AuthController.cs:line 76
+   at lambda_method26(Closure , Object )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+  Exception data:
+    Severity: FATAL
+    SqlState: 08P01
+    MessageText: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+2025-10-28 02:12:17.845 +03:00 [ERR] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP POST /api/Auth/login failed after 748ms {"RequestId":"0HNGLLOSRILHQ:00000005","ConnectionId":"0HNGLLOSRILHQ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Npgsql.PostgresException (0x80004005): 08P01: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.PostgresDatabaseInfo.LoadBackendTypes(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfo.LoadPostgresInfo(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfoFactory.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlDatabaseInfo.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlConnector.LoadDatabaseInfo(Boolean forceReload, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.OpenNewConnector(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.<Get>g__RentAsync|28_0(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.<Open>g__OpenAsync|45_0(Boolean async, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenAsync(CancellationToken cancellationToken, Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at pos_system_api.Infrastructure.Data.Repositories.UserRepository.GetByIdentifierAsync(String identifier, CancellationToken cancellationToken) in C:\Users\pc\Documents\My Projects\pos_system_api\src\Infrastructure\Data\Repositories\UserRepository.cs:line 59
+   at pos_system_api.Core.Application.Auth.Commands.Login.LoginCommandHandler.Handle(LoginCommand request, CancellationToken cancellationToken) in C:\Users\pc\Documents\My Projects\pos_system_api\src\Core\Application\Auth\Commands\Login\LoginCommandHandler.cs:line 31
+   at pos_system_api.Core.Application.Common.Behaviors.ValidationBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in C:\Users\pc\Documents\My Projects\pos_system_api\src\Core\Application\Common\Behaviors\ValidationBehavior.cs:line 0
+   at pos_system_api.API.Controllers.AuthController.Login(LoginRequestDto request) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Controllers\AuthController.cs:line 76
+   at lambda_method26(Closure , Object )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at pos_system_api.API.Middleware.RequestResponseLoggingMiddleware.InvokeAsync(HttpContext context) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\RequestResponseLoggingMiddleware.cs:line 50
+  Exception data:
+    Severity: FATAL
+    SqlState: 08P01
+    MessageText: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+2025-10-28 02:12:17.857 +03:00 [ERR] [pos_system_api.API.Middleware.GlobalExceptionHandlingMiddleware] Exception handled: PostgresException - 08P01: server login has been failing, cached error: database "neondb" does not exist (server_login_retry) {"RequestId":"0HNGLLOSRILHQ:00000005","RequestPath":"/api/Auth/login","ConnectionId":"0HNGLLOSRILHQ","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Npgsql.PostgresException (0x80004005): 08P01: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.PostgresDatabaseInfo.LoadBackendTypes(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfo.LoadPostgresInfo(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfoFactory.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlDatabaseInfo.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlConnector.LoadDatabaseInfo(Boolean forceReload, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.OpenNewConnector(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.<Get>g__RentAsync|28_0(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.<Open>g__OpenAsync|45_0(Boolean async, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenAsync(CancellationToken cancellationToken, Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at pos_system_api.Infrastructure.Data.Repositories.UserRepository.GetByIdentifierAsync(String identifier, CancellationToken cancellationToken) in C:\Users\pc\Documents\My Projects\pos_system_api\src\Infrastructure\Data\Repositories\UserRepository.cs:line 59
+   at pos_system_api.Core.Application.Auth.Commands.Login.LoginCommandHandler.Handle(LoginCommand request, CancellationToken cancellationToken) in C:\Users\pc\Documents\My Projects\pos_system_api\src\Core\Application\Auth\Commands\Login\LoginCommandHandler.cs:line 31
+   at pos_system_api.Core.Application.Common.Behaviors.ValidationBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in C:\Users\pc\Documents\My Projects\pos_system_api\src\Core\Application\Common\Behaviors\ValidationBehavior.cs:line 0
+   at pos_system_api.API.Controllers.AuthController.Login(LoginRequestDto request) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Controllers\AuthController.cs:line 76
+   at lambda_method26(Closure , Object )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at pos_system_api.API.Middleware.RequestResponseLoggingMiddleware.InvokeAsync(HttpContext context) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\RequestResponseLoggingMiddleware.cs:line 50
+   at pos_system_api.API.Middleware.GlobalExceptionHandlingMiddleware.InvokeAsync(HttpContext context) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\GlobalExceptionHandlingMiddleware.cs:line 30
+  Exception data:
+    Severity: FATAL
+    SqlState: 08P01
+    MessageText: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+2025-10-28 02:12:58.674 +03:00 [INF] [] Shutting down POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:13:04.060 +03:00 [INF] [] Starting POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:13:04.240 +03:00 [FTL] [] Application terminated unexpectedly {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Microsoft.Extensions.Hosting.HostFactoryResolver+HostingListener+StopTheHostException: Exception of type 'Microsoft.Extensions.Hosting.HostFactoryResolver+HostingListener+StopTheHostException' was thrown.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in C:\Users\pc\Documents\My Projects\pos_system_api\Program.cs:line 45
+2025-10-28 02:13:04.270 +03:00 [INF] [] Shutting down POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:13:08.715 +03:00 [INF] [] Starting POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:13:08.879 +03:00 [FTL] [] Application terminated unexpectedly {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Microsoft.Extensions.Hosting.HostFactoryResolver+HostingListener+StopTheHostException: Exception of type 'Microsoft.Extensions.Hosting.HostFactoryResolver+HostingListener+StopTheHostException' was thrown.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in C:\Users\pc\Documents\My Projects\pos_system_api\Program.cs:line 45
+2025-10-28 02:13:08.906 +03:00 [INF] [] Shutting down POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:13:12.177 +03:00 [INF] [] Starting POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:13:12.934 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The property 'ShopInventory.Batches' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly. {"EventId":{"Id":10620,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.CollectionWithoutComparer"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:13:12.938 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The property 'ShopUser.Permissions' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly. {"EventId":{"Id":10620,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.CollectionWithoutComparer"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:13:12.972 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'User' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:13:12.975 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'Category' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:13:12.977 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'ShopUser' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:13:13.833 +03:00 [ERR] [Microsoft.EntityFrameworkCore.Database.Connection] An error occurred using the connection to database 'neondb' on server ''. {"EventId":{"Id":20004,"Name":"Microsoft.EntityFrameworkCore.Database.Connection.ConnectionError"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:13:13.850 +03:00 [ERR] [Microsoft.EntityFrameworkCore.Query] An exception occurred while iterating over the results of a query for context type 'pos_system_api.Infrastructure.Data.ApplicationDbContext'.
+Npgsql.PostgresException (0x80004005): 08P01: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.PostgresDatabaseInfo.LoadBackendTypes(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfo.LoadPostgresInfo(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfoFactory.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlDatabaseInfo.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlConnector.LoadDatabaseInfo(Boolean forceReload, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.OpenNewConnector(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.<Get>g__RentAsync|28_0(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.<Open>g__OpenAsync|45_0(Boolean async, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenAsync(CancellationToken cancellationToken, Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+  Exception data:
+    Severity: FATAL
+    SqlState: 08P01
+    MessageText: server login has been failing, cached error: database "neondb" does not exist (server_login_retry) {"EventId":{"Id":10100,"Name":"Microsoft.EntityFrameworkCore.Query.QueryIterationFailed"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Npgsql.PostgresException (0x80004005): 08P01: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.PostgresDatabaseInfo.LoadBackendTypes(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfo.LoadPostgresInfo(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfoFactory.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlDatabaseInfo.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlConnector.LoadDatabaseInfo(Boolean forceReload, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.OpenNewConnector(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.<Get>g__RentAsync|28_0(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.<Open>g__OpenAsync|45_0(Boolean async, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenAsync(CancellationToken cancellationToken, Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+  Exception data:
+    Severity: FATAL
+    SqlState: 08P01
+    MessageText: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+2025-10-28 02:13:13.861 +03:00 [ERR] [Program] An error occurred while seeding the database. {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Npgsql.PostgresException (0x80004005): 08P01: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.PostgresDatabaseInfo.LoadBackendTypes(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfo.LoadPostgresInfo(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfoFactory.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlDatabaseInfo.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlConnector.LoadDatabaseInfo(Boolean forceReload, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.OpenNewConnector(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.<Get>g__RentAsync|28_0(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.<Open>g__OpenAsync|45_0(Boolean async, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenAsync(CancellationToken cancellationToken, Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at pos_system_api.Infrastructure.Data.Seeders.DatabaseSeeder.SeedAllAsync() in C:\Users\pc\Documents\My Projects\pos_system_api\src\Infrastructure\Data\Seeders\DatabaseSeeder.cs:line 24
+   at Program.<Main>$(String[] args) in C:\Users\pc\Documents\My Projects\pos_system_api\Program.cs:line 57
+  Exception data:
+    Severity: FATAL
+    SqlState: 08P01
+    MessageText: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+2025-10-28 02:13:13.941 +03:00 [INF] [] POS System API started successfully {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:13:59.417 +03:00 [INF] [] Starting POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:13:59.561 +03:00 [FTL] [] Application terminated unexpectedly {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Microsoft.Extensions.Hosting.HostFactoryResolver+HostingListener+StopTheHostException: Exception of type 'Microsoft.Extensions.Hosting.HostFactoryResolver+HostingListener+StopTheHostException' was thrown.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in C:\Users\pc\Documents\My Projects\pos_system_api\Program.cs:line 45
+2025-10-28 02:13:59.583 +03:00 [INF] [] Shutting down POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:14:04.082 +03:00 [INF] [] Starting POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:14:04.233 +03:00 [FTL] [] Application terminated unexpectedly {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Microsoft.Extensions.Hosting.HostFactoryResolver+HostingListener+StopTheHostException: Exception of type 'Microsoft.Extensions.Hosting.HostFactoryResolver+HostingListener+StopTheHostException' was thrown.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in C:\Users\pc\Documents\My Projects\pos_system_api\Program.cs:line 45
+2025-10-28 02:14:04.256 +03:00 [INF] [] Shutting down POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:14:07.521 +03:00 [INF] [] Starting POS System API... {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:14:08.292 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The property 'ShopInventory.Batches' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly. {"EventId":{"Id":10620,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.CollectionWithoutComparer"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:14:08.296 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The property 'ShopUser.Permissions' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly. {"EventId":{"Id":10620,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.CollectionWithoutComparer"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:14:08.330 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'User' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:14:08.332 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'Category' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:14:08.334 +03:00 [WRN] [Microsoft.EntityFrameworkCore.Model.Validation] The 'bool' property 'IsActive' on entity type 'ShopUser' is configured with a database-generated default. This default will always be used for inserts when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead, so that the default will only be used for inserts when the property value is 'null'. {"EventId":{"Id":20601,"Name":"Microsoft.EntityFrameworkCore.Model.Validation.BoolWithDefaultWarning"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:14:09.208 +03:00 [ERR] [Microsoft.EntityFrameworkCore.Database.Connection] An error occurred using the connection to database 'neondb' on server ''. {"EventId":{"Id":20004,"Name":"Microsoft.EntityFrameworkCore.Database.Connection.ConnectionError"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:14:09.223 +03:00 [ERR] [Microsoft.EntityFrameworkCore.Query] An exception occurred while iterating over the results of a query for context type 'pos_system_api.Infrastructure.Data.ApplicationDbContext'.
+Npgsql.PostgresException (0x80004005): 08P01: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.PostgresDatabaseInfo.LoadBackendTypes(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfo.LoadPostgresInfo(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfoFactory.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlDatabaseInfo.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlConnector.LoadDatabaseInfo(Boolean forceReload, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.OpenNewConnector(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.<Get>g__RentAsync|28_0(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.<Open>g__OpenAsync|45_0(Boolean async, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenAsync(CancellationToken cancellationToken, Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+  Exception data:
+    Severity: FATAL
+    SqlState: 08P01
+    MessageText: server login has been failing, cached error: database "neondb" does not exist (server_login_retry) {"EventId":{"Id":10100,"Name":"Microsoft.EntityFrameworkCore.Query.QueryIterationFailed"},"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Npgsql.PostgresException (0x80004005): 08P01: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.PostgresDatabaseInfo.LoadBackendTypes(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfo.LoadPostgresInfo(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfoFactory.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlDatabaseInfo.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlConnector.LoadDatabaseInfo(Boolean forceReload, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.OpenNewConnector(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.<Get>g__RentAsync|28_0(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.<Open>g__OpenAsync|45_0(Boolean async, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenAsync(CancellationToken cancellationToken, Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+  Exception data:
+    Severity: FATAL
+    SqlState: 08P01
+    MessageText: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+2025-10-28 02:14:09.235 +03:00 [ERR] [Program] An error occurred while seeding the database. {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+Npgsql.PostgresException (0x80004005): 08P01: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+   at Npgsql.Internal.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|223_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at Npgsql.PostgresDatabaseInfo.LoadBackendTypes(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfo.LoadPostgresInfo(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.PostgresDatabaseInfoFactory.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlDatabaseInfo.Load(NpgsqlConnector conn, NpgsqlTimeout timeout, Boolean async)
+   at Npgsql.Internal.NpgsqlConnector.LoadDatabaseInfo(Boolean forceReload, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.OpenNewConnector(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.<Get>g__RentAsync|28_0(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.<Open>g__OpenAsync|45_0(Boolean async, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenAsync(CancellationToken cancellationToken, Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at pos_system_api.Infrastructure.Data.Seeders.DatabaseSeeder.SeedAllAsync() in C:\Users\pc\Documents\My Projects\pos_system_api\src\Infrastructure\Data\Seeders\DatabaseSeeder.cs:line 24
+   at Program.<Main>$(String[] args) in C:\Users\pc\Documents\My Projects\pos_system_api\Program.cs:line 57
+  Exception data:
+    Severity: FATAL
+    SqlState: 08P01
+    MessageText: server login has been failing, cached error: database "neondb" does not exist (server_login_retry)
+2025-10-28 02:14:09.313 +03:00 [INF] [] POS System API started successfully {"MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:18:49.520 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.html started {"RequestId":"0HNGLLSNP2TFP:00000002","ConnectionId":"0HNGLLSNP2TFP","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:18:49.612 +03:00 [ERR] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/index.html responded 500 in 84.9441ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLSNP2TFP:00000002","ConnectionId":"0HNGLLSNP2TFP","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+System.TypeInitializationException: The type initializer for 'Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases' threw an exception.
+ ---> System.IO.FileNotFoundException: Could not load file or assembly 'Microsoft.AspNetCore.WebUtilities, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'. The system cannot find the file specified.
+File name: 'Microsoft.AspNetCore.WebUtilities, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases..cctor()
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases.ToStatusBytes(Int32 statusCode, String reasonPhrase)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.Http1OutputProducer.WriteResponseHeadersInternal(BufferWriter`1& writer, Int32 statusCode, String reasonPhrase, HttpResponseHeaders responseHeaders, Boolean autoChunk)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.Http1OutputProducer.WriteResponseHeaders(Int32 statusCode, String reasonPhrase, HttpResponseHeaders responseHeaders, Boolean autoChunk, Boolean appComplete)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProduceStart(Boolean appCompleted)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.InitializeResponseAsync(Int32 firstWriteByteCount)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.Microsoft.AspNetCore.Http.Features.IHttpResponseBodyFeature.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.DefaultHttpResponse.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.HttpResponseWritingExtensions.WriteAsync(HttpResponse response, String text, Encoding encoding, CancellationToken cancellationToken)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.RespondWithFile(HttpResponse response, String fileName)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2025-10-28 02:18:49.623 +03:00 [ERR] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.html failed after 103ms {"RequestId":"0HNGLLSNP2TFP:00000002","ConnectionId":"0HNGLLSNP2TFP","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+System.TypeInitializationException: The type initializer for 'Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases' threw an exception.
+ ---> System.IO.FileNotFoundException: Could not load file or assembly 'Microsoft.AspNetCore.WebUtilities, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'. The system cannot find the file specified.
+File name: 'Microsoft.AspNetCore.WebUtilities, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases..cctor()
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases.ToStatusBytes(Int32 statusCode, String reasonPhrase)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.Http1OutputProducer.WriteResponseHeadersInternal(BufferWriter`1& writer, Int32 statusCode, String reasonPhrase, HttpResponseHeaders responseHeaders, Boolean autoChunk)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.Http1OutputProducer.WriteResponseHeaders(Int32 statusCode, String reasonPhrase, HttpResponseHeaders responseHeaders, Boolean autoChunk, Boolean appComplete)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProduceStart(Boolean appCompleted)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.InitializeResponseAsync(Int32 firstWriteByteCount)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.Microsoft.AspNetCore.Http.Features.IHttpResponseBodyFeature.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.DefaultHttpResponse.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.HttpResponseWritingExtensions.WriteAsync(HttpResponse response, String text, Encoding encoding, CancellationToken cancellationToken)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.RespondWithFile(HttpResponse response, String fileName)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at pos_system_api.API.Middleware.RequestResponseLoggingMiddleware.InvokeAsync(HttpContext context) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\RequestResponseLoggingMiddleware.cs:line 50
+2025-10-28 02:18:49.629 +03:00 [ERR] [pos_system_api.API.Middleware.GlobalExceptionHandlingMiddleware] Exception handled: TypeInitializationException - The type initializer for 'Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases' threw an exception. {"RequestId":"0HNGLLSNP2TFP:00000002","RequestPath":"/Swagger/index.html","ConnectionId":"0HNGLLSNP2TFP","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+System.TypeInitializationException: The type initializer for 'Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases' threw an exception.
+ ---> System.IO.FileNotFoundException: Could not load file or assembly 'Microsoft.AspNetCore.WebUtilities, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'. The system cannot find the file specified.
+File name: 'Microsoft.AspNetCore.WebUtilities, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases..cctor()
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases.ToStatusBytes(Int32 statusCode, String reasonPhrase)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.Http1OutputProducer.WriteResponseHeadersInternal(BufferWriter`1& writer, Int32 statusCode, String reasonPhrase, HttpResponseHeaders responseHeaders, Boolean autoChunk)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.Http1OutputProducer.WriteResponseHeaders(Int32 statusCode, String reasonPhrase, HttpResponseHeaders responseHeaders, Boolean autoChunk, Boolean appComplete)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProduceStart(Boolean appCompleted)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.InitializeResponseAsync(Int32 firstWriteByteCount)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.Microsoft.AspNetCore.Http.Features.IHttpResponseBodyFeature.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.DefaultHttpResponse.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.HttpResponseWritingExtensions.WriteAsync(HttpResponse response, String text, Encoding encoding, CancellationToken cancellationToken)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.RespondWithFile(HttpResponse response, String fileName)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at pos_system_api.API.Middleware.RequestResponseLoggingMiddleware.InvokeAsync(HttpContext context) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\RequestResponseLoggingMiddleware.cs:line 50
+   at pos_system_api.API.Middleware.GlobalExceptionHandlingMiddleware.InvokeAsync(HttpContext context) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\GlobalExceptionHandlingMiddleware.cs:line 30
+2025-10-28 02:18:49.636 +03:00 [ERR] [Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware] An unhandled exception has occurred while executing the request. {"EventId":{"Id":1,"Name":"UnhandledException"},"RequestId":"0HNGLLSNP2TFP:00000002","RequestPath":"/Swagger/index.html","ConnectionId":"0HNGLLSNP2TFP","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+System.InvalidOperationException: Headers are read-only, response has already started.
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpHeaders.ThrowHeadersReadOnlyException()
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpResponseHeaders.Microsoft.AspNetCore.Http.IHeaderDictionary.set_ContentType(StringValues value)
+   at Microsoft.AspNetCore.Http.DefaultHttpResponse.set_ContentType(String value)
+   at pos_system_api.API.Middleware.GlobalExceptionHandlingMiddleware.HandleExceptionAsync(HttpContext context, Exception exception) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\GlobalExceptionHandlingMiddleware.cs:line 55
+   at pos_system_api.API.Middleware.GlobalExceptionHandlingMiddleware.InvokeAsync(HttpContext context) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\GlobalExceptionHandlingMiddleware.cs:line 34
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2025-10-28 02:18:49.640 +03:00 [WRN] [Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware] The response has already started, the error page middleware will not be executed. {"EventId":{"Id":2,"Name":"ResponseStarted"},"RequestId":"0HNGLLSNP2TFP:00000002","RequestPath":"/Swagger/index.html","ConnectionId":"0HNGLLSNP2TFP","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:18:49.644 +03:00 [ERR] [Microsoft.AspNetCore.Server.Kestrel] Connection id "0HNGLLSNP2TFP", Request id "0HNGLLSNP2TFP:00000002": An unhandled exception was thrown by the application. {"EventId":{"Id":13,"Name":"ApplicationError"},"RequestId":"0HNGLLSNP2TFP:00000002","RequestPath":"/Swagger/index.html","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+System.InvalidOperationException: Headers are read-only, response has already started.
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpHeaders.ThrowHeadersReadOnlyException()
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpResponseHeaders.Microsoft.AspNetCore.Http.IHeaderDictionary.set_ContentType(StringValues value)
+   at Microsoft.AspNetCore.Http.DefaultHttpResponse.set_ContentType(String value)
+   at pos_system_api.API.Middleware.GlobalExceptionHandlingMiddleware.HandleExceptionAsync(HttpContext context, Exception exception) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\GlobalExceptionHandlingMiddleware.cs:line 55
+   at pos_system_api.API.Middleware.GlobalExceptionHandlingMiddleware.InvokeAsync(HttpContext context) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\GlobalExceptionHandlingMiddleware.cs:line 34
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+2025-10-28 02:18:49.652 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.html started {"RequestId":"0HNGLLSNP2TFQ:00000002","ConnectionId":"0HNGLLSNP2TFQ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:18:49.656 +03:00 [ERR] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/index.html responded 500 in 0.4674ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLSNP2TFQ:00000002","ConnectionId":"0HNGLLSNP2TFQ","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+System.TypeInitializationException: The type initializer for 'Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases' threw an exception.
+ ---> System.IO.FileNotFoundException: Could not load file or assembly 'Microsoft.AspNetCore.WebUtilities, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'. The system cannot find the file specified.
+File name: 'Microsoft.AspNetCore.WebUtilities, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases..cctor()
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases.ToStatusBytes(Int32 statusCode, String reasonPhrase)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.Http1OutputProducer.WriteResponseHeadersInternal(BufferWriter`1& writer, Int32 statusCode, String reasonPhrase, HttpResponseHeaders responseHeaders, Boolean autoChunk)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.Http1OutputProducer.WriteResponseHeaders(Int32 statusCode, String reasonPhrase, HttpResponseHeaders responseHeaders, Boolean autoChunk, Boolean appComplete)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProduceStart(Boolean appCompleted)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.InitializeResponseAsync(Int32 firstWriteByteCount)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.Microsoft.AspNetCore.Http.Features.IHttpResponseBodyFeature.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.DefaultHttpResponse.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.HttpResponseWritingExtensions.WriteAsync(HttpResponse response, String text, Encoding encoding, CancellationToken cancellationToken)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.RespondWithFile(HttpResponse response, String fileName)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2025-10-28 02:18:49.660 +03:00 [ERR] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.html failed after 7ms {"RequestId":"0HNGLLSNP2TFQ:00000002","ConnectionId":"0HNGLLSNP2TFQ","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+System.TypeInitializationException: The type initializer for 'Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases' threw an exception.
+ ---> System.IO.FileNotFoundException: Could not load file or assembly 'Microsoft.AspNetCore.WebUtilities, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'. The system cannot find the file specified.
+File name: 'Microsoft.AspNetCore.WebUtilities, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases..cctor()
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases.ToStatusBytes(Int32 statusCode, String reasonPhrase)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.Http1OutputProducer.WriteResponseHeadersInternal(BufferWriter`1& writer, Int32 statusCode, String reasonPhrase, HttpResponseHeaders responseHeaders, Boolean autoChunk)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.Http1OutputProducer.WriteResponseHeaders(Int32 statusCode, String reasonPhrase, HttpResponseHeaders responseHeaders, Boolean autoChunk, Boolean appComplete)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProduceStart(Boolean appCompleted)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.InitializeResponseAsync(Int32 firstWriteByteCount)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.Microsoft.AspNetCore.Http.Features.IHttpResponseBodyFeature.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.DefaultHttpResponse.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.HttpResponseWritingExtensions.WriteAsync(HttpResponse response, String text, Encoding encoding, CancellationToken cancellationToken)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.RespondWithFile(HttpResponse response, String fileName)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at pos_system_api.API.Middleware.RequestResponseLoggingMiddleware.InvokeAsync(HttpContext context) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\RequestResponseLoggingMiddleware.cs:line 50
+2025-10-28 02:18:49.664 +03:00 [ERR] [pos_system_api.API.Middleware.GlobalExceptionHandlingMiddleware] Exception handled: TypeInitializationException - The type initializer for 'Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases' threw an exception. {"RequestId":"0HNGLLSNP2TFQ:00000002","RequestPath":"/Swagger/index.html","ConnectionId":"0HNGLLSNP2TFQ","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+System.TypeInitializationException: The type initializer for 'Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases' threw an exception.
+ ---> System.IO.FileNotFoundException: Could not load file or assembly 'Microsoft.AspNetCore.WebUtilities, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'. The system cannot find the file specified.
+File name: 'Microsoft.AspNetCore.WebUtilities, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases..cctor()
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases.ToStatusBytes(Int32 statusCode, String reasonPhrase)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.Http1OutputProducer.WriteResponseHeadersInternal(BufferWriter`1& writer, Int32 statusCode, String reasonPhrase, HttpResponseHeaders responseHeaders, Boolean autoChunk)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.Http1OutputProducer.WriteResponseHeaders(Int32 statusCode, String reasonPhrase, HttpResponseHeaders responseHeaders, Boolean autoChunk, Boolean appComplete)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProduceStart(Boolean appCompleted)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.InitializeResponseAsync(Int32 firstWriteByteCount)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.Microsoft.AspNetCore.Http.Features.IHttpResponseBodyFeature.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.DefaultHttpResponse.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.HttpResponseWritingExtensions.WriteAsync(HttpResponse response, String text, Encoding encoding, CancellationToken cancellationToken)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.RespondWithFile(HttpResponse response, String fileName)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at pos_system_api.API.Middleware.RequestResponseLoggingMiddleware.InvokeAsync(HttpContext context) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\RequestResponseLoggingMiddleware.cs:line 50
+   at pos_system_api.API.Middleware.GlobalExceptionHandlingMiddleware.InvokeAsync(HttpContext context) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\GlobalExceptionHandlingMiddleware.cs:line 30
+2025-10-28 02:18:49.668 +03:00 [ERR] [Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware] An unhandled exception has occurred while executing the request. {"EventId":{"Id":1,"Name":"UnhandledException"},"RequestId":"0HNGLLSNP2TFQ:00000002","RequestPath":"/Swagger/index.html","ConnectionId":"0HNGLLSNP2TFQ","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+System.InvalidOperationException: Headers are read-only, response has already started.
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpHeaders.ThrowHeadersReadOnlyException()
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpResponseHeaders.Microsoft.AspNetCore.Http.IHeaderDictionary.set_ContentType(StringValues value)
+   at Microsoft.AspNetCore.Http.DefaultHttpResponse.set_ContentType(String value)
+   at pos_system_api.API.Middleware.GlobalExceptionHandlingMiddleware.HandleExceptionAsync(HttpContext context, Exception exception) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\GlobalExceptionHandlingMiddleware.cs:line 55
+   at pos_system_api.API.Middleware.GlobalExceptionHandlingMiddleware.InvokeAsync(HttpContext context) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\GlobalExceptionHandlingMiddleware.cs:line 34
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2025-10-28 02:18:49.672 +03:00 [WRN] [Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware] The response has already started, the error page middleware will not be executed. {"EventId":{"Id":2,"Name":"ResponseStarted"},"RequestId":"0HNGLLSNP2TFQ:00000002","RequestPath":"/Swagger/index.html","ConnectionId":"0HNGLLSNP2TFQ","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:18:49.675 +03:00 [ERR] [Microsoft.AspNetCore.Server.Kestrel] Connection id "0HNGLLSNP2TFQ", Request id "0HNGLLSNP2TFQ:00000002": An unhandled exception was thrown by the application. {"EventId":{"Id":13,"Name":"ApplicationError"},"RequestId":"0HNGLLSNP2TFQ:00000002","RequestPath":"/Swagger/index.html","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+System.InvalidOperationException: Headers are read-only, response has already started.
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpHeaders.ThrowHeadersReadOnlyException()
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpResponseHeaders.Microsoft.AspNetCore.Http.IHeaderDictionary.set_ContentType(StringValues value)
+   at Microsoft.AspNetCore.Http.DefaultHttpResponse.set_ContentType(String value)
+   at pos_system_api.API.Middleware.GlobalExceptionHandlingMiddleware.HandleExceptionAsync(HttpContext context, Exception exception) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\GlobalExceptionHandlingMiddleware.cs:line 55
+   at pos_system_api.API.Middleware.GlobalExceptionHandlingMiddleware.InvokeAsync(HttpContext context) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\GlobalExceptionHandlingMiddleware.cs:line 34
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+2025-10-28 02:18:49.679 +03:00 [INF] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.html started {"RequestId":"0HNGLLSNP2TFR:00000002","ConnectionId":"0HNGLLSNP2TFR","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:18:49.682 +03:00 [ERR] [Serilog.AspNetCore.RequestLoggingMiddleware] HTTP GET /Swagger/index.html responded 500 in 0.5786ms {"RequestHost":"localhost:5135","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","RemoteIpAddress":"::1","RequestQuery":"","RequestId":"0HNGLLSNP2TFR:00000002","ConnectionId":"0HNGLLSNP2TFR","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+System.TypeInitializationException: The type initializer for 'Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases' threw an exception.
+ ---> System.IO.FileNotFoundException: Could not load file or assembly 'Microsoft.AspNetCore.WebUtilities, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'. The system cannot find the file specified.
+File name: 'Microsoft.AspNetCore.WebUtilities, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases..cctor()
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases.ToStatusBytes(Int32 statusCode, String reasonPhrase)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.Http1OutputProducer.WriteResponseHeadersInternal(BufferWriter`1& writer, Int32 statusCode, String reasonPhrase, HttpResponseHeaders responseHeaders, Boolean autoChunk)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.Http1OutputProducer.WriteResponseHeaders(Int32 statusCode, String reasonPhrase, HttpResponseHeaders responseHeaders, Boolean autoChunk, Boolean appComplete)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProduceStart(Boolean appCompleted)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.InitializeResponseAsync(Int32 firstWriteByteCount)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.Microsoft.AspNetCore.Http.Features.IHttpResponseBodyFeature.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.DefaultHttpResponse.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.HttpResponseWritingExtensions.WriteAsync(HttpResponse response, String text, Encoding encoding, CancellationToken cancellationToken)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.RespondWithFile(HttpResponse response, String fileName)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2025-10-28 02:18:49.687 +03:00 [ERR] [pos_system_api.API.Middleware.RequestResponseLoggingMiddleware] HTTP GET /Swagger/index.html failed after 7ms {"RequestId":"0HNGLLSNP2TFR:00000002","ConnectionId":"0HNGLLSNP2TFR","RemoteIpAddress":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+System.TypeInitializationException: The type initializer for 'Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases' threw an exception.
+ ---> System.IO.FileNotFoundException: Could not load file or assembly 'Microsoft.AspNetCore.WebUtilities, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'. The system cannot find the file specified.
+File name: 'Microsoft.AspNetCore.WebUtilities, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases..cctor()
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases.ToStatusBytes(Int32 statusCode, String reasonPhrase)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.Http1OutputProducer.WriteResponseHeadersInternal(BufferWriter`1& writer, Int32 statusCode, String reasonPhrase, HttpResponseHeaders responseHeaders, Boolean autoChunk)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.Http1OutputProducer.WriteResponseHeaders(Int32 statusCode, String reasonPhrase, HttpResponseHeaders responseHeaders, Boolean autoChunk, Boolean appComplete)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProduceStart(Boolean appCompleted)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.InitializeResponseAsync(Int32 firstWriteByteCount)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.Microsoft.AspNetCore.Http.Features.IHttpResponseBodyFeature.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.DefaultHttpResponse.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.HttpResponseWritingExtensions.WriteAsync(HttpResponse response, String text, Encoding encoding, CancellationToken cancellationToken)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.RespondWithFile(HttpResponse response, String fileName)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at pos_system_api.API.Middleware.RequestResponseLoggingMiddleware.InvokeAsync(HttpContext context) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\RequestResponseLoggingMiddleware.cs:line 50
+2025-10-28 02:18:49.691 +03:00 [ERR] [pos_system_api.API.Middleware.GlobalExceptionHandlingMiddleware] Exception handled: TypeInitializationException - The type initializer for 'Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases' threw an exception. {"RequestId":"0HNGLLSNP2TFR:00000002","RequestPath":"/Swagger/index.html","ConnectionId":"0HNGLLSNP2TFR","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+System.TypeInitializationException: The type initializer for 'Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases' threw an exception.
+ ---> System.IO.FileNotFoundException: Could not load file or assembly 'Microsoft.AspNetCore.WebUtilities, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'. The system cannot find the file specified.
+File name: 'Microsoft.AspNetCore.WebUtilities, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases..cctor()
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.ReasonPhrases.ToStatusBytes(Int32 statusCode, String reasonPhrase)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.Http1OutputProducer.WriteResponseHeadersInternal(BufferWriter`1& writer, Int32 statusCode, String reasonPhrase, HttpResponseHeaders responseHeaders, Boolean autoChunk)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.Http1OutputProducer.WriteResponseHeaders(Int32 statusCode, String reasonPhrase, HttpResponseHeaders responseHeaders, Boolean autoChunk, Boolean appComplete)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProduceStart(Boolean appCompleted)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.InitializeResponseAsync(Int32 firstWriteByteCount)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.Microsoft.AspNetCore.Http.Features.IHttpResponseBodyFeature.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.DefaultHttpResponse.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.HttpResponseWritingExtensions.WriteAsync(HttpResponse response, String text, Encoding encoding, CancellationToken cancellationToken)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.RespondWithFile(HttpResponse response, String fileName)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at pos_system_api.API.Middleware.RequestResponseLoggingMiddleware.InvokeAsync(HttpContext context) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\RequestResponseLoggingMiddleware.cs:line 50
+   at pos_system_api.API.Middleware.GlobalExceptionHandlingMiddleware.InvokeAsync(HttpContext context) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\GlobalExceptionHandlingMiddleware.cs:line 30
+2025-10-28 02:18:49.695 +03:00 [ERR] [Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware] An unhandled exception has occurred while executing the request. {"EventId":{"Id":1,"Name":"UnhandledException"},"RequestId":"0HNGLLSNP2TFR:00000002","RequestPath":"/Swagger/index.html","ConnectionId":"0HNGLLSNP2TFR","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+System.InvalidOperationException: Headers are read-only, response has already started.
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpHeaders.ThrowHeadersReadOnlyException()
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpResponseHeaders.Microsoft.AspNetCore.Http.IHeaderDictionary.set_ContentType(StringValues value)
+   at Microsoft.AspNetCore.Http.DefaultHttpResponse.set_ContentType(String value)
+   at pos_system_api.API.Middleware.GlobalExceptionHandlingMiddleware.HandleExceptionAsync(HttpContext context, Exception exception) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\GlobalExceptionHandlingMiddleware.cs:line 55
+   at pos_system_api.API.Middleware.GlobalExceptionHandlingMiddleware.InvokeAsync(HttpContext context) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\GlobalExceptionHandlingMiddleware.cs:line 34
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2025-10-28 02:18:49.698 +03:00 [WRN] [Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware] The response has already started, the error page middleware will not be executed. {"EventId":{"Id":2,"Name":"ResponseStarted"},"RequestId":"0HNGLLSNP2TFR:00000002","RequestPath":"/Swagger/index.html","ConnectionId":"0HNGLLSNP2TFR","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+2025-10-28 02:18:49.700 +03:00 [ERR] [Microsoft.AspNetCore.Server.Kestrel] Connection id "0HNGLLSNP2TFR", Request id "0HNGLLSNP2TFR:00000002": An unhandled exception was thrown by the application. {"EventId":{"Id":13,"Name":"ApplicationError"},"RequestId":"0HNGLLSNP2TFR:00000002","RequestPath":"/Swagger/index.html","MachineName":"DESKTOP-CMP5LCV","EnvironmentName":"Development"}
+System.InvalidOperationException: Headers are read-only, response has already started.
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpHeaders.ThrowHeadersReadOnlyException()
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpResponseHeaders.Microsoft.AspNetCore.Http.IHeaderDictionary.set_ContentType(StringValues value)
+   at Microsoft.AspNetCore.Http.DefaultHttpResponse.set_ContentType(String value)
+   at pos_system_api.API.Middleware.GlobalExceptionHandlingMiddleware.HandleExceptionAsync(HttpContext context, Exception exception) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\GlobalExceptionHandlingMiddleware.cs:line 55
+   at pos_system_api.API.Middleware.GlobalExceptionHandlingMiddleware.InvokeAsync(HttpContext context) in C:\Users\pc\Documents\My Projects\pos_system_api\src\API\Middleware\GlobalExceptionHandlingMiddleware.cs:line 34
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)

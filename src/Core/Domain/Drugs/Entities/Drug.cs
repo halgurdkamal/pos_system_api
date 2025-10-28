@@ -27,6 +27,7 @@ public class Drug : BaseEntity
     public Formulation Formulation { get; set; } = new();
     public BasePricing BasePricing { get; set; } = new(); // Suggested pricing only
     public Regulatory Regulatory { get; set; } = new();
+    public PackagingInfo PackagingInfo { get; set; } = new(); // Packaging hierarchy and default sell unit
     
     // NOTE: Inventory, shop-specific pricing, and supplier info are now in ShopInventory entity
 }

@@ -41,6 +41,13 @@ public class ShopInventoryConfiguration : IEntityTypeConfiguration<ShopInventory
         
         builder.Property(si => si.LastRestockDate);
         
+        // Shop-specific packaging configuration
+        builder.Property(si => si.ShopSpecificSellUnit)
+            .HasMaxLength(50);
+        
+        builder.Property(si => si.MinimumSaleQuantity)
+            .HasColumnType("decimal(18,2)");
+        
         // Configure ShopPricing as owned entity
         builder.OwnsOne(si => si.ShopPricing, pricing =>
         {
@@ -68,6 +75,15 @@ public class ShopInventoryConfiguration : IEntityTypeConfiguration<ShopInventory
             
             pricing.Property(p => p.LastPriceUpdate)
                 .HasColumnName("Pricing_LastPriceUpdate");
+            
+            // Configure PackagingLevelPrices as JSONB for PostgreSQL
+            pricing.Property(p => p.PackagingLevelPrices)
+                .HasColumnName("Pricing_PackagingLevelPrices")
+                .HasColumnType("jsonb")
+                .HasConversion(
+                    v => System.Text.Json.JsonSerializer.Serialize(v, (System.Text.Json.JsonSerializerOptions?)null),
+                    v => System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, decimal>>(v, (System.Text.Json.JsonSerializerOptions?)null) ?? new Dictionary<string, decimal>()
+                );
         });
         
         // Configure Batches as owned collection (stored as JSONB for PostgreSQL in EF Core 6)
@@ -98,9 +114,16 @@ public class ShopInventoryConfiguration : IEntityTypeConfiguration<ShopInventory
         // Indexes
         builder.HasIndex(si => si.ShopId);
         builder.HasIndex(si => si.DrugId);
+        builder.HasAlternateKey(si => new { si.ShopId, si.DrugId });
         builder.HasIndex(si => new { si.ShopId, si.DrugId }).IsUnique(); // Composite unique index
         builder.HasIndex(si => si.TotalStock);
         builder.HasIndex(si => si.IsAvailable);
         builder.HasIndex(si => si.LastRestockDate);
+
+        builder.HasMany(si => si.PackagingOverrides)
+            .WithOne()
+            .HasForeignKey(po => new { po.ShopId, po.DrugId })
+            .HasPrincipalKey(si => new { si.ShopId, si.DrugId })
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

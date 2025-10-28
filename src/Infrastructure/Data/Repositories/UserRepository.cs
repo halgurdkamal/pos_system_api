@@ -17,6 +17,8 @@ public class UserRepository : IUserRepository
     public async Task<User?> GetByIdAsync(string userId, CancellationToken cancellationToken = default)
     {
         return await _context.Users
+            .Include(u => u.ShopMemberships)
+                .ThenInclude(sm => sm.Shop)
             .AsNoTracking()
             .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
     }

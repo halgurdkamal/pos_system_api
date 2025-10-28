@@ -25,7 +25,8 @@ public record CreateSalesOrderItemDto
 {
     public string DrugId { get; init; } = string.Empty;
     public int Quantity { get; init; }
-    public decimal UnitPrice { get; init; }
+    public decimal? UnitPrice { get; init; } // Optional - can be auto-populated from packaging level
+    public string? PackagingLevel { get; init; } // e.g., "Box", "Strip" - for auto-pricing
     public decimal? DiscountPercentage { get; init; }
     public string? BatchNumber { get; init; }
 }
@@ -33,13 +34,19 @@ public record CreateSalesOrderItemDto
 public class CreateSalesOrderCommandHandler : IRequestHandler<CreateSalesOrderCommand, SalesOrderDto>
 {
     private readonly ISalesOrderRepository _repository;
+    private readonly IDrugRepository _drugRepository;
+    private readonly IInventoryRepository _inventoryRepository;
     private readonly ILogger<CreateSalesOrderCommandHandler> _logger;
 
     public CreateSalesOrderCommandHandler(
         ISalesOrderRepository repository,
+        IDrugRepository drugRepository,
+        IInventoryRepository inventoryRepository,
         ILogger<CreateSalesOrderCommandHandler> logger)
     {
         _repository = repository;
+        _drugRepository = drugRepository;
+        _inventoryRepository = inventoryRepository;
         _logger = logger;
     }
 
@@ -62,12 +69,20 @@ public class CreateSalesOrderCommandHandler : IRequestHandler<CreateSalesOrderCo
         // Add items
         foreach (var itemDto in request.Items)
         {
+            // Auto-populate price from packaging level if not provided
+            decimal unitPrice = itemDto.UnitPrice ?? await GetUnitPriceFromPackagingLevel(request.ShopId, itemDto.DrugId, itemDto.PackagingLevel, cancellationToken);
+            
+            // Get base units consumed for stock tracking
+            decimal baseUnitsConsumed = await CalculateBaseUnitsConsumed(itemDto.DrugId, itemDto.PackagingLevel, itemDto.Quantity, cancellationToken);
+            
             salesOrder.AddItem(
                 itemDto.DrugId,
                 itemDto.Quantity,
-                itemDto.UnitPrice,
+                unitPrice,
                 itemDto.DiscountPercentage,
-                itemDto.BatchNumber);
+                itemDto.BatchNumber,
+                itemDto.PackagingLevel,
+                baseUnitsConsumed);
         }
 
         // Set tax and discount
@@ -134,7 +149,65 @@ public class CreateSalesOrderCommandHandler : IRequestHandler<CreateSalesOrderCo
             DiscountPercentage = item.DiscountPercentage,
             DiscountAmount = item.DiscountAmount,
             TotalPrice = item.TotalPrice,
-            BatchNumber = item.BatchNumber
+            BatchNumber = item.BatchNumber,
+            PackagingLevelSold = item.PackagingLevelSold,
+            BaseUnitsConsumed = item.BaseUnitsConsumed
         };
+    }
+
+    private async Task<decimal> GetUnitPriceFromPackagingLevel(string shopId, string drugId, string? packagingLevel, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrEmpty(packagingLevel))
+        {
+            throw new ArgumentException("Packaging level must be specified when unit price is not provided");
+        }
+
+        // Get shop-specific inventory for this drug
+        var shopInventory = await _inventoryRepository.GetByShopAndDrugAsync(shopId, drugId, cancellationToken);
+        if (shopInventory == null)
+        {
+            throw new KeyNotFoundException($"Drug {drugId} not found in shop {shopId} inventory");
+        }
+
+        // Get price from shop's packaging-level pricing
+        var price = shopInventory.ShopPricing.GetPackagingLevelPrice(packagingLevel);
+
+        if (price <= 0)
+        {
+            throw new InvalidOperationException($"No selling price defined for packaging level '{packagingLevel}' of drug {drugId} in shop {shopId}");
+        }
+
+        return price;
+    }
+
+    private async Task<decimal> CalculateBaseUnitsConsumed(string drugId, string? packagingLevel, int quantity, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrEmpty(packagingLevel))
+        {
+            // If no packaging level specified, assume quantity is in base units
+            return quantity;
+        }
+
+        var drug = await _drugRepository.GetByIdAsync(drugId, cancellationToken);
+        if (drug == null)
+        {
+            throw new KeyNotFoundException($"Drug {drugId} not found");
+        }
+
+        var packagingInfo = drug.PackagingInfo;
+        if (packagingInfo == null)
+        {
+            // If no packaging info, assume quantity is in base units
+            return quantity;
+        }
+
+        var level = packagingInfo.PackagingLevels.FirstOrDefault(l => l.UnitName.Equals(packagingLevel, StringComparison.OrdinalIgnoreCase));
+        if (level == null)
+        {
+            // If packaging level not found, assume quantity is in base units
+            return quantity;
+        }
+
+        return level.CalculateBaseUnitsFromQuantity(quantity);
     }
 }

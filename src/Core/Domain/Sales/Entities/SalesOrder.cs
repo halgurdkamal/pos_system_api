@@ -112,12 +112,12 @@ public class SalesOrder : BaseEntity
         return $"SO-{timestamp}-{random}";
     }
 
-    public void AddItem(string drugId, int quantity, decimal unitPrice, decimal? discountPercentage = null, string? batchNumber = null)
+    public void AddItem(string drugId, int quantity, decimal unitPrice, decimal? discountPercentage = null, string? batchNumber = null, string? packagingLevelSold = null, decimal baseUnitsConsumed = 0)
     {
         if (Status != SalesOrderStatus.Draft && Status != SalesOrderStatus.Confirmed)
             throw new InvalidOperationException($"Cannot add items to order in status {Status}");
 
-        var item = new SalesOrderItem(Id, drugId, quantity, unitPrice, discountPercentage, batchNumber);
+        var item = new SalesOrderItem(Id, drugId, quantity, unitPrice, discountPercentage, batchNumber, packagingLevelSold, baseUnitsConsumed);
         Items.Add(item);
         RecalculateTotals();
     }
@@ -264,9 +264,9 @@ public class SalesOrder : BaseEntity
 /// </summary>
 public class SalesOrderItem
 {
-    public string Id { get; private set; }
-    public string SalesOrderId { get; private set; }
-    public string DrugId { get; private set; }
+    public string Id { get; private set; } = string.Empty;
+    public string SalesOrderId { get; private set; } = string.Empty;
+    public string DrugId { get; private set; } = string.Empty;
     
     // Order details
     public int Quantity { get; private set; }
@@ -274,6 +274,10 @@ public class SalesOrderItem
     public decimal DiscountPercentage { get; private set; }
     public decimal DiscountAmount { get; private set; }
     public decimal TotalPrice { get; private set; }
+    
+    // Packaging information
+    public string? PackagingLevelSold { get; private set; } // e.g., "Box", "Strip"
+    public decimal BaseUnitsConsumed { get; private set; } // Total base units used
     
     // Batch tracking
     public string? BatchNumber { get; private set; }
@@ -286,7 +290,9 @@ public class SalesOrderItem
         int quantity,
         decimal unitPrice,
         decimal? discountPercentage = null,
-        string? batchNumber = null)
+        string? batchNumber = null,
+        string? packagingLevelSold = null,
+        decimal baseUnitsConsumed = 0)
     {
         Id = Guid.NewGuid().ToString();
         SalesOrderId = salesOrderId;
@@ -295,6 +301,8 @@ public class SalesOrderItem
         UnitPrice = unitPrice;
         DiscountPercentage = discountPercentage ?? 0;
         BatchNumber = batchNumber;
+        PackagingLevelSold = packagingLevelSold;
+        BaseUnitsConsumed = baseUnitsConsumed;
         
         CalculateAmounts();
     }

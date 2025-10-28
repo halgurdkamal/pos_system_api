@@ -56,6 +56,8 @@ public record SalesOrderItemDto
     public decimal DiscountAmount { get; init; }
     public decimal TotalPrice { get; init; }
     public string? BatchNumber { get; init; }
+    public string? PackagingLevelSold { get; init; }
+    public decimal BaseUnitsConsumed { get; init; }
 }
 
 public record SalesOrderSummaryDto

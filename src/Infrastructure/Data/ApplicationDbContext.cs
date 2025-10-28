@@ -23,6 +23,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Shop> Shops { get; set; } = null!;
     public DbSet<Supplier> Suppliers { get; set; } = null!;
     public DbSet<ShopInventory> ShopInventory { get; set; } = null!;
+    public DbSet<ShopPackagingOverride> ShopPackagingOverrides { get; set; } = null!;
     public DbSet<StockAdjustment> StockAdjustments { get; set; } = null!;
     public DbSet<StockTransfer> StockTransfers { get; set; } = null!;
     public DbSet<StockCount> StockCounts { get; set; } = null!;

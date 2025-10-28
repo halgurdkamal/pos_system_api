@@ -127,6 +127,30 @@ public class DrugConfiguration : IEntityTypeConfiguration<Drug>
                 .HasColumnName("ControlSchedule");
         });
 
+        // PackagingInfo (defines how drug is measured and packaged)
+        builder.OwnsOne(d => d.PackagingInfo, packaging =>
+        {
+            packaging.Property(p => p.UnitType)
+                .HasColumnName("PackagingInfo_UnitType")
+                .HasConversion<string>(); // Store enum as string in database
+
+            packaging.Property(p => p.BaseUnit)
+                .HasMaxLength(50)
+                .HasColumnName("PackagingInfo_BaseUnit");
+
+            packaging.Property(p => p.BaseUnitDisplayName)
+                .HasMaxLength(100)
+                .HasColumnName("PackagingInfo_BaseUnitDisplayName");
+
+            packaging.Property(p => p.IsSubdivisible)
+                .HasColumnName("PackagingInfo_IsSubdivisible");
+
+            // PackagingLevels stored as JSONB for flexibility
+            packaging.Property(p => p.PackagingLevels)
+                .HasColumnType("jsonb")
+                .HasColumnName("PackagingInfo_PackagingLevels");
+        });
+
         // NOTE: Inventory and SupplierInfo are now in ShopInventory entity (multi-tenant model)
         
         // Audit fields from BaseEntity

@@ -18,11 +18,30 @@ public class ShopInventory : BaseEntity
     public int ReorderPoint { get; set; } = 50;
     public string StorageLocation { get; set; } = string.Empty;
     
+    // Shop-Specific Packaging Configuration
+    /// <summary>
+    /// Optional override for the default sell unit for this drug in this shop
+    /// If null, uses the Drug's PackagingInfo default sell unit
+    /// Example: Drug default is "Strip", but this shop prefers to sell by "Box"
+    /// </summary>
+    public string? ShopSpecificSellUnit { get; set; }
+    
+    /// <summary>
+    /// Minimum quantity that can be sold at the shop level
+    /// Overrides the packaging level minimum if specified
+    /// </summary>
+    public decimal? MinimumSaleQuantity { get; set; }
+    
     // Batches (owned collection - configured in EF Core)
     public List<Batch> Batches { get; set; } = new();
     
     // Shop-Specific Pricing (owned entity)
     public ShopPricing ShopPricing { get; set; } = new();
+
+    /// <summary>
+    /// Shop-level overrides for packaging quantities, sellability, and pricing.
+    /// </summary>
+    public List<ShopPackagingOverride> PackagingOverrides { get; set; } = new();
     
     // Inventory Status
     public bool IsAvailable { get; set; } = true;
@@ -35,7 +54,9 @@ public class ShopInventory : BaseEntity
         string drugId,
         int reorderPoint,
         string storageLocation,
-        ShopPricing shopPricing)
+        ShopPricing shopPricing,
+        string? shopSpecificSellUnit = null,
+        decimal? minimumSaleQuantity = null)
     {
         Id = $"INV-{Guid.NewGuid().ToString().Substring(0, 12).ToUpper()}";
         ShopId = shopId;
@@ -44,6 +65,8 @@ public class ShopInventory : BaseEntity
         ReorderPoint = reorderPoint;
         StorageLocation = storageLocation;
         ShopPricing = shopPricing;
+        ShopSpecificSellUnit = shopSpecificSellUnit;
+        MinimumSaleQuantity = minimumSaleQuantity;
         CreatedAt = DateTime.UtcNow;
     }
 
@@ -310,6 +333,24 @@ public class ShopInventory : BaseEntity
     public void UpdatePricing(ShopPricing newPricing)
     {
         ShopPricing = newPricing;
+        LastUpdated = DateTime.UtcNow;
+    }
+
+    /// <summary>
+    /// Set or update the shop-specific default sell unit
+    /// </summary>
+    public void SetShopSpecificSellUnit(string? unitName)
+    {
+        ShopSpecificSellUnit = unitName;
+        LastUpdated = DateTime.UtcNow;
+    }
+
+    /// <summary>
+    /// Set minimum sale quantity for this shop
+    /// </summary>
+    public void SetMinimumSaleQuantity(decimal? quantity)
+    {
+        MinimumSaleQuantity = quantity;
         LastUpdated = DateTime.UtcNow;
     }
 }
