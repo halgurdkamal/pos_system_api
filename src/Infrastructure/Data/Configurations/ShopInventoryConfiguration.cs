@@ -125,5 +125,7 @@ public class ShopInventoryConfiguration : IEntityTypeConfiguration<ShopInventory
             .HasForeignKey(po => new { po.ShopId, po.DrugId })
             .HasPrincipalKey(si => new { si.ShopId, si.DrugId })
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Navigation(si => si.PackagingOverrides);
     }
 }

@@ -1,3 +1,4 @@
+using pos_system_api.Core.Domain.Categories.Entities;
 using pos_system_api.Core.Domain.Common;
 using pos_system_api.Core.Domain.Drugs.ValueObjects;
 
@@ -15,7 +16,9 @@ public class Drug : BaseEntity
     public string GenericName { get; set; } = string.Empty;
     public string Manufacturer { get; set; } = string.Empty;
     public string OriginCountry { get; set; } = string.Empty;
-    public string Category { get; set; } = string.Empty;
+    public string CategoryName { get; set; } = string.Empty;
+    public string CategoryId { get; set; } = string.Empty;
+    public Category? Category { get; set; }
     public List<string> ImageUrls { get; set; } = new();
     public string Description { get; set; } = string.Empty;
     public List<string> SideEffects { get; set; } = new();

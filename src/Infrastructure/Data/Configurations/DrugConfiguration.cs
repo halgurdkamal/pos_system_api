@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using pos_system_api.Core.Domain.Categories.Entities;
 using pos_system_api.Core.Domain.Drugs.Entities;
 
 namespace pos_system_api.Infrastructure.Data.Configurations;
@@ -47,8 +48,22 @@ public class DrugConfiguration : IEntityTypeConfiguration<Drug>
         builder.Property(d => d.OriginCountry)
             .HasMaxLength(100);
 
-        builder.Property(d => d.Category)
-            .HasMaxLength(100);
+        builder.Property(d => d.CategoryName)
+            .IsRequired()
+            .HasMaxLength(100)
+            .HasColumnName("Category");
+
+        builder.Property(d => d.CategoryId)
+            .IsRequired()
+            .HasMaxLength(50);
+
+        builder.HasIndex(d => d.CategoryId);
+
+        builder.HasOne(d => d.Category)
+            .WithMany(c => c.Drugs)
+            .HasForeignKey(d => d.CategoryId)
+            .HasPrincipalKey(c => c.CategoryId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(d => d.Description)
             .HasMaxLength(1000);

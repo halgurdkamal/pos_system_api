@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using pos_system_api.Core.Application.Common.Models;
+using pos_system_api.Core.Application.Drugs.Commands.CreateDrug;
 using pos_system_api.Core.Application.Drugs.DTOs;
 using pos_system_api.Core.Application.Drugs.Queries.GetDrug;
 using pos_system_api.Core.Application.Drugs.Queries.GetDrugList;
@@ -23,6 +24,33 @@ public class DrugsController : BaseApiController
     public DrugsController(IMediator mediator)
     {
         _mediator = mediator;
+    }
+
+    /// <summary>
+    /// Create a new drug in the catalog
+    /// </summary>
+    /// <param name="dto">Drug details including packaging information</param>
+    /// <returns>The created drug</returns>
+    [HttpPost]
+    [Authorize(Policy = "AdminOnly")]
+    [ProducesResponseType(typeof(DrugDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    public async Task<ActionResult<DrugDto>> CreateDrug([FromBody] CreateDrugDto dto)
+    {
+        try
+        {
+            var result = await _mediator.Send(new CreateDrugCommand(dto));
+            return CreatedAtAction(nameof(GetDrug), new { id = result.DrugId }, result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { error = ex.Message });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     /// <summary>

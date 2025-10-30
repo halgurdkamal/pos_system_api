@@ -22,13 +22,19 @@ public class Category : BaseEntity
 
     public Category()
     {
-        CategoryId = $"CAT-{Guid.NewGuid().ToString()[..8].ToUpper()}";
+        CategoryId = GenerateCategoryId();
     }
 
-    public Category(string name, string? logoUrl = null, string? description = null) : this()
+    public Category(string name, string? logoUrl = null, string? description = null, string? categoryId = null)
     {
+        CategoryId = !string.IsNullOrWhiteSpace(categoryId) ? categoryId : GenerateCategoryId();
         Name = name;
         LogoUrl = logoUrl;
         Description = description;
+    }
+
+    private static string GenerateCategoryId()
+    {
+        return $"CAT-{Guid.NewGuid().ToString()[..8].ToUpper()}";
     }
 }

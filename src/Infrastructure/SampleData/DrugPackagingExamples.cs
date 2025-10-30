@@ -22,7 +22,8 @@ public static class DrugPackagingExamples
             BrandName = "Amoxil",
             GenericName = "Amoxicillin",
             Manufacturer = "GSK",
-            Category = "Antibiotics",
+            CategoryId = "CAT-ABX",
+            CategoryName = "Antibiotics",
             Formulation = new Formulation
             {
                 Form = "Capsule",
@@ -83,7 +84,8 @@ public static class DrugPackagingExamples
             BrandName = "Cetal Syrup",
             GenericName = "Paracetamol",
             Manufacturer = "Julphar",
-            Category = "Analgesics",
+            CategoryId = "CAT-PAIN",
+            CategoryName = "Pain Relief",
             Formulation = new Formulation
             {
                 Form = "Syrup",
@@ -145,7 +147,8 @@ public static class DrugPackagingExamples
             BrandName = "Hydrocortisone Cream",
             GenericName = "Hydrocortisone",
             Manufacturer = "Spimaco",
-            Category = "Corticosteroids",
+            CategoryId = "CAT-SKIN",
+            CategoryName = "Skin Care",
             Formulation = new Formulation
             {
                 Form = "Cream",
@@ -206,7 +209,8 @@ public static class DrugPackagingExamples
             BrandName = "Ventolin Inhaler",
             GenericName = "Salbutamol",
             Manufacturer = "GSK",
-            Category = "Bronchodilators",
+            CategoryId = "CAT-ALLERGY",
+            CategoryName = "Allergy & Asthma",
             Formulation = new Formulation
             {
                 Form = "Metered Dose Inhaler",
@@ -267,7 +271,8 @@ public static class DrugPackagingExamples
             BrandName = "Aspirin",
             GenericName = "Acetylsalicylic Acid",
             Manufacturer = "Bayer",
-            Category = "Analgesics",
+            CategoryId = "CAT-PAIN",
+            CategoryName = "Pain Relief",
             Formulation = new Formulation
             {
                 Form = "Tablet",

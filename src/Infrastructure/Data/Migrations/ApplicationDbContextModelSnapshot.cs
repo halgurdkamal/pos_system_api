@@ -204,13 +204,16 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<string>("Category")
+                    b.Property<string>("CategoryId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("CategoryName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("CategoryId")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("Category");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -446,8 +449,6 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("ShopId", "DrugId");
-
                     b.HasIndex("DrugId");
 
                     b.HasIndex("IsAvailable");
@@ -470,17 +471,18 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<string>("CustomUnitName")
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
                     b.Property<int?>("CustomLevelOrder")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("CreatedBy")
+                    b.Property<string>("CustomUnitName")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
@@ -1163,6 +1165,9 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("text");
 
+                    b.Property<decimal>("BaseUnitsConsumed")
+                        .HasColumnType("numeric");
+
                     b.Property<string>("BatchNumber")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
@@ -1177,6 +1182,9 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<string>("PackagingLevelSold")
+                        .HasColumnType("text");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
@@ -1479,9 +1487,12 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("pos_system_api.Core.Domain.Drugs.Entities.Drug", b =>
                 {
-                    b.HasOne("pos_system_api.Core.Domain.Categories.Entities.Category", null)
+                    b.HasOne("pos_system_api.Core.Domain.Categories.Entities.Category", "Category")
                         .WithMany("Drugs")
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoryId")
+                        .HasPrincipalKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.OwnsOne("pos_system_api.Core.Domain.Drugs.ValueObjects.BasePricing", "BasePricing", b1 =>
                         {
@@ -1624,6 +1635,8 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
                     b.Navigation("BasePricing")
                         .IsRequired();
 
+                    b.Navigation("Category");
+
                     b.Navigation("Formulation")
                         .IsRequired();
 
@@ -1671,6 +1684,11 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
                                 .HasColumnType("timestamp with time zone")
                                 .HasColumnName("Pricing_LastPriceUpdate");
 
+                            b1.Property<string>("PackagingLevelPrices")
+                                .IsRequired()
+                                .HasColumnType("jsonb")
+                                .HasColumnName("Pricing_PackagingLevelPrices");
+
                             b1.Property<decimal>("SellingPrice")
                                 .HasColumnType("numeric(18,2)")
                                 .HasColumnName("Pricing_SellingPrice");
@@ -1687,8 +1705,6 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
                                 .HasForeignKey("ShopInventoryId");
                         });
 
-                    b.Navigation("PackagingOverrides");
-
                     b.Navigation("ShopPricing")
                         .IsRequired();
                 });
@@ -1698,6 +1714,7 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
                     b.HasOne("pos_system_api.Core.Domain.Inventory.Entities.ShopInventory", null)
                         .WithMany("PackagingOverrides")
                         .HasForeignKey("ShopId", "DrugId")
+                        .HasPrincipalKey("ShopId", "DrugId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -2097,6 +2114,11 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
             modelBuilder.Entity("pos_system_api.Core.Domain.Categories.Entities.Category", b =>
                 {
                     b.Navigation("Drugs");
+                });
+
+            modelBuilder.Entity("pos_system_api.Core.Domain.Inventory.Entities.ShopInventory", b =>
+                {
+                    b.Navigation("PackagingOverrides");
                 });
 
             modelBuilder.Entity("pos_system_api.Core.Domain.PurchaseOrders.Entities.PurchaseOrder", b =>

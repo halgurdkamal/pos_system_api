@@ -79,11 +79,7 @@ public class CategoryRepository : ICategoryRepository
 
     public async Task<int> GetDrugCountAsync(string categoryId, CancellationToken cancellationToken = default)
     {
-        var category = await GetByIdAsync(categoryId, cancellationToken);
-        if (category == null)
-            return 0;
-
         return await _context.Drugs
-            .CountAsync(d => d.Category == category.Name, cancellationToken);
+            .CountAsync(d => d.CategoryId == categoryId, cancellationToken);
     }
 }

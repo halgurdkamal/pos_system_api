@@ -10,6 +10,7 @@ public record DrugListItemDto
     public string BrandName { get; init; } = string.Empty;
     public string GenericName { get; init; } = string.Empty;
     public string Barcode { get; init; } = string.Empty;
+    public string CategoryId { get; init; } = string.Empty;
     public string Category { get; init; } = string.Empty;
     public string? CategoryLogoUrl { get; init; }
     public string? CategoryColorCode { get; init; }
@@ -46,6 +47,7 @@ public record DrugDetailDto
     public string GenericName { get; init; } = string.Empty;
     public string Manufacturer { get; init; } = string.Empty;
     public string OriginCountry { get; init; } = string.Empty;
+    public string CategoryId { get; init; } = string.Empty;
     public string Category { get; init; } = string.Empty;
     public string? CategoryLogoUrl { get; init; }
     public string? CategoryColorCode { get; init; }

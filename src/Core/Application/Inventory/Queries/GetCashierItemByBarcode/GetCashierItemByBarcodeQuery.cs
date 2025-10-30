@@ -46,7 +46,7 @@ public class GetCashierItemByBarcodeQueryHandler : IRequestHandler<GetCashierIte
         }
         
         // Get category details (logo and color)
-        var categoryInfo = await _categoryRepository.GetByNameAsync(drug.Category, cancellationToken);
+        var categoryInfo = await _categoryRepository.GetByIdAsync(drug.CategoryId, cancellationToken);
         
         // Get oldest batch info
         var oldestBatch = shopInventory.Batches.OrderBy(b => b.ExpiryDate).FirstOrDefault();
@@ -62,7 +62,8 @@ public class GetCashierItemByBarcodeQueryHandler : IRequestHandler<GetCashierIte
             BrandName = drug.BrandName,
             GenericName = drug.GenericName,
             Barcode = drug.Barcode,
-            Category = drug.Category,
+            CategoryId = drug.CategoryId,
+            Category = categoryInfo?.Name ?? string.Empty,
             CategoryLogoUrl = categoryInfo?.LogoUrl, // Category logo
             CategoryColorCode = categoryInfo?.ColorCode, // Category color
             Manufacturer = drug.Manufacturer,

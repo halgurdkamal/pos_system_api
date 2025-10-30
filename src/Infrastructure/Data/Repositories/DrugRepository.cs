@@ -20,6 +20,7 @@ public class DrugRepository : IDrugRepository
     public async Task<Drug?> GetByIdAsync(string drugId, CancellationToken cancellationToken = default)
     {
         return await _context.Drugs
+            .Include(d => d.Category)
             .AsNoTracking()
             .FirstOrDefaultAsync(d => d.DrugId == drugId, cancellationToken);
     }
@@ -27,6 +28,7 @@ public class DrugRepository : IDrugRepository
     public async Task<Drug?> GetByBarcodeAsync(string barcode, CancellationToken cancellationToken = default)
     {
         return await _context.Drugs
+            .Include(d => d.Category)
             .AsNoTracking()
             .FirstOrDefaultAsync(d => d.Barcode == barcode, cancellationToken);
     }
@@ -36,6 +38,7 @@ public class DrugRepository : IDrugRepository
         var total = await _context.Drugs.CountAsync(cancellationToken);
         
         var data = await _context.Drugs
+            .Include(d => d.Category)
             .AsNoTracking()
             .OrderBy(d => d.BrandName)
             .Skip((page - 1) * limit)
@@ -70,7 +73,8 @@ public class DrugRepository : IDrugRepository
             existingDrug.GenericName = drug.GenericName;
             existingDrug.Manufacturer = drug.Manufacturer;
             existingDrug.OriginCountry = drug.OriginCountry;
-            existingDrug.Category = drug.Category;
+            existingDrug.CategoryId = drug.CategoryId;
+            existingDrug.CategoryName = drug.CategoryName;
             existingDrug.ImageUrls = drug.ImageUrls;
             existingDrug.Description = drug.Description;
             existingDrug.SideEffects = drug.SideEffects;

@@ -14,6 +14,7 @@ public class DrugDto
     public string GenericName { get; set; } = string.Empty;
     public string Manufacturer { get; set; } = string.Empty;
     public string OriginCountry { get; set; } = string.Empty;
+    public string CategoryId { get; set; } = string.Empty;
     public string Category { get; set; } = string.Empty;
     public List<string> ImageUrls { get; set; } = new();
     public string Description { get; set; } = string.Empty;

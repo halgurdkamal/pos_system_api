@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using MediatR;
 using pos_system_api.Core.Application.Common.Interfaces;
 using pos_system_api.Core.Application.Common.Models;
 using pos_system_api.Core.Application.Inventory.DTOs;
 using Microsoft.EntityFrameworkCore;
+using pos_system_api.Core.Domain.Inventory.Entities;
 
 namespace pos_system_api.Core.Application.Inventory.Queries.GetCashierItems;
 
@@ -48,10 +50,11 @@ public class GetCashierItemsQueryHandler : IRequestHandler<GetCashierItemsQuery,
         
         // Get all categories for logo/color lookup
         var allCategories = await _categoryRepository.GetAllAsync(true, cancellationToken);
-        var categoriesDict = allCategories.ToDictionary(c => c.Name, StringComparer.OrdinalIgnoreCase);
+        var categoriesById = allCategories.ToDictionary(c => c.CategoryId, StringComparer.OrdinalIgnoreCase);
+        var categoriesByName = allCategories.ToDictionary(c => c.Name, StringComparer.OrdinalIgnoreCase);
         
         // Apply search and category filters
-        var query = availableInventory.AsQueryable();
+        IEnumerable<ShopInventory> query = availableInventory;
         
         if (!string.IsNullOrEmpty(request.SearchTerm))
         {
@@ -61,7 +64,7 @@ public class GetCashierItemsQueryHandler : IRequestHandler<GetCashierItemsQuery,
                     drugsDict[inv.DrugId].BrandName.ToLower().Contains(searchLower) ||
                     drugsDict[inv.DrugId].GenericName.ToLower().Contains(searchLower) ||
                     drugsDict[inv.DrugId].Barcode.ToLower().Contains(searchLower) ||
-                    drugsDict[inv.DrugId].Category.ToLower().Contains(searchLower)
+                    (drugsDict[inv.DrugId].Category?.Name ?? drugsDict[inv.DrugId].CategoryName).ToLower().Contains(searchLower)
                 ));
         }
         
@@ -69,7 +72,8 @@ public class GetCashierItemsQueryHandler : IRequestHandler<GetCashierItemsQuery,
         {
             query = query.Where(inv => 
                 drugsDict.ContainsKey(inv.DrugId) && 
-                drugsDict[inv.DrugId].Category.Equals(request.Category, StringComparison.OrdinalIgnoreCase));
+                (drugsDict[inv.DrugId].CategoryId.Equals(request.Category, StringComparison.OrdinalIgnoreCase) ||
+                 (drugsDict[inv.DrugId].Category?.Name ?? drugsDict[inv.DrugId].CategoryName).Equals(request.Category, StringComparison.OrdinalIgnoreCase)));
         }
         
         var filteredInventory = query.ToList();
@@ -93,7 +97,8 @@ public class GetCashierItemsQueryHandler : IRequestHandler<GetCashierItemsQuery,
             var finalPrice = unitPrice * (1 - discount / 100);
             
             // Get category details (logo and color)
-            var categoryInfo = categoriesDict.GetValueOrDefault(drug.Category);
+            var categoryInfo = categoriesById.GetValueOrDefault(drug.CategoryId);
+            categoryInfo ??= categoriesByName.GetValueOrDefault(drug.Category?.Name ?? string.Empty);
             
             return new CashierItemDto
             {
@@ -101,7 +106,8 @@ public class GetCashierItemsQueryHandler : IRequestHandler<GetCashierItemsQuery,
                 BrandName = drug.BrandName,
                 GenericName = drug.GenericName,
                 Barcode = drug.Barcode,
-                Category = drug.Category,
+                CategoryId = drug.CategoryId,
+                Category = drug.Category?.Name ?? string.Empty,
                 CategoryLogoUrl = categoryInfo?.LogoUrl, // Category logo
                 CategoryColorCode = categoryInfo?.ColorCode, // Category color
                 Manufacturer = drug.Manufacturer,

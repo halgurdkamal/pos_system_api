@@ -35,7 +35,7 @@ public class GetDrugDetailQueryHandler : IRequestHandler<GetDrugDetailQuery, Dru
             return null;
 
         // Get category info
-        var categoryInfo = await _categoryRepository.GetByNameAsync(drug.Category, cancellationToken);
+        var categoryInfo = await _categoryRepository.GetByIdAsync(drug.CategoryId, cancellationToken);
 
         // Get ALL shop inventories for this drug
         var shopInventories = await _context.ShopInventory
@@ -100,7 +100,8 @@ public class GetDrugDetailQueryHandler : IRequestHandler<GetDrugDetailQuery, Dru
             GenericName = drug.GenericName,
             Manufacturer = drug.Manufacturer,
             OriginCountry = drug.OriginCountry,
-            Category = drug.Category,
+            CategoryId = drug.CategoryId,
+            Category = categoryInfo?.Name ?? string.Empty,
             CategoryLogoUrl = categoryInfo?.LogoUrl,
             CategoryColorCode = categoryInfo?.ColorCode,
             ImageUrls = drug.ImageUrls,

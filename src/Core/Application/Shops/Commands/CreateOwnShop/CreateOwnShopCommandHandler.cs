@@ -166,17 +166,17 @@ public class CreateOwnShopCommandHandler : IRequestHandler<CreateOwnShopCommand,
             LicenseNumber = shop.LicenseNumber,
             Address = new Common.DTOs.AddressDto
             {
-                Street = shop.Address.Street,
-                City = shop.Address.City,
-                State = shop.Address.State,
-                ZipCode = shop.Address.ZipCode,
-                Country = shop.Address.Country
+                Street = shop.Address?.Street ?? string.Empty,
+                City = shop.Address?.City ?? string.Empty,
+                State = shop.Address?.State ?? string.Empty,
+                ZipCode = shop.Address?.ZipCode ?? string.Empty,
+                Country = shop.Address?.Country ?? string.Empty
             },
             Contact = new Common.DTOs.ContactDto
             {
-                Phone = shop.Contact.Phone,
-                Email = shop.Contact.Email,
-                Website = shop.Contact.Website
+                Phone = shop.Contact?.Phone ?? string.Empty,
+                Email = shop.Contact?.Email ?? string.Empty,
+                Website = shop.Contact?.Website ?? string.Empty
             },
             VatRegistrationNumber = shop.VatRegistrationNumber,
             PharmacyRegistrationNumber = shop.PharmacyRegistrationNumber,

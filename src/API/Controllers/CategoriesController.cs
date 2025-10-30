@@ -41,7 +41,7 @@ public class CategoriesController : BaseApiController
     /// <param name="dto">Category details</param>
     /// <returns>Created category</returns>
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "AdminOnly")]
     [ProducesResponseType(typeof(CategoryDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<CategoryDto>> Create([FromBody] CreateCategoryDto dto)

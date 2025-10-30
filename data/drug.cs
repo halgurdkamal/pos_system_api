@@ -57,7 +57,8 @@ namespace pos_system_api.data
               "genericName": "{{genericName}}",
               "manufacturer": "PharmaGlobal Inc.",
               "originCountry": "Germany",
-              "category": "Cardiovascular",
+              "categoryId": "CAT-CARDIO",
+              "category": "Heart & Blood Pressure",
               "imageUrls": [
                 "{{image[imageIndex]}}"
               ],

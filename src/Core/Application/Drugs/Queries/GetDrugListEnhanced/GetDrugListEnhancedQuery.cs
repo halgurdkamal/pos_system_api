@@ -36,12 +36,12 @@ public class GetDrugListEnhancedQueryHandler : IRequestHandler<GetDrugListEnhanc
         
         // Get categories for logo/color lookup
         var allCategories = await _categoryRepository.GetAllAsync(true, cancellationToken);
-        var categoriesDict = allCategories.ToDictionary(c => c.Name, StringComparer.OrdinalIgnoreCase);
+        var categoriesById = allCategories.ToDictionary(c => c.CategoryId, StringComparer.OrdinalIgnoreCase);
         
         // Map to list DTOs (simplified - stock data would require shop context)
         var items = drugsResult.Data.Select(drug =>
         {
-            var categoryInfo = categoriesDict.GetValueOrDefault(drug.Category);
+            var categoryInfo = categoriesById.GetValueOrDefault(drug.CategoryId);
             
             return new DrugListItemDto
             {
@@ -49,7 +49,8 @@ public class GetDrugListEnhancedQueryHandler : IRequestHandler<GetDrugListEnhanc
                 BrandName = drug.BrandName,
                 GenericName = drug.GenericName,
                 Barcode = drug.Barcode,
-                Category = drug.Category,
+                CategoryId = drug.CategoryId,
+                Category = categoryInfo?.Name ?? drug.CategoryName,
                 CategoryLogoUrl = categoryInfo?.LogoUrl,
                 CategoryColorCode = categoryInfo?.ColorCode,
                 PrimaryImageUrl = drug.ImageUrls.FirstOrDefault(),
@@ -78,7 +79,9 @@ public class GetDrugListEnhancedQueryHandler : IRequestHandler<GetDrugListEnhanc
         
         if (!string.IsNullOrEmpty(request.Category))
         {
-            items = items.Where(d => d.Category.Equals(request.Category, StringComparison.OrdinalIgnoreCase)).ToList();
+            items = items.Where(d =>
+                d.CategoryId.Equals(request.Category, StringComparison.OrdinalIgnoreCase) ||
+                d.Category.Equals(request.Category, StringComparison.OrdinalIgnoreCase)).ToList();
         }
         
         return new PagedResult<DrugListItemDto>
