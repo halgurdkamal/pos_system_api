@@ -217,6 +217,7 @@ public class CreateDrugCommandHandler : IRequestHandler<CreateDrugCommand, DrugD
             Formulation = drug.Formulation,
             BasePricing = drug.BasePricing,
             Regulatory = drug.Regulatory,
+            PackagingInfo = drug.PackagingInfo,
             CreatedAt = drug.CreatedAt,
             CreatedBy = drug.CreatedBy,
             LastUpdated = drug.LastUpdated,

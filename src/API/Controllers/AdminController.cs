@@ -27,6 +27,7 @@ public class AdminController : BaseApiController
     /// </summary>
     /// <returns>Seeding result</returns>
     [HttpPost("seed")]
+    [AllowAnonymous] // Temporarily allow anonymous for seeding during development
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> SeedDatabase()

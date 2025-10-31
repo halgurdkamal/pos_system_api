@@ -27,6 +27,7 @@ public class DrugDto
     public Formulation Formulation { get; set; } = new();
     public BasePricing BasePricing { get; set; } = new();
     public Regulatory Regulatory { get; set; } = new();
+    public PackagingInfo PackagingInfo { get; set; } = new();
     
     // NOTE: Inventory, shop-specific pricing, and supplier info are now in ShopInventory (per-shop)
     

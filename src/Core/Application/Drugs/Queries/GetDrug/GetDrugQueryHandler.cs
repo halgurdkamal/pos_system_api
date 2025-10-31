@@ -49,6 +49,7 @@ public class GetDrugQueryHandler : IRequestHandler<GetDrugQuery, DrugDto?>
             Formulation = drug.Formulation,
             BasePricing = drug.BasePricing,
             Regulatory = drug.Regulatory,
+            PackagingInfo = drug.PackagingInfo,
             // NOTE: Inventory and supplier info are now shop-specific (see ShopInventory)
             CreatedAt = drug.CreatedAt,
             CreatedBy = drug.CreatedBy,

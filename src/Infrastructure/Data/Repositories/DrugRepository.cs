@@ -17,28 +17,38 @@ public class DrugRepository : IDrugRepository
         _context = context;
     }
 
-    public async Task<Drug?> GetByIdAsync(string drugId, CancellationToken cancellationToken = default)
+    public async Task<Drug?> GetByIdAsync(
+        string drugId,
+        CancellationToken cancellationToken = default
+    )
     {
-        return await _context.Drugs
-            .Include(d => d.Category)
+        return await _context
+            .Drugs.Include(d => d.Category)
             .AsNoTracking()
             .FirstOrDefaultAsync(d => d.DrugId == drugId, cancellationToken);
     }
 
-    public async Task<Drug?> GetByBarcodeAsync(string barcode, CancellationToken cancellationToken = default)
+    public async Task<Drug?> GetByBarcodeAsync(
+        string barcode,
+        CancellationToken cancellationToken = default
+    )
     {
-        return await _context.Drugs
-            .Include(d => d.Category)
+        return await _context
+            .Drugs.Include(d => d.Category)
             .AsNoTracking()
             .FirstOrDefaultAsync(d => d.Barcode == barcode, cancellationToken);
     }
 
-    public async Task<PagedResult<Drug>> GetAllAsync(int page, int limit, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<Drug>> GetAllAsync(
+        int page,
+        int limit,
+        CancellationToken cancellationToken = default
+    )
     {
         var total = await _context.Drugs.CountAsync(cancellationToken);
-        
-        var data = await _context.Drugs
-            .Include(d => d.Category)
+
+        var data = await _context
+            .Drugs.Include(d => d.Category)
             .AsNoTracking()
             .OrderBy(d => d.BrandName)
             .Skip((page - 1) * limit)
@@ -52,18 +62,20 @@ public class DrugRepository : IDrugRepository
     {
         drug.CreatedAt = DateTime.UtcNow;
         drug.CreatedBy = "system";
-        
+
         _context.Drugs.Add(drug);
         await _context.SaveChangesAsync(cancellationToken);
-        
+
         return drug;
     }
 
     public async Task<Drug> UpdateAsync(Drug drug, CancellationToken cancellationToken = default)
     {
-        var existingDrug = await _context.Drugs
-            .FirstOrDefaultAsync(d => d.DrugId == drug.DrugId, cancellationToken);
-            
+        var existingDrug = await _context.Drugs.FirstOrDefaultAsync(
+            d => d.DrugId == drug.DrugId,
+            cancellationToken
+        );
+
         if (existingDrug != null)
         {
             // Update properties
@@ -89,22 +101,27 @@ public class DrugRepository : IDrugRepository
 
             await _context.SaveChangesAsync(cancellationToken);
         }
-        
+
         return existingDrug ?? drug;
     }
 
-    public async Task<bool> DeleteAsync(string drugId, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteAsync(
+        string drugId,
+        CancellationToken cancellationToken = default
+    )
     {
-        var drug = await _context.Drugs
-            .FirstOrDefaultAsync(d => d.DrugId == drugId, cancellationToken);
-            
+        var drug = await _context.Drugs.FirstOrDefaultAsync(
+            d => d.DrugId == drugId,
+            cancellationToken
+        );
+
         if (drug != null)
         {
             _context.Drugs.Remove(drug);
             await _context.SaveChangesAsync(cancellationToken);
             return true;
         }
-        
+
         return false;
     }
 }
