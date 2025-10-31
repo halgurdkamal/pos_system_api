@@ -526,8 +526,8 @@ public class InventoryController : BaseApiController
     /// <returns>Cashier-friendly list of available items with all necessary info</returns>
     [HttpGet("shops/{shopId}/pos-items")]
     [Authorize(Policy = "ShopAccess")]
-    [ProducesResponseType(typeof(PagedResult<CashierItemDto>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<PagedResult<CashierItemDto>>> GetPosItems(
+    [ProducesResponseType(typeof(PagedResult<ShopPosItemDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<PagedResult<ShopPosItemDto>>> GetPosItems(
         string shopId,
         [FromQuery] string? searchTerm = null,
         [FromQuery] string? category = null,
@@ -616,7 +616,7 @@ public class InventoryController : BaseApiController
         new(_inventoryRepository, _loggerFactory.CreateLogger<MoveToStorageCommandHandler>());
 
     private GetCashierItemsQueryHandler CreateGetCashierItemsQueryHandler() =>
-        new(_inventoryRepository, _drugRepository, _categoryRepository);
+        new(_inventoryRepository, _drugRepository, _effectivePackagingService);
 
     private GetCashierItemByBarcodeQueryHandler CreateGetCashierItemByBarcodeQueryHandler() =>
         new(_inventoryRepository, _drugRepository, _categoryRepository);
