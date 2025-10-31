@@ -39,7 +39,7 @@ public static class DrugPackagingExamples
         };
 
         // Add packaging levels
-        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null, 
+        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null,
             levelNumber: 1,
             unitName: "Capsule",
             baseUnitQuantity: 1,
@@ -48,7 +48,7 @@ public static class DrugPackagingExamples
             isBreakable: false
         ));
 
-        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null, 
+        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null,
             levelNumber: 2,
             unitName: "Strip",
             baseUnitQuantity: 10, // 10 capsules per strip
@@ -58,7 +58,7 @@ public static class DrugPackagingExamples
             barcode: "6223001234574"
         ));
 
-        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null, 
+        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null,
             levelNumber: 3,
             unitName: "Box",
             baseUnitQuantity: 100, // 10 strips = 100 capsules
@@ -101,7 +101,7 @@ public static class DrugPackagingExamples
         };
 
         // Add packaging levels
-        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null, 
+        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null,
             levelNumber: 1,
             unitName: "ml",
             baseUnitQuantity: 1,
@@ -111,7 +111,7 @@ public static class DrugPackagingExamples
             minimumSaleQuantity: 5 // Must buy at least 5ml
         ));
 
-        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null, 
+        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null,
             levelNumber: 2,
             unitName: "Bottle",
             baseUnitQuantity: 120, // 120ml per bottle
@@ -121,7 +121,7 @@ public static class DrugPackagingExamples
             barcode: "6223002345685"
         ));
 
-        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null, 
+        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null,
             levelNumber: 3,
             unitName: "Box",
             baseUnitQuantity: 1200, // 10 bottles = 1200ml
@@ -164,7 +164,7 @@ public static class DrugPackagingExamples
         };
 
         // Add packaging levels
-        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null, 
+        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null,
             levelNumber: 1,
             unitName: "Gram",
             baseUnitQuantity: 1,
@@ -173,7 +173,7 @@ public static class DrugPackagingExamples
             isBreakable: false
         ));
 
-        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null, 
+        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null,
             levelNumber: 2,
             unitName: "Tube",
             baseUnitQuantity: 15, // 15g per tube
@@ -183,7 +183,7 @@ public static class DrugPackagingExamples
             barcode: "6223003456796"
         ));
 
-        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null, 
+        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null,
             levelNumber: 3,
             unitName: "Box",
             baseUnitQuantity: 75, // 5 tubes = 75g
@@ -226,7 +226,7 @@ public static class DrugPackagingExamples
         };
 
         // Add packaging levels
-        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null, 
+        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null,
             levelNumber: 1,
             unitName: "Puff",
             baseUnitQuantity: 1,
@@ -235,7 +235,7 @@ public static class DrugPackagingExamples
             isBreakable: false
         ));
 
-        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null, 
+        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null,
             levelNumber: 2,
             unitName: "Inhaler",
             baseUnitQuantity: 200, // 200 puffs per inhaler
@@ -245,7 +245,7 @@ public static class DrugPackagingExamples
             barcode: "6223004567906"
         ));
 
-        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null, 
+        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null,
             levelNumber: 3,
             unitName: "Box",
             baseUnitQuantity: 200, // 1 inhaler per retail box
@@ -288,7 +288,7 @@ public static class DrugPackagingExamples
         };
 
         // Add packaging levels
-        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null, 
+        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null,
             levelNumber: 1,
             unitName: "Tablet",
             baseUnitQuantity: 1,
@@ -297,7 +297,7 @@ public static class DrugPackagingExamples
             isBreakable: false
         ));
 
-        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null, 
+        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null,
             levelNumber: 2,
             unitName: "Strip",
             baseUnitQuantity: 10,
@@ -307,7 +307,7 @@ public static class DrugPackagingExamples
             barcode: "6223005678918"
         ));
 
-        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null, 
+        drug.PackagingInfo.AddPackagingLevel(new PackagingLevel(packagingLevelId: null,
             levelNumber: 3,
             unitName: "Box",
             baseUnitQuantity: 100, // 10 strips

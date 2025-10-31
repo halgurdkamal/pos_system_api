@@ -143,7 +143,7 @@ namespace pos_system_api.data
         public static Dictionary<string, object> GetDrugList()
         {
             var drugList = new List<Dictionary<string, object>>();
-            
+
             // Create a list of 20 drugs.
             for (int i = 0; i < 20; i++)
             {
@@ -155,14 +155,14 @@ namespace pos_system_api.data
                     drugList.Add(drug);
                 }
             }
-            return 
+            return
             new Dictionary<string, object>
             {
                 { "page", 1 },
                 { "limit", 20 },
                 { "total", 100 },
                 { "data", drugList }
-            };;
+            }; ;
         }
     }
 }

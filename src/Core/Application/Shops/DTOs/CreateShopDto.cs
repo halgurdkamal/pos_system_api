@@ -12,24 +12,24 @@ public class CreateShopDto
     public string LicenseNumber { get; set; } = string.Empty;
     public string VatRegistrationNumber { get; set; } = string.Empty;
     public string PharmacyRegistrationNumber { get; set; } = string.Empty;
-    
+
     // Contact and Address
     public AddressDto Address { get; set; } = new();
     public ContactDto Contact { get; set; } = new();
-    
+
     // Branding (optional)
     public string? LogoUrl { get; set; }
     public List<string>? ShopImageUrls { get; set; }
     public string? BrandColorPrimary { get; set; }
     public string? BrandColorSecondary { get; set; }
-    
+
     // Configuration (optional, can use defaults)
     public ReceiptConfigurationDto? ReceiptConfig { get; set; }
     public HardwareConfigurationDto? HardwareConfig { get; set; }
-    
+
     // Operating Schedule (optional)
     public Dictionary<string, string>? OperatingHours { get; set; }
-    
+
     // Compliance
     public bool RequiresPrescriptionVerification { get; set; } = true;
     public bool AllowsControlledSubstances { get; set; } = false;

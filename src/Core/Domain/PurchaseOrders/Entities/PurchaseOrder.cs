@@ -50,21 +50,21 @@ public class PurchaseOrder : BaseEntity
     public string SupplierId { get; private set; }
     public PurchaseOrderStatus Status { get; private set; }
     public OrderPriority Priority { get; private set; }
-    
+
     // Financial Information (for dashboard analytics)
     public decimal SubTotal { get; private set; }
     public decimal TaxAmount { get; private set; }
     public decimal ShippingCost { get; private set; }
     public decimal DiscountAmount { get; private set; }
     public decimal TotalAmount { get; private set; }
-    
+
     // Payment & Terms
     public PaymentTerms PaymentTerms { get; private set; }
     public string? CustomPaymentTerms { get; private set; }
     public DateTime? PaymentDueDate { get; private set; }
     public bool IsPaid { get; private set; }
     public DateTime? PaidAt { get; private set; }
-    
+
     // Dates (for tracking and analytics)
     public DateTime OrderDate { get; private set; }
     public DateTime? ExpectedDeliveryDate { get; private set; }
@@ -72,19 +72,19 @@ public class PurchaseOrder : BaseEntity
     public DateTime? ConfirmedAt { get; private set; }
     public DateTime? CompletedAt { get; private set; }
     public DateTime? CancelledAt { get; private set; }
-    
+
     // User Tracking (for audit and performance analytics)
     public new string CreatedBy { get; private set; }
     public string? SubmittedBy { get; private set; }
     public string? ConfirmedBy { get; private set; }
     public string? CancelledBy { get; private set; }
     public string? CancellationReason { get; private set; }
-    
+
     // Additional Information
     public string? Notes { get; private set; }
     public string? DeliveryAddress { get; private set; }
     public string? ReferenceNumber { get; private set; }
-    
+
     // Items
     public List<PurchaseOrderItem> Items { get; private set; } = new();
 
@@ -116,7 +116,7 @@ public class PurchaseOrder : BaseEntity
         Notes = notes;
         DeliveryAddress = deliveryAddress;
         ReferenceNumber = referenceNumber;
-        
+
         SubTotal = 0;
         TaxAmount = 0;
         ShippingCost = 0;
@@ -191,7 +191,7 @@ public class PurchaseOrder : BaseEntity
     {
         SubTotal = Items.Sum(i => i.TotalPrice);
         TotalAmount = SubTotal + TaxAmount + ShippingCost - DiscountAmount;
-        
+
         // Calculate payment due date based on terms
         if (PaymentTerms != PaymentTerms.Custom && SubmittedAt.HasValue)
         {
@@ -278,10 +278,10 @@ public class PurchaseOrder : BaseEntity
     public decimal GetCompletionPercentage()
     {
         if (!Items.Any()) return 0;
-        
+
         var totalOrdered = Items.Sum(i => i.OrderedQuantity);
         var totalReceived = Items.Sum(i => i.ReceivedQuantity);
-        
+
         return totalOrdered > 0 ? (decimal)totalReceived / totalOrdered * 100 : 0;
     }
 
@@ -305,14 +305,14 @@ public class PurchaseOrderItem
     public string Id { get; private set; }
     public string PurchaseOrderId { get; private set; }
     public string DrugId { get; private set; }
-    
+
     // Order details
     public int OrderedQuantity { get; private set; }
     public decimal UnitPrice { get; private set; }
     public decimal DiscountPercentage { get; private set; }
     public decimal DiscountAmount { get; private set; }
     public decimal TotalPrice { get; private set; }
-    
+
     // Receiving tracking (for performance analytics)
     public int ReceivedQuantity { get; private set; }
     public List<ReceiptRecord> Receipts { get; private set; } = new();
@@ -333,7 +333,7 @@ public class PurchaseOrderItem
         UnitPrice = unitPrice;
         DiscountPercentage = discountPercentage ?? 0;
         ReceivedQuantity = 0;
-        
+
         CalculateAmounts();
     }
 
@@ -342,7 +342,7 @@ public class PurchaseOrderItem
         OrderedQuantity = orderedQuantity;
         UnitPrice = unitPrice;
         DiscountPercentage = discountPercentage ?? 0;
-        
+
         CalculateAmounts();
     }
 

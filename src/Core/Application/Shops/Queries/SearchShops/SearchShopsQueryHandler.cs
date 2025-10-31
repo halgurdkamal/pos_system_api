@@ -25,7 +25,7 @@ public class SearchShopsQueryHandler : IRequestHandler<SearchShopsQuery, IEnumer
         }
 
         var shops = await _shopRepository.SearchByNameAsync(request.SearchTerm, cancellationToken);
-        
+
         return shops.Select(ShopMapper.MapToDto).ToList();
     }
 }

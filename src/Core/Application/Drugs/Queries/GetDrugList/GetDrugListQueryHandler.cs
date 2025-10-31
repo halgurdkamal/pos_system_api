@@ -21,7 +21,7 @@ public class GetDrugListQueryHandler : IRequestHandler<GetDrugListQuery, PagedRe
     public async Task<PagedResult<DrugDto>> Handle(GetDrugListQuery request, CancellationToken cancellationToken)
     {
         var result = await _drugRepository.GetAllAsync(request.Page, request.Limit, cancellationToken);
-        
+
         var skip = (request.Page - 1) * request.Limit;
         var skipBeyondTotal = skip >= result.Total;
         if (result.Total > 0 && result.Data.Count == 0 && !skipBeyondTotal)
@@ -30,9 +30,9 @@ public class GetDrugListQueryHandler : IRequestHandler<GetDrugListQuery, PagedRe
                 "Detected drugs in the catalog but none could be materialized. Verify category references for each drug."
             );
         }
-        
+
         var drugDtos = result.Data.Select(MapToDto).ToList();
-        
+
         return new PagedResult<DrugDto>(
             drugDtos,
             result.Page,

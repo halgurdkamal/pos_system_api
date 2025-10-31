@@ -32,7 +32,7 @@ public record UserShopDto
     public bool IsOwner { get; init; }
     public bool IsActive { get; init; }
     public DateTime JoinedDate { get; init; }
-    
+
     // Complete shop details with all configurations
     public ShopDetailsDto? ShopDetails { get; init; }
 }
@@ -45,35 +45,35 @@ public record ShopDetailsDto
     public string LicenseNumber { get; init; } = string.Empty;
     public string? VatRegistrationNumber { get; init; }
     public string? PharmacyRegistrationNumber { get; init; }
-    
+
     // Contact and Address
     public AddressDetailsDto Address { get; init; } = new();
     public ContactDetailsDto Contact { get; init; } = new();
-    
+
     // Branding
     public string? LogoUrl { get; init; }
     public List<string> ShopImageUrls { get; init; } = new();
     public string? BrandColorPrimary { get; init; }
     public string? BrandColorSecondary { get; init; }
-    
+
     // Configuration - This is what you requested for custom shop/printer
     public ReceiptConfigDetailsDto ReceiptConfig { get; init; } = new();
     public HardwareConfigDetailsDto HardwareConfig { get; init; } = new();
-    
+
     // Shop Settings
     public string Currency { get; init; } = "USD";
     public decimal DefaultTaxRate { get; init; }
     public bool AutoReorderEnabled { get; init; }
     public int LowStockAlertThreshold { get; init; }
-    
+
     // Operating Schedule
     public Dictionary<string, string> OperatingHours { get; init; } = new();
-    
+
     // Compliance
     public bool RequiresPrescriptionVerification { get; init; }
     public bool AllowsControlledSubstances { get; init; }
     public List<string> AcceptedInsuranceProviders { get; init; } = new();
-    
+
     // Status
     public string Status { get; init; } = "Active";
     public DateTime RegistrationDate { get; init; }
@@ -120,33 +120,33 @@ public record HardwareConfigDetailsDto
     public string? ReceiptPrinterConnectionType { get; init; }
     public string? ReceiptPrinterIpAddress { get; init; }
     public int? ReceiptPrinterPort { get; init; }
-    
+
     // Barcode Label Printer
     public string? BarcodePrinterName { get; init; }
     public string? BarcodePrinterConnectionType { get; init; }
     public string? BarcodePrinterIpAddress { get; init; }
     public string BarcodeLabelSize { get; init; } = "Small";
-    
+
     // Barcode Scanner
     public string? BarcodeScannerModel { get; init; }
     public string? BarcodeScannerConnectionType { get; init; }
     public bool AutoSubmitOnScan { get; init; } = true;
-    
+
     // Cash Drawer
     public string? CashDrawerModel { get; init; }
     public bool CashDrawerEnabled { get; init; } = true;
     public string? CashDrawerOpenCommand { get; init; }
-    
+
     // Payment Terminal
     public string? PaymentTerminalModel { get; init; }
     public string? PaymentTerminalConnectionType { get; init; }
     public string? PaymentTerminalIpAddress { get; init; }
     public bool IntegratedPayments { get; init; } = false;
-    
+
     // POS Terminal Info
     public string? PosTerminalId { get; init; }
     public string? PosTerminalName { get; init; }
-    
+
     // Customer Display
     public bool CustomerDisplayEnabled { get; init; } = false;
     public string? CustomerDisplayType { get; init; }

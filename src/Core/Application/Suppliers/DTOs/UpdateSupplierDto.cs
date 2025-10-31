@@ -11,18 +11,18 @@ public class UpdateSupplierDto
     public string SupplierType { get; set; } = string.Empty;
     public string ContactNumber { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
-    
+
     // Address
     public AddressDto Address { get; set; } = new();
-    
+
     // Business Terms
     public string PaymentTerms { get; set; } = string.Empty;
     public int DeliveryLeadTime { get; set; }
     public decimal MinimumOrderValue { get; set; }
-    
+
     // Status
     public bool IsActive { get; set; }
-    
+
     // Additional Info
     public string? Website { get; set; }
     public string? TaxId { get; set; }

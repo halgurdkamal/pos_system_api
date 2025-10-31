@@ -24,12 +24,12 @@ public class RequestResponseLoggingMiddleware
     {
         // Start timing
         var stopwatch = Stopwatch.StartNew();
-        
+
         // Get request details
         var requestMethod = context.Request.Method;
         var requestPath = context.Request.Path;
         var requestQuery = context.Request.QueryString.ToString();
-        
+
         // Add request context to logs
         using (LogContext.PushProperty("RequestMethod", requestMethod))
         using (LogContext.PushProperty("RequestPath", requestPath))
@@ -48,17 +48,17 @@ public class RequestResponseLoggingMiddleware
 
                 // Call the next middleware
                 await _next(context);
-                
+
                 stopwatch.Stop();
-                
+
                 // Log response
                 var statusCode = context.Response.StatusCode;
                 var elapsedMs = stopwatch.ElapsedMilliseconds;
-                
+
                 var logLevel = statusCode >= 500 ? LogLevel.Error :
                               statusCode >= 400 ? LogLevel.Warning :
                               LogLevel.Information;
-                
+
                 _logger.Log(
                     logLevel,
                     "HTTP {RequestMethod} {RequestPath}{RequestQuery} responded {StatusCode} in {ElapsedMs}ms",
@@ -67,7 +67,7 @@ public class RequestResponseLoggingMiddleware
                     requestQuery,
                     statusCode,
                     elapsedMs);
-                
+
                 // Log slow requests (> 5 seconds)
                 if (elapsedMs > 5000)
                 {
@@ -82,7 +82,7 @@ public class RequestResponseLoggingMiddleware
             catch (Exception ex)
             {
                 stopwatch.Stop();
-                
+
                 _logger.LogError(
                     ex,
                     "HTTP {RequestMethod} {RequestPath}{RequestQuery} failed after {ElapsedMs}ms",
@@ -90,7 +90,7 @@ public class RequestResponseLoggingMiddleware
                     requestPath,
                     requestQuery,
                     stopwatch.ElapsedMilliseconds);
-                
+
                 throw;
             }
         }

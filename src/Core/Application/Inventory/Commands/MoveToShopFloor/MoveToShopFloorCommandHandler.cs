@@ -31,7 +31,7 @@ public class MoveToShopFloorCommandHandler : IRequestHandler<MoveToShopFloorComm
 
         if (inventory == null)
         {
-            _logger.LogWarning("Inventory not found for drug {DrugId} in shop {ShopId}", 
+            _logger.LogWarning("Inventory not found for drug {DrugId} in shop {ShopId}",
                 request.DrugId, request.ShopId);
             throw new KeyNotFoundException($"Inventory not found for drug {request.DrugId} in shop {request.ShopId}");
         }

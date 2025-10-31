@@ -32,14 +32,14 @@ public class AddStockCommandHandler : IRequestHandler<AddStockCommand, Inventory
         Console.WriteLine($"  ShopId: {request.ShopId}");
         Console.WriteLine($"  DrugId: {request.DrugId}");
         Console.WriteLine($"  SupplierId: {request.SupplierId}");
-        
+
         // Validate that the drug exists
         var drug = await _drugRepository.GetByIdAsync(request.DrugId, cancellationToken);
         if (drug == null)
         {
             throw new InvalidOperationException($"Drug with ID '{request.DrugId}' does not exist. Please verify the drug ID is correct.");
         }
-        
+
         Console.WriteLine($"[AddStockCommandHandler] Drug found: {drug.BrandName}");
 
         // Validate that the supplier exists
@@ -48,7 +48,7 @@ public class AddStockCommandHandler : IRequestHandler<AddStockCommand, Inventory
         {
             throw new InvalidOperationException($"Supplier with ID '{request.SupplierId}' does not exist. Please verify the supplier ID is correct.");
         }
-        
+
         Console.WriteLine($"[AddStockCommandHandler] Supplier found: {supplier.SupplierName}");
 
         // Check if inventory already exists for this shop-drug combination

@@ -100,8 +100,8 @@ public class GlobalExceptionHandlingMiddleware
             Title = "Bad Request",
             Status = (int)HttpStatusCode.BadRequest,
             Detail = exception.Message,
-            Extensions = 
-            { 
+            Extensions =
+            {
                 ["stackTrace"] = exception.StackTrace,
                 ["innerException"] = exception.InnerException?.Message,
                 ["innerStackTrace"] = exception.InnerException?.StackTrace
@@ -150,8 +150,8 @@ public class GlobalExceptionHandlingMiddleware
             Title = "Internal Server Error",
             Status = (int)HttpStatusCode.InternalServerError,
             Detail = exception.Message,
-            Extensions = 
-            { 
+            Extensions =
+            {
                 ["stackTrace"] = exception.StackTrace,
                 ["innerException"] = exception.InnerException?.Message,
                 ["innerStackTrace"] = exception.InnerException?.StackTrace,

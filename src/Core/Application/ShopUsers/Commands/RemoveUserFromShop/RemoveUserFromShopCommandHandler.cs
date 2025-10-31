@@ -24,8 +24,8 @@ public class RemoveUserFromShopCommandHandler : IRequestHandler<RemoveUserFromSh
     {
         // Get the shop user relationship
         var shopUser = await _shopUserRepository.GetByUserAndShopAsync(
-            request.UserId, 
-            request.ShopId, 
+            request.UserId,
+            request.ShopId,
             cancellationToken);
 
         if (shopUser == null)

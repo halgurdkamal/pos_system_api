@@ -15,9 +15,10 @@ public class Category : BaseEntity
     public string? ColorCode { get; set; } // For UI theming (e.g., "#FF5733")
     public int DisplayOrder { get; set; } // For sorting in lists
     public bool IsActive { get; set; } = true;
-    
+
     // Navigation property for drugs in this category
     // Not loaded by default - use explicit Include when needed
+
     public virtual ICollection<Drug> Drugs { get; set; } = new List<Drug>();
 
     public Category()

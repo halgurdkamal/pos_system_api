@@ -71,10 +71,10 @@ public class CreateSalesOrderCommandHandler : IRequestHandler<CreateSalesOrderCo
         {
             // Auto-populate price from packaging level if not provided
             decimal unitPrice = itemDto.UnitPrice ?? await GetUnitPriceFromPackagingLevel(request.ShopId, itemDto.DrugId, itemDto.PackagingLevel, cancellationToken);
-            
+
             // Get base units consumed for stock tracking
             decimal baseUnitsConsumed = await CalculateBaseUnitsConsumed(itemDto.DrugId, itemDto.PackagingLevel, itemDto.Quantity, cancellationToken);
-            
+
             salesOrder.AddItem(
                 itemDto.DrugId,
                 itemDto.Quantity,

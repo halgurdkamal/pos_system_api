@@ -35,19 +35,19 @@ public class JwtTokenService
         if (user.ShopMemberships != null && user.ShopMemberships.Any())
         {
             var activeShops = user.ShopMemberships.Where(sm => sm.IsActive).ToList();
-            
+
             // Add shop IDs as comma-separated claim
             if (activeShops.Any())
             {
                 var shopIds = string.Join(",", activeShops.Select(sm => sm.ShopId));
                 claims.Add(new Claim("shopIds", shopIds));
-                
+
                 // Add shop-specific permissions
                 foreach (var shopMembership in activeShops)
                 {
                     claims.Add(new Claim($"shop:{shopMembership.ShopId}:role", shopMembership.Role.ToString()));
                     claims.Add(new Claim($"shop:{shopMembership.ShopId}:isOwner", shopMembership.IsOwner.ToString()));
-                    
+
                     // Add permissions for this shop
                     foreach (var permission in shopMembership.Permissions)
                     {
@@ -59,7 +59,7 @@ public class JwtTokenService
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
             _configuration["Jwt:SecretKey"] ?? throw new InvalidOperationException("JWT Secret Key not configured")));
-        
+
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
@@ -96,7 +96,7 @@ public class JwtTokenService
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
-        
+
         if (securityToken is not JwtSecurityToken jwtSecurityToken ||
             !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
         {

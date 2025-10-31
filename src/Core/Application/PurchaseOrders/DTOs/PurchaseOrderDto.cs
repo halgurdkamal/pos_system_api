@@ -8,21 +8,21 @@ public record PurchaseOrderDto
     public string SupplierId { get; init; } = string.Empty;
     public string Status { get; init; } = string.Empty;
     public string Priority { get; init; } = string.Empty;
-    
+
     // Financial
     public decimal SubTotal { get; init; }
     public decimal TaxAmount { get; init; }
     public decimal ShippingCost { get; init; }
     public decimal DiscountAmount { get; init; }
     public decimal TotalAmount { get; init; }
-    
+
     // Payment
     public string PaymentTerms { get; init; } = string.Empty;
     public string? CustomPaymentTerms { get; init; }
     public DateTime? PaymentDueDate { get; init; }
     public bool IsPaid { get; init; }
     public DateTime? PaidAt { get; init; }
-    
+
     // Dates
     public DateTime OrderDate { get; init; }
     public DateTime? ExpectedDeliveryDate { get; init; }
@@ -30,22 +30,22 @@ public record PurchaseOrderDto
     public DateTime? ConfirmedAt { get; init; }
     public DateTime? CompletedAt { get; init; }
     public DateTime? CancelledAt { get; init; }
-    
+
     // Users
     public string CreatedBy { get; init; } = string.Empty;
     public string? SubmittedBy { get; init; }
     public string? ConfirmedBy { get; init; }
     public string? CancelledBy { get; init; }
     public string? CancellationReason { get; init; }
-    
+
     // Additional
     public string? Notes { get; init; }
     public string? DeliveryAddress { get; init; }
     public string? ReferenceNumber { get; init; }
-    
+
     // Items
     public List<PurchaseOrderItemDto> Items { get; init; } = new();
-    
+
     // Analytics
     public decimal CompletionPercentage { get; init; }
     public int DaysToDeliver { get; init; }

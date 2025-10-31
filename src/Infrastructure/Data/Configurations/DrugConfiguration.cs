@@ -167,7 +167,7 @@ public class DrugConfiguration : IEntityTypeConfiguration<Drug>
         });
 
         // NOTE: Inventory and SupplierInfo are now in ShopInventory entity (multi-tenant model)
-        
+
         // Audit fields from BaseEntity
         builder.Property(d => d.CreatedAt)
             .IsRequired();

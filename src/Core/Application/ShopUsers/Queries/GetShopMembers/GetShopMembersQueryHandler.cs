@@ -26,8 +26,8 @@ public class GetShopMembersQueryHandler : IRequestHandler<GetShopMembersQuery, L
     public async Task<List<ShopMemberDto>> Handle(GetShopMembersQuery request, CancellationToken cancellationToken)
     {
         var shopUsers = await _shopUserRepository.GetShopMembersAsync(
-            request.ShopId, 
-            request.ActiveOnly, 
+            request.ShopId,
+            request.ActiveOnly,
             cancellationToken);
 
         var shop = await _shopRepository.GetByIdAsync(request.ShopId, cancellationToken);

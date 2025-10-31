@@ -107,10 +107,10 @@ public class ReceiveStockCommandHandler : IRequestHandler<ReceiveStockCommand, P
     {
         // Get existing inventory
         var inventory = await _inventoryRepository.GetByShopAndDrugAsync(shopId, drugId, cancellationToken);
-        
+
         if (inventory == null)
         {
-            _logger.LogWarning("Inventory not found for shop {ShopId} and drug {DrugId}. " + 
+            _logger.LogWarning("Inventory not found for shop {ShopId} and drug {DrugId}. " +
                 "Please create inventory record first.", shopId, drugId);
             return;
         }
@@ -118,9 +118,9 @@ public class ReceiveStockCommandHandler : IRequestHandler<ReceiveStockCommand, P
         // Log the receipt - actual inventory batch management
         // should be done through dedicated StockAdjustment commands
         _logger.LogInformation("Received stock for drug {DrugId} in shop {ShopId}: " +
-            "{Quantity} units in batch {BatchNumber}, expiry {ExpiryDate:yyyy-MM-dd}", 
+            "{Quantity} units in batch {BatchNumber}, expiry {ExpiryDate:yyyy-MM-dd}",
             drugId, shopId, quantity, batchNumber, expiryDate);
-        
+
         // TODO: Integrate with StockAdjustment system to properly track
         // batches, expiry dates, and update inventory totals
     }

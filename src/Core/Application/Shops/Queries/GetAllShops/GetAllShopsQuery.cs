@@ -9,7 +9,7 @@ namespace pos_system_api.Core.Application.Shops.Queries.GetAllShops;
 /// Query to get all shops with pagination and optional status filtering
 /// </summary>
 public record GetAllShopsQuery(
-    int Page = 1, 
-    int Limit = 20, 
+    int Page = 1,
+    int Limit = 20,
     ShopStatus? Status = null
 ) : IRequest<PagedResult<ShopDto>>;

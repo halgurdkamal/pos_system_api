@@ -9,12 +9,12 @@ namespace pos_system_api.Core.Application.Common.Interfaces;
 public interface IDrugRepository
 {
     Task<Drug?> GetByIdAsync(string id, CancellationToken cancellationToken = default);
-    
+
     /// <summary>
     /// Get a drug by its barcode
     /// </summary>
     Task<Drug?> GetByBarcodeAsync(string barcode, CancellationToken cancellationToken = default);
-    
+
     /// <summary>
     /// Get drugs with pagination
     /// </summary>

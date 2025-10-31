@@ -39,7 +39,7 @@ public class ShopMembersController : BaseApiController
     [ProducesResponseType(typeof(List<ShopMemberDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<List<ShopMemberDto>>> GetShopMembers(
-        string shopId, 
+        string shopId,
         [FromQuery] bool activeOnly = true)
     {
         try
@@ -65,7 +65,7 @@ public class ShopMembersController : BaseApiController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<ShopMemberDto>> AddUserToShop(
-        string shopId, 
+        string shopId,
         [FromBody] AddUserToShopDto dto)
     {
         try
@@ -94,8 +94,8 @@ public class ShopMembersController : BaseApiController
                 currentUserId, dto.UserId, shopId);
 
             return CreatedAtAction(
-                nameof(GetShopMembers), 
-                new { shopId }, 
+                nameof(GetShopMembers),
+                new { shopId },
                 member);
         }
         catch (InvalidOperationException ex)
@@ -125,8 +125,8 @@ public class ShopMembersController : BaseApiController
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<ShopMemberDto>> UpdateShopUser(
-        string shopId, 
-        string userId, 
+        string shopId,
+        string userId,
         [FromBody] UpdateShopUserDto dto)
     {
         try
@@ -206,7 +206,7 @@ public class ShopMembersController : BaseApiController
     [HttpGet("/api/users/{userId}/shops")]
     [ProducesResponseType(typeof(List<ShopMemberDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<ShopMemberDto>>> GetUserMemberships(
-        string userId, 
+        string userId,
         [FromQuery] bool activeOnly = true)
     {
         var query = new GetUserMembershipsQuery(userId, activeOnly);

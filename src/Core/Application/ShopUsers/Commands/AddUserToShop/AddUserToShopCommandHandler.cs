@@ -47,10 +47,10 @@ public class AddUserToShopCommandHandler : IRequestHandler<AddUserToShopCommand,
 
         // Check if user is already a member
         var existingMembership = await _shopUserRepository.GetByUserAndShopAsync(
-            request.UserId, 
-            request.ShopId, 
+            request.UserId,
+            request.ShopId,
             cancellationToken);
-        
+
         if (existingMembership != null)
         {
             throw new InvalidOperationException($"User '{user.Username}' is already a member of shop '{shop.ShopName}'");

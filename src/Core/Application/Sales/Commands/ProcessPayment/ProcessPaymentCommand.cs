@@ -40,7 +40,7 @@ public class ProcessPaymentCommandHandler : IRequestHandler<ProcessPaymentComman
 
         // Process payment
         salesOrder.ProcessPayment(paymentMethod, request.AmountPaid, request.PaymentReference);
-        
+
         await _repository.UpdateAsync(salesOrder, cancellationToken);
 
         _logger.LogInformation("Payment processed for order {OrderNumber}: {PaymentMethod} - {AmountPaid:C}",

@@ -16,45 +16,45 @@ public class Shop : BaseEntity
     public string? TaxId { get; set; }
     public string? VatRegistrationNumber { get; set; } // For receipts
     public string? PharmacyRegistrationNumber { get; set; } // Required on pharmacy receipts
-    
+
     // Value Objects (configured as owned entities)
     public Address Address { get; set; } = new();
     public Contact Contact { get; set; } = new();
-    
+
     // Branding & Visual Identity
     public string? LogoUrl { get; set; } // Shop logo for receipts and UI
     public List<string> ShopImageUrls { get; set; } = new(); // Storefront, interior photos
     public string? BrandColorPrimary { get; set; } // Hex color code (e.g., "#007BFF")
     public string? BrandColorSecondary { get; set; }
-    
+
     // Receipt Configuration (owned entity)
     public ReceiptConfiguration ReceiptConfig { get; set; } = new();
-    
+
     // Hardware Configuration (owned entity)
     public HardwareConfiguration HardwareConfig { get; set; } = new();
-    
+
     // Shop Settings
     public string Currency { get; set; } = "USD";
     public decimal DefaultTaxRate { get; set; }
     public bool AutoReorderEnabled { get; set; } = true;
     public int LowStockAlertThreshold { get; set; } = 50;
-    
+
     // Operating Hours (stored as JSON in database)
     public Dictionary<string, string> OperatingHours { get; set; } = new();
-    
+
     // Compliance Settings
     public bool RequiresPrescriptionVerification { get; set; } = true;
     public bool AllowsControlledSubstances { get; set; } = false;
     public List<string> AcceptedInsuranceProviders { get; set; } = new(); // Insurance codes
-    
+
     // Shop Members (Many-to-Many relationship with Users via ShopUser)
     public ICollection<ShopUser> Members { get; set; } = new List<ShopUser>();
-    
+
     // Status
     public ShopStatus Status { get; set; } = ShopStatus.Active;
     public DateTime RegistrationDate { get; set; }
 
-    public Shop() 
+    public Shop()
     {
         RegistrationDate = DateTime.UtcNow;
     }
@@ -114,7 +114,7 @@ public class Shop : BaseEntity
         Status = ShopStatus.Closed;
         LastUpdated = DateTime.UtcNow;
     }
-    
+
     /// <summary>
     /// Get all active members of this shop
     /// </summary>
@@ -122,7 +122,7 @@ public class Shop : BaseEntity
     {
         return Members.Where(m => m.IsActive);
     }
-    
+
     /// <summary>
     /// Get all owners of this shop
     /// </summary>
@@ -130,7 +130,7 @@ public class Shop : BaseEntity
     {
         return Members.Where(m => m.IsOwner && m.IsActive);
     }
-    
+
     /// <summary>
     /// Check if a user is a member of this shop
     /// </summary>

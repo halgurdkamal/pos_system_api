@@ -9,7 +9,7 @@ public enum SystemRole
     /// Super administrator - can access all shops and system settings
     /// </summary>
     SuperAdmin = 0,
-    
+
     /// <summary>
     /// Regular user - access controlled per shop via ShopUser permissions
     /// </summary>

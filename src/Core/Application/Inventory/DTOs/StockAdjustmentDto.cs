@@ -9,18 +9,18 @@ public class StockAdjustmentDto
     public string ShopId { get; set; } = string.Empty;
     public string DrugId { get; set; } = string.Empty;
     public string? BatchNumber { get; set; }
-    
+
     public string AdjustmentType { get; set; } = string.Empty;
     public int QuantityChanged { get; set; }
     public int QuantityBefore { get; set; }
     public int QuantityAfter { get; set; }
-    
+
     public string Reason { get; set; } = string.Empty;
     public string? Notes { get; set; }
-    
+
     public string AdjustedBy { get; set; } = string.Empty;
     public DateTime AdjustedAt { get; set; }
-    
+
     public string? ReferenceId { get; set; }
     public string? ReferenceType { get; set; }
 }

@@ -46,7 +46,7 @@ public class GetDrugDetailQueryHandler : IRequestHandler<GetDrugDetailQuery, Dru
         // Get shop details for inventory
         var shopIds = shopInventories.Select(inv => inv.ShopId).Distinct().ToList();
         var shops = new Dictionary<string, Core.Domain.Shops.Entities.Shop>();
-        
+
         foreach (var shopId in shopIds)
         {
             var shop = await _shopRepository.GetByIdAsync(shopId, cancellationToken);

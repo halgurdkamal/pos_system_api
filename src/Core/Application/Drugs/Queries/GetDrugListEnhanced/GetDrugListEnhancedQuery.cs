@@ -33,16 +33,16 @@ public class GetDrugListEnhancedQueryHandler : IRequestHandler<GetDrugListEnhanc
     {
         // Get paginated drugs
         var drugsResult = await _drugRepository.GetAllAsync(request.Page, request.Limit, cancellationToken);
-        
+
         // Get categories for logo/color lookup
         var allCategories = await _categoryRepository.GetAllAsync(true, cancellationToken);
         var categoriesById = allCategories.ToDictionary(c => c.CategoryId, StringComparer.OrdinalIgnoreCase);
-        
+
         // Map to list DTOs (simplified - stock data would require shop context)
         var items = drugsResult.Data.Select(drug =>
         {
             var categoryInfo = categoriesById.GetValueOrDefault(drug.CategoryId);
-            
+
             return new DrugListItemDto
             {
                 DrugId = drug.Id,
@@ -65,7 +65,7 @@ public class GetDrugListEnhancedQueryHandler : IRequestHandler<GetDrugListEnhanc
                 RequiresPrescription = drug.Regulatory.IsPrescriptionRequired
             };
         }).ToList();
-        
+
         // Apply filters
         if (!string.IsNullOrEmpty(request.SearchTerm))
         {
@@ -76,14 +76,14 @@ public class GetDrugListEnhancedQueryHandler : IRequestHandler<GetDrugListEnhanc
                 d.Barcode.ToLower().Contains(searchLower) ||
                 d.Manufacturer.ToLower().Contains(searchLower)).ToList();
         }
-        
+
         if (!string.IsNullOrEmpty(request.Category))
         {
             items = items.Where(d =>
                 d.CategoryId.Equals(request.Category, StringComparison.OrdinalIgnoreCase) ||
                 d.Category.Equals(request.Category, StringComparison.OrdinalIgnoreCase)).ToList();
         }
-        
+
         return new PagedResult<DrugListItemDto>
         {
             Data = items,

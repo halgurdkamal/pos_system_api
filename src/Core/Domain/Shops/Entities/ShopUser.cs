@@ -13,71 +13,71 @@ public class ShopUser : BaseEntity
     {
         Id = $"SHOPUSER-{Guid.NewGuid().ToString().Substring(0, 8).ToUpper()}";
     }
-    
+
     /// <summary>
     /// User ID reference
     /// </summary>
     public string UserId { get; set; } = string.Empty;
-    
+
     /// <summary>
     /// Navigation property to User
     /// </summary>
     public Auth.Entities.User User { get; set; } = null!;
-    
+
     /// <summary>
     /// Shop ID reference
     /// </summary>
     public string ShopId { get; set; } = string.Empty;
-    
+
     /// <summary>
     /// Navigation property to Shop
     /// </summary>
     public Shop Shop { get; set; } = null!;
-    
+
     /// <summary>
     /// Shop-level role (predefined permission set)
     /// </summary>
     public ShopRole Role { get; set; } = ShopRole.Custom;
-    
+
     /// <summary>
     /// Custom permissions for this user in this shop
     /// Stored as JSON array in database
     /// </summary>
     public List<Permission> Permissions { get; set; } = new();
-    
+
     /// <summary>
     /// Date the user joined this shop
     /// </summary>
     public DateTime JoinedDate { get; set; } = DateTime.UtcNow;
-    
+
     /// <summary>
     /// ID of the user who invited this user to the shop
     /// Null if user is original owner
     /// </summary>
     public string? InvitedBy { get; set; }
-    
+
     /// <summary>
     /// Is this user an owner of the shop?
     /// Shops can have multiple owners
     /// </summary>
     public bool IsOwner { get; set; } = false;
-    
+
     /// <summary>
     /// Is this membership active?
     /// Set to false to revoke access without deleting record (audit trail)
     /// </summary>
     public bool IsActive { get; set; } = true;
-    
+
     /// <summary>
     /// Last date user accessed this shop
     /// </summary>
     public DateTime? LastAccessDate { get; set; }
-    
+
     /// <summary>
     /// Optional notes about this user's role/access
     /// </summary>
     public string? Notes { get; set; }
-    
+
     /// <summary>
     /// Check if user has specific permission in this shop
     /// </summary>
@@ -85,7 +85,7 @@ public class ShopUser : BaseEntity
     {
         return IsActive && Permissions.Contains(permission);
     }
-    
+
     /// <summary>
     /// Check if user has any of the specified permissions
     /// </summary>
@@ -93,7 +93,7 @@ public class ShopUser : BaseEntity
     {
         return IsActive && permissions.Any(p => Permissions.Contains(p));
     }
-    
+
     /// <summary>
     /// Check if user has all of the specified permissions
     /// </summary>
@@ -101,7 +101,7 @@ public class ShopUser : BaseEntity
     {
         return IsActive && permissions.All(p => Permissions.Contains(p));
     }
-    
+
     /// <summary>
     /// Add a permission to this user
     /// </summary>
@@ -112,7 +112,7 @@ public class ShopUser : BaseEntity
             Permissions.Add(permission);
         }
     }
-    
+
     /// <summary>
     /// Remove a permission from this user
     /// </summary>
@@ -120,7 +120,7 @@ public class ShopUser : BaseEntity
     {
         Permissions.Remove(permission);
     }
-    
+
     /// <summary>
     /// Set permissions based on a role
     /// </summary>

@@ -17,7 +17,7 @@ public class PasswordHasher
     {
         // Generate salt
         var salt = RandomNumberGenerator.GetBytes(SaltSize);
-        
+
         // Hash password
         var hash = Rfc2898DeriveBytes.Pbkdf2(
             Encoding.UTF8.GetBytes(password),

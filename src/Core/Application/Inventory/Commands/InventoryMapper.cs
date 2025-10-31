@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using pos_system_api.Core.Application.Inventory.DTOs;
 using pos_system_api.Core.Domain.Inventory.Entities;
 
@@ -37,15 +38,29 @@ public static class InventoryMapper
                 Location = b.Location.ToString(),
                 StorageLocation = b.StorageLocation
             }).ToList(),
-            ShopPricing = new ShopPricingDto
-            {
-                CostPrice = inventory.ShopPricing.CostPrice,
-                SellingPrice = inventory.ShopPricing.SellingPrice,
-                Currency = inventory.ShopPricing.Currency,
-                TaxRate = inventory.ShopPricing.TaxRate
-            },
+            ShopPricing = MapPricing(inventory.ShopPricing),
+            Packaging = null,
             CreatedAt = inventory.CreatedAt,
             UpdatedAt = inventory.LastUpdated ?? inventory.CreatedAt
+        };
+    }
+
+    private static ShopPricingDto MapPricing(pos_system_api.Core.Domain.Inventory.ValueObjects.ShopPricing pricing)
+    {
+        var packagingPrices = pricing.PackagingLevelPrices ?? new Dictionary<string, decimal>();
+        var finalPrice = pricing.GetFinalPrice();
+
+        return new ShopPricingDto
+        {
+            CostPrice = pricing.CostPrice,
+            SellingPrice = pricing.SellingPrice,
+            Discount = pricing.Discount,
+            Currency = pricing.Currency,
+            TaxRate = pricing.TaxRate,
+            ProfitMargin = finalPrice - pricing.CostPrice,
+            ProfitMarginPercentage = pricing.GetProfitMargin(),
+            LastPriceUpdate = pricing.LastPriceUpdate,
+            PackagingLevelPrices = new Dictionary<string, decimal>(packagingPrices)
         };
     }
 }

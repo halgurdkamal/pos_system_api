@@ -1,6 +1,9 @@
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Threading;
+using pos_system_api.Core.Application.Common.Interfaces;
 using pos_system_api.Core.Application.Common.Models;
 using pos_system_api.Core.Application.Inventory.Commands.AddStock;
 using pos_system_api.Core.Application.Inventory.Commands.ReduceStock;
@@ -8,14 +11,16 @@ using pos_system_api.Core.Application.Inventory.Commands.UpdatePricing;
 using pos_system_api.Core.Application.Inventory.Commands.UpdateReorderPoint;
 using pos_system_api.Core.Application.Inventory.Commands.UpdatePackagingPricing;
 using pos_system_api.Core.Application.Inventory.Commands.PackagingOverrides;
+using pos_system_api.Core.Application.Inventory.Commands.MoveToShopFloor;
+using pos_system_api.Core.Application.Inventory.Commands.MoveToStorage;
 using pos_system_api.Core.Application.Inventory.DTOs;
+using pos_system_api.Core.Application.Inventory.Services;
 using pos_system_api.Core.Application.Inventory.Queries.GetExpiringBatches;
 using pos_system_api.Core.Application.Inventory.Queries.GetLowStock;
 using pos_system_api.Core.Application.Inventory.Queries.GetShopInventory;
 using pos_system_api.Core.Application.Inventory.Queries.GetTotalStockValue;
 using pos_system_api.Core.Application.Inventory.Queries.GetCashierItems;
 using pos_system_api.Core.Application.Inventory.Queries.GetCashierItemByBarcode;
-using pos_system_api.Core.Application.Inventory.Queries.GetEffectivePackaging;
 
 namespace pos_system_api.API.Controllers;
 
@@ -28,11 +33,36 @@ namespace pos_system_api.API.Controllers;
 // [Authorize(Policy = "ShopAccess")] // All inventory endpoints require shop-specific access
 public class InventoryController : BaseApiController
 {
-    private readonly IMediator _mediator;
+    private readonly IInventoryRepository _inventoryRepository;
+    private readonly IDrugRepository _drugRepository;
+    private readonly ISupplierRepository _supplierRepository;
+    private readonly IStockAdjustmentRepository _stockAdjustmentRepository;
+    private readonly IShopPackagingOverrideRepository _packagingOverrideRepository;
+    private readonly IEffectivePackagingService _effectivePackagingService;
+    private readonly ICategoryRepository _categoryRepository;
+    private readonly ILoggerFactory _loggerFactory;
+    private readonly ILogger<InventoryController> _logger;
 
-    public InventoryController(IMediator mediator)
+    public InventoryController(
+        IInventoryRepository inventoryRepository,
+        IDrugRepository drugRepository,
+        ISupplierRepository supplierRepository,
+        IStockAdjustmentRepository stockAdjustmentRepository,
+        IShopPackagingOverrideRepository packagingOverrideRepository,
+        IEffectivePackagingService effectivePackagingService,
+        ICategoryRepository categoryRepository,
+        ILoggerFactory loggerFactory,
+        ILogger<InventoryController> logger)
     {
-        _mediator = mediator;
+        _inventoryRepository = inventoryRepository;
+        _drugRepository = drugRepository;
+        _supplierRepository = supplierRepository;
+        _stockAdjustmentRepository = stockAdjustmentRepository;
+        _packagingOverrideRepository = packagingOverrideRepository;
+        _effectivePackagingService = effectivePackagingService;
+        _categoryRepository = categoryRepository;
+        _loggerFactory = loggerFactory;
+        _logger = logger;
     }
 
     /// <summary>
@@ -45,7 +75,8 @@ public class InventoryController : BaseApiController
     {
         try
         {
-            var result = await _mediator.Send(new GetEffectivePackagingQuery(shopId, drugId));
+            var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
+            var result = await _effectivePackagingService.GetEffectivePackagingAsync(shopId, drugId, cancellationToken);
             return Ok(result);
         }
         catch (KeyNotFoundException ex)
@@ -67,7 +98,10 @@ public class InventoryController : BaseApiController
     {
         try
         {
-            var result = await _mediator.Send(new CreatePackagingOverrideCommand(shopId, drugId, dto));
+            var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
+            var handler = CreatePackagingOverrideHandler();
+            var command = new CreatePackagingOverrideCommand(shopId, drugId, dto);
+            var result = await handler.Handle(command, cancellationToken);
             return Ok(result);
         }
         catch (KeyNotFoundException ex)
@@ -95,7 +129,10 @@ public class InventoryController : BaseApiController
     {
         try
         {
-            var result = await _mediator.Send(new UpdatePackagingLevelCommand(shopId, drugId, levelId, dto));
+            var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
+            var handler = CreateUpdatePackagingLevelHandler();
+            var command = new UpdatePackagingLevelCommand(shopId, drugId, levelId, dto);
+            var result = await handler.Handle(command, cancellationToken);
             return Ok(result);
         }
         catch (KeyNotFoundException ex)
@@ -121,6 +158,8 @@ public class InventoryController : BaseApiController
     {
         try
         {
+            var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
+            var handler = CreateAddStockHandler();
             var command = new AddStockCommand(
                 shopId,
                 dto.DrugId,
@@ -132,10 +171,12 @@ public class InventoryController : BaseApiController
                 dto.SellingPrice,
                 dto.StorageLocation
             );
-            var result = await _mediator.Send(command);
+            var result = await handler.Handle(command, cancellationToken);
             return CreatedAtAction(
-                nameof(GetShopInventory), 
-                new { shopId = result.ShopId }, 
+                nameof(GetShopInventory),
+
+                new { shopId = result.ShopId },
+
                 result
             );
         }
@@ -157,14 +198,18 @@ public class InventoryController : BaseApiController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<InventoryDto>> ReduceStock(
-        string shopId, 
-        string drugId, 
+        string shopId,
+
+        string drugId,
+
         [FromBody] ReduceStockDto dto)
     {
         try
         {
+            var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
+            var handler = CreateReduceStockHandler();
             var command = new ReduceStockCommand(shopId, drugId, dto.Quantity);
-            var result = await _mediator.Send(command);
+            var result = await handler.Handle(command, cancellationToken);
             return Ok(result);
         }
         catch (InvalidOperationException ex)
@@ -186,20 +231,27 @@ public class InventoryController : BaseApiController
     [ProducesResponseType(typeof(InventoryDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<InventoryDto>> UpdatePricing(
-        string shopId, 
-        string drugId, 
+        string shopId,
+
+        string drugId,
+
         [FromBody] UpdatePricingDto dto)
     {
         try
         {
+            var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
+            var handler = CreateUpdatePricingHandler();
             var command = new UpdatePricingCommand(
-                shopId, 
-                drugId, 
-                dto.CostPrice, 
-                dto.SellingPrice, 
+                shopId,
+                drugId,
+
+                dto.CostPrice,
+
+                dto.SellingPrice,
+
                 dto.TaxRate
             );
-            var result = await _mediator.Send(command);
+            var result = await handler.Handle(command, cancellationToken);
             return Ok(result);
         }
         catch (InvalidOperationException ex)
@@ -220,14 +272,18 @@ public class InventoryController : BaseApiController
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<InventoryDto>> UpdateReorderPoint(
-        string shopId, 
-        string drugId, 
+        string shopId,
+
+        string drugId,
+
         [FromBody] UpdateReorderPointDto dto)
     {
         try
         {
+            var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
+            var handler = CreateUpdateReorderPointHandler();
             var command = new UpdateReorderPointCommand(shopId, drugId, dto.ReorderPoint);
-            var result = await _mediator.Send(command);
+            var result = await handler.Handle(command, cancellationToken);
             return Ok(result);
         }
         catch (InvalidOperationException ex)
@@ -257,14 +313,54 @@ public class InventoryController : BaseApiController
     {
         try
         {
+            var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
+            var handler = CreateUpdatePackagingPricingHandler();
             var command = new UpdatePackagingPricingCommand(shopId, drugId, packagingPrices);
-            var result = await _mediator.Send(command);
+            var result = await handler.Handle(command, cancellationToken);
             return Ok(result);
         }
         catch (InvalidOperationException ex)
         {
             return NotFoundWithDetails(ex);
         }
+    }
+
+    /// <summary>
+    /// Get packaging-level pricing for an inventory item
+    /// </summary>
+    /// <param name="shopId">Shop ID</param>
+    /// <param name="drugId">Drug ID</param>
+    /// <returns>Shop pricing details including packaging level prices</returns>
+    [HttpGet("shops/{shopId}/drugs/{drugId}/packaging-pricing")]
+    [ProducesResponseType(typeof(ShopPricingDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ShopPricingDto>> GetPackagingPricing(string shopId, string drugId)
+    {
+        var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
+        var inventory = await _inventoryRepository.GetByShopAndDrugAsync(shopId, drugId, cancellationToken);
+
+        if (inventory == null)
+        {
+            return NotFound(new { error = $"Inventory not found for Shop '{shopId}' and Drug '{drugId}'." });
+        }
+
+        var pricing = inventory.ShopPricing;
+        var finalPrice = pricing.GetFinalPrice();
+
+        var dto = new ShopPricingDto
+        {
+            CostPrice = pricing.CostPrice,
+            SellingPrice = pricing.SellingPrice,
+            Discount = pricing.Discount,
+            Currency = pricing.Currency,
+            TaxRate = pricing.TaxRate,
+            ProfitMargin = finalPrice - pricing.CostPrice,
+            ProfitMarginPercentage = pricing.GetProfitMargin(),
+            LastPriceUpdate = pricing.LastPriceUpdate,
+            PackagingLevelPrices = new Dictionary<string, decimal>(pricing.PackagingLevelPrices)
+        };
+
+        return Ok(dto);
     }
 
     /// <summary>
@@ -283,8 +379,10 @@ public class InventoryController : BaseApiController
         [FromQuery] int limit = 20,
         [FromQuery] bool? isAvailable = null)
     {
+        var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
+        var handler = CreateGetShopInventoryQueryHandler();
         var query = new GetShopInventoryQuery(shopId, page, limit, isAvailable);
-        var result = await _mediator.Send(query);
+        var result = await handler.Handle(query, cancellationToken);
         return Ok(result);
     }
 
@@ -297,8 +395,10 @@ public class InventoryController : BaseApiController
     [ProducesResponseType(typeof(IEnumerable<InventoryDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<InventoryDto>>> GetLowStock(string shopId)
     {
+        var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
+        var handler = CreateGetLowStockQueryHandler();
         var query = new GetLowStockQuery(shopId);
-        var result = await _mediator.Send(query);
+        var result = await handler.Handle(query, cancellationToken);
         return Ok(result);
     }
 
@@ -314,8 +414,10 @@ public class InventoryController : BaseApiController
         string shopId,
         [FromQuery] int days = 30)
     {
+        var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
+        var handler = CreateGetExpiringBatchesQueryHandler();
         var query = new GetExpiringBatchesQuery(shopId, days);
-        var result = await _mediator.Send(query);
+        var result = await handler.Handle(query, cancellationToken);
         return Ok(result);
     }
 
@@ -328,8 +430,10 @@ public class InventoryController : BaseApiController
     [ProducesResponseType(typeof(decimal), StatusCodes.Status200OK)]
     public async Task<ActionResult<object>> GetTotalStockValue(string shopId)
     {
+        var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
+        var handler = CreateGetTotalStockValueQueryHandler();
         var query = new GetTotalStockValueQuery(shopId);
-        var result = await _mediator.Send(query);
+        var result = await handler.Handle(query, cancellationToken);
         return Ok(new { shopId, totalValue = result, currency = "USD" });
     }
 
@@ -351,13 +455,15 @@ public class InventoryController : BaseApiController
     {
         try
         {
+            var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
+            var handler = CreateMoveToShopFloorHandler();
             var command = new pos_system_api.Core.Application.Inventory.Commands.MoveToShopFloor.MoveToShopFloorCommand(
                 shopId,
                 drugId,
                 dto.Quantity,
                 dto.BatchNumber
             );
-            var result = await _mediator.Send(command);
+            var result = await handler.Handle(command, cancellationToken);
             return Ok(result);
         }
         catch (KeyNotFoundException ex)
@@ -388,13 +494,15 @@ public class InventoryController : BaseApiController
     {
         try
         {
+            var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
+            var handler = CreateMoveToStorageHandler();
             var command = new pos_system_api.Core.Application.Inventory.Commands.MoveToStorage.MoveToStorageCommand(
                 shopId,
                 drugId,
                 dto.Quantity,
                 dto.BatchNumber
             );
-            var result = await _mediator.Send(command);
+            var result = await handler.Handle(command, cancellationToken);
             return Ok(result);
         }
         catch (KeyNotFoundException ex)
@@ -426,8 +534,10 @@ public class InventoryController : BaseApiController
         [FromQuery] int page = 1,
         [FromQuery] int limit = 50)
     {
+        var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
+        var handler = CreateGetCashierItemsQueryHandler();
         var query = new GetCashierItemsQuery(shopId, searchTerm, category, page, limit);
-        var result = await _mediator.Send(query);
+        var result = await handler.Handle(query, cancellationToken);
         return Ok(result);
     }
 
@@ -443,12 +553,71 @@ public class InventoryController : BaseApiController
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<CashierItemDto>> GetPosItemByBarcode(string shopId, string barcode)
     {
+        var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
+        var handler = CreateGetCashierItemByBarcodeQueryHandler();
         var query = new GetCashierItemByBarcodeQuery(shopId, barcode);
-        var result = await _mediator.Send(query);
-        
+        var result = await handler.Handle(query, cancellationToken);
+
+
         if (result == null)
             return NotFound(new { error = $"Item with barcode '{barcode}' not found or out of stock in this shop" });
-        
+
+
         return Ok(result);
     }
+
+    private AddStockCommandHandler CreateAddStockHandler() =>
+        new(_inventoryRepository, _drugRepository, _supplierRepository);
+
+    private ReduceStockCommandHandler CreateReduceStockHandler() =>
+        new(_inventoryRepository, _stockAdjustmentRepository, _loggerFactory.CreateLogger<ReduceStockCommandHandler>());
+
+    private UpdatePricingCommandHandler CreateUpdatePricingHandler() =>
+        new(_inventoryRepository);
+
+    private UpdateReorderPointCommandHandler CreateUpdateReorderPointHandler() =>
+        new(_inventoryRepository);
+
+    private UpdatePackagingPricingCommandHandler CreateUpdatePackagingPricingHandler() =>
+        new(_inventoryRepository, _loggerFactory.CreateLogger<UpdatePackagingPricingCommandHandler>());
+
+    private CreatePackagingOverrideCommandHandler CreatePackagingOverrideHandler() =>
+        new(
+            _packagingOverrideRepository,
+            _inventoryRepository,
+            _drugRepository,
+            _effectivePackagingService,
+            _loggerFactory.CreateLogger<CreatePackagingOverrideCommandHandler>());
+
+    private UpdatePackagingLevelCommandHandler CreateUpdatePackagingLevelHandler() =>
+        new(
+            _packagingOverrideRepository,
+            _inventoryRepository,
+            _drugRepository,
+            _effectivePackagingService,
+            _loggerFactory.CreateLogger<UpdatePackagingLevelCommandHandler>());
+
+    private GetShopInventoryQueryHandler CreateGetShopInventoryQueryHandler() =>
+        new(_inventoryRepository, _effectivePackagingService);
+
+    private GetLowStockQueryHandler CreateGetLowStockQueryHandler() =>
+        new(_inventoryRepository);
+
+    private GetExpiringBatchesQueryHandler CreateGetExpiringBatchesQueryHandler() =>
+        new(_inventoryRepository);
+
+    private GetTotalStockValueQueryHandler CreateGetTotalStockValueQueryHandler() =>
+        new(_inventoryRepository);
+
+    private MoveToShopFloorCommandHandler CreateMoveToShopFloorHandler() =>
+        new(_inventoryRepository, _loggerFactory.CreateLogger<MoveToShopFloorCommandHandler>());
+
+    private MoveToStorageCommandHandler CreateMoveToStorageHandler() =>
+        new(_inventoryRepository, _loggerFactory.CreateLogger<MoveToStorageCommandHandler>());
+
+    private GetCashierItemsQueryHandler CreateGetCashierItemsQueryHandler() =>
+        new(_inventoryRepository, _drugRepository, _categoryRepository);
+
+    private GetCashierItemByBarcodeQueryHandler CreateGetCashierItemByBarcodeQueryHandler() =>
+        new(_inventoryRepository, _drugRepository, _categoryRepository);
 }

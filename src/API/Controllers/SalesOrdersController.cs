@@ -41,7 +41,7 @@ public class SalesOrdersController : BaseApiController
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "system";
         var commandWithCashier = command with { CashierId = userId };
-        
+
         var result = await _mediator.Send(commandWithCashier);
         return CreatedAtAction(nameof(GetSalesOrder), new { id = result.Id }, result);
     }
@@ -106,7 +106,7 @@ public class SalesOrdersController : BaseApiController
     public async Task<ActionResult<SalesOrderDto>> ConfirmSalesOrder(string id)
     {
         var salesOrder = await _repository.GetByIdAsync(id);
-        
+
         if (salesOrder == null)
             return NotFound();
 
@@ -144,7 +144,7 @@ public class SalesOrdersController : BaseApiController
     public async Task<ActionResult<SalesOrderDto>> CompleteSalesOrder(string id)
     {
         var salesOrder = await _repository.GetByIdAsync(id);
-        
+
         if (salesOrder == null)
             return NotFound();
 
@@ -164,7 +164,7 @@ public class SalesOrdersController : BaseApiController
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "system";
         var salesOrder = await _repository.GetByIdAsync(id);
-        
+
         if (salesOrder == null)
             return NotFound();
 
@@ -184,7 +184,7 @@ public class SalesOrdersController : BaseApiController
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "system";
         var salesOrder = await _repository.GetByIdAsync(id);
-        
+
         if (salesOrder == null)
             return NotFound();
 
@@ -232,7 +232,7 @@ public class SalesOrdersController : BaseApiController
     {
         var salesTask = _repository.GetCashierSalesAsync(shopId, fromDate, toDate);
         var orderCountTask = _repository.GetCashierOrderCountAsync(shopId, fromDate, toDate);
-        
+
         // Today's stats
         var today = DateTime.UtcNow.Date;
         var todaySalesTask = _repository.GetCashierSalesAsync(shopId, today, null);
@@ -252,8 +252,8 @@ public class SalesOrdersController : BaseApiController
             CashierName = cashierId, // Would normally fetch from user repository
             TotalOrders = orderCount.GetValueOrDefault(cashierId, 0),
             TotalSales = sales.GetValueOrDefault(cashierId, 0),
-            AverageOrderValue = orderCount.GetValueOrDefault(cashierId, 0) > 0 
-                ? sales.GetValueOrDefault(cashierId, 0) / orderCount.GetValueOrDefault(cashierId, 0) 
+            AverageOrderValue = orderCount.GetValueOrDefault(cashierId, 0) > 0
+                ? sales.GetValueOrDefault(cashierId, 0) / orderCount.GetValueOrDefault(cashierId, 0)
                 : 0,
             TodaysOrders = todayOrderCount.GetValueOrDefault(cashierId, 0),
             TodaysSales = todaySales.GetValueOrDefault(cashierId, 0)
@@ -291,7 +291,7 @@ public class SalesOrdersController : BaseApiController
         return Ok(result);
     }
 
-        /// <summary>
+    /// <summary>
     /// Get all draft (pending/paused) orders for multi-order cashier workflow
     /// Cashiers can see all their paused orders to resume later
     /// </summary>
@@ -329,7 +329,7 @@ public class SalesOrdersController : BaseApiController
     public async Task<ActionResult<SalesOrderDto>> SaveDraft(string id)
     {
         var salesOrder = await _repository.GetByIdAsync(id);
-        
+
         if (salesOrder == null)
             return NotFound(new { error = "Order not found" });
 
@@ -352,7 +352,7 @@ public class SalesOrdersController : BaseApiController
     public async Task<ActionResult<SalesOrderDto>> ResumeOrder(string id)
     {
         var salesOrder = await _repository.GetByIdAsync(id);
-        
+
         if (salesOrder == null)
             return NotFound(new { error = "Order not found" });
 

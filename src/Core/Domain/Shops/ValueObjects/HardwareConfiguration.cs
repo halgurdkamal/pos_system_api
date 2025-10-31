@@ -10,37 +10,37 @@ public class HardwareConfiguration
     public string? ReceiptPrinterConnectionType { get; set; } // "USB", "Network", "Bluetooth"
     public string? ReceiptPrinterIpAddress { get; set; } // For network printers
     public int? ReceiptPrinterPort { get; set; } = 9100; // Standard ESC/POS port
-    
+
     // Barcode Label Printer
     public string? BarcodePrinterName { get; set; } // For printing shelf labels
     public string? BarcodePrinterConnectionType { get; set; }
     public string? BarcodePrinterIpAddress { get; set; }
     public BarcodeLabelSize BarcodeLabelSize { get; set; } = BarcodeLabelSize.Small; // 40x30mm, 50x25mm, etc.
-    
+
     // Barcode Scanner
     public string? BarcodeScannerModel { get; set; } // "Zebra DS2208", "Honeywell 1900"
     public string? BarcodeScannerConnectionType { get; set; } // "USB", "Bluetooth"
     public bool AutoSubmitOnScan { get; set; } = true; // Auto-submit after scan
-    
+
     // Cash Drawer
     public string? CashDrawerModel { get; set; }
     public bool CashDrawerEnabled { get; set; } = true;
     public string? CashDrawerOpenCommand { get; set; } // ESC/POS command to open drawer
-    
+
     // Payment Terminal
     public string? PaymentTerminalModel { get; set; } // "Verifone VX520", "Ingenico iCT250"
     public string? PaymentTerminalConnectionType { get; set; } // "Serial", "USB", "Network"
     public string? PaymentTerminalIpAddress { get; set; }
     public bool IntegratedPayments { get; set; } = false; // Direct integration vs standalone
-    
+
     // POS Terminal
     public string? PosTerminalId { get; set; } // Unique ID for this POS station
     public string? PosTerminalName { get; set; } // "Front Counter 1", "Drive-Thru"
-    
+
     // Display Settings
     public bool CustomerDisplayEnabled { get; set; } = false; // Secondary customer-facing display
     public string? CustomerDisplayType { get; set; } // "LCD", "LED Pole Display"
-    
+
     public HardwareConfiguration() { }
 
     public HardwareConfiguration(

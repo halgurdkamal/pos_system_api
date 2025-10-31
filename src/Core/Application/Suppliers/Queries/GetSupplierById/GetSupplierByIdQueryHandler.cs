@@ -19,7 +19,7 @@ public class GetSupplierByIdQueryHandler : IRequestHandler<GetSupplierByIdQuery,
     public async Task<SupplierDto?> Handle(GetSupplierByIdQuery request, CancellationToken cancellationToken)
     {
         var supplier = await _supplierRepository.GetByIdAsync(request.Id, cancellationToken);
-        
+
         if (supplier == null)
         {
             return null;

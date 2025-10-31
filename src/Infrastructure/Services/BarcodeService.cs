@@ -35,7 +35,7 @@ public class BarcodeService : IBarcodeService
             using var bitmap = writer.Write(data);
             using var image = SKImage.FromBitmap(bitmap);
             using var encoded = image.Encode(SKEncodedImageFormat.Png, 100);
-            
+
             return encoded.ToArray();
         }
         catch (Exception ex)
@@ -63,7 +63,7 @@ public class BarcodeService : IBarcodeService
             using var bitmap = writer.Write(data);
             using var image = SKImage.FromBitmap(bitmap);
             using var encoded = image.Encode(SKEncodedImageFormat.Png, 100);
-            
+
             return encoded.ToArray();
         }
         catch (Exception ex)
@@ -79,7 +79,7 @@ public class BarcodeService : IBarcodeService
         {
             using var stream = new MemoryStream(imageData);
             using var bitmap = SKBitmap.Decode(stream);
-            
+
             if (bitmap == null)
             {
                 _logger.LogWarning("Failed to decode image data");
@@ -107,7 +107,7 @@ public class BarcodeService : IBarcodeService
             };
 
             var result = reader.Decode(bitmap);
-            
+
             if (result == null)
             {
                 _logger.LogWarning("No barcode found in image");

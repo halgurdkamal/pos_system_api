@@ -64,7 +64,7 @@ public class GenerateDrugBarcodeHandler : IRequestHandler<GenerateDrugBarcodeQue
 
         // Generate barcode image
         var barcodeImage = _barcodeService.GenerateBarcode(barcodeData, 400, 120);
-        
+
         // Generate QR code with drug details (JSON format)
         var qrData = System.Text.Json.JsonSerializer.Serialize(new
         {
@@ -220,7 +220,7 @@ public class BarcodesController : BaseApiController
         var result = await _mediator.Send(new SearchByBarcodeQuery(barcode));
         if (result == null)
             return NotFound(new { error = "Drug not found with barcode" });
-        
+
         return Ok(result);
     }
 
@@ -258,7 +258,7 @@ public class BarcodesController : BaseApiController
         {
             var result = await _mediator.Send(new GenerateDrugBarcodeQuery(drugId));
             var imageBytes = Convert.FromBase64String(result.BarcodeImageBase64);
-            
+
             var fileName = $"{result.Barcode}_barcode.png";
             return File(imageBytes, "image/png", fileName);
         }
@@ -280,7 +280,7 @@ public class BarcodesController : BaseApiController
         {
             var result = await _mediator.Send(new GenerateDrugBarcodeQuery(drugId));
             var imageBytes = Convert.FromBase64String(result.QRCodeImageBase64);
-            
+
             var fileName = $"{result.DrugId}_qrcode.png";
             return File(imageBytes, "image/png", fileName);
         }

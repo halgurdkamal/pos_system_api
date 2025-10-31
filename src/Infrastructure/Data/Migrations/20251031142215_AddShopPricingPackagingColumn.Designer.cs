@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using pos_system_api.Core.Domain.Drugs.ValueObjects;
@@ -13,9 +14,10 @@ using pos_system_api.Infrastructure.Data;
 namespace pos_system_api.src.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251031142215_AddShopPricingPackagingColumn")]
+    partial class AddShopPricingPackagingColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1652,7 +1654,6 @@ namespace pos_system_api.src.Infrastructure.Data.Migrations
                     b.HasOne("pos_system_api.Core.Domain.Drugs.Entities.Drug", null)
                         .WithMany()
                         .HasForeignKey("DrugId")
-                        .HasPrincipalKey("DrugId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

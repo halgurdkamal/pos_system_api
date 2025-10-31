@@ -13,7 +13,7 @@ public class Batch
     public decimal PurchasePrice { get; set; }
     public decimal SellingPrice { get; set; }
     public BatchStatus Status { get; set; } = BatchStatus.Active;
-    
+
     // Location Tracking
     public BatchLocation Location { get; set; } = BatchLocation.Storage;
     public string StorageLocation { get; set; } = string.Empty; // e.g., "Shelf A-3", "Storage Room 2", "Counter Display"
@@ -51,7 +51,7 @@ public class Batch
     /// <summary>
     /// Check if batch is expiring within specified days
     /// </summary>
-    public bool IsExpiringWithin(int days) => 
+    public bool IsExpiringWithin(int days) =>
         (ExpiryDate - DateTime.UtcNow).TotalDays <= days && !IsExpired();
 }
 
@@ -62,13 +62,13 @@ public enum BatchLocation
 {
     /// <summary>Back storage/warehouse - not accessible to customers</summary>
     Storage = 0,
-    
+
     /// <summary>Shop floor/display - accessible to customers for immediate sale</summary>
     ShopFloor = 1,
-    
+
     /// <summary>Reserved for specific purpose (transfer, order, etc.)</summary>
     Reserved = 2,
-    
+
     /// <summary>Quarantined - quality issue or recall</summary>
     Quarantine = 3
 }

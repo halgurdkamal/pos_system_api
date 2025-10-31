@@ -60,10 +60,10 @@ public class UserRepository : IUserRepository
             .Include(u => u.ShopMemberships)
                 .ThenInclude(sm => sm.Shop)
             .AsNoTracking()
-            .FirstOrDefaultAsync(u => 
-                u.Username == identifier || 
-                u.Email == identifier || 
-                u.Phone == identifier, 
+            .FirstOrDefaultAsync(u =>
+                u.Username == identifier ||
+                u.Email == identifier ||
+                u.Phone == identifier,
                 cancellationToken);
     }
 

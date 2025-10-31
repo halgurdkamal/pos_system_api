@@ -20,7 +20,7 @@ public class GetShopByIdQueryHandler : IRequestHandler<GetShopByIdQuery, ShopDto
     public async Task<ShopDto?> Handle(GetShopByIdQuery request, CancellationToken cancellationToken)
     {
         var shop = await _shopRepository.GetByIdAsync(request.ShopId, cancellationToken);
-        
+
         if (shop == null)
         {
             return null;

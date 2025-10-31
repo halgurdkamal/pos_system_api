@@ -87,8 +87,8 @@ public class CreateOwnShopCommandHandler : IRequestHandler<CreateOwnShopCommand,
             if (!string.IsNullOrEmpty(request.Description))
             {
                 // Truncate description to 100 characters if needed (database constraint)
-                shop.PharmacyRegistrationNumber = request.Description.Length > 100 
-                    ? request.Description.Substring(0, 100) 
+                shop.PharmacyRegistrationNumber = request.Description.Length > 100
+                    ? request.Description.Substring(0, 100)
                     : request.Description;
             }
 
@@ -107,47 +107,47 @@ public class CreateOwnShopCommandHandler : IRequestHandler<CreateOwnShopCommand,
 
             // Grant all essential permissions to owner
             shopUser.AddPermission(Permission.ProcessSales);
-        shopUser.AddPermission(Permission.ViewSales);
-        shopUser.AddPermission(Permission.RefundSales);
-        shopUser.AddPermission(Permission.ApplyDiscounts);
-        shopUser.AddPermission(Permission.ViewInventory);
-        shopUser.AddPermission(Permission.AddStock);
-        shopUser.AddPermission(Permission.ReduceStock);
-        shopUser.AddPermission(Permission.UpdatePricing);
-        shopUser.AddPermission(Permission.ManageProducts);
-        shopUser.AddPermission(Permission.StockAudit);
-        shopUser.AddPermission(Permission.ViewOrders);
-        shopUser.AddPermission(Permission.CreateOrders);
-        shopUser.AddPermission(Permission.ApproveOrders);
-        shopUser.AddPermission(Permission.ReceiveOrders);
-        shopUser.AddPermission(Permission.CancelOrders);
-        shopUser.AddPermission(Permission.ViewSuppliers);
-        shopUser.AddPermission(Permission.ManageSuppliers);
-        shopUser.AddPermission(Permission.ViewCustomers);
-        shopUser.AddPermission(Permission.ManageCustomers);
-        shopUser.AddPermission(Permission.ViewStaff);
-        shopUser.AddPermission(Permission.InviteStaff);
-        shopUser.AddPermission(Permission.RemoveStaff);
-        shopUser.AddPermission(Permission.UpdateStaffPermissions);
-        shopUser.AddPermission(Permission.ViewReports);
-        shopUser.AddPermission(Permission.ExportReports);
-        shopUser.AddPermission(Permission.ViewAnalytics);
-        shopUser.AddPermission(Permission.UpdateShopInfo);
-        shopUser.AddPermission(Permission.UpdateReceiptConfig);
-        shopUser.AddPermission(Permission.UpdateHardwareConfig);
-        shopUser.AddPermission(Permission.ManagePaymentMethods);
-        shopUser.AddPermission(Permission.ManageTaxes);
-        shopUser.AddPermission(Permission.ViewFinancials);
-        shopUser.AddPermission(Permission.RecordExpenses);
-        shopUser.AddPermission(Permission.CloseCashRegister);
-        shopUser.AddPermission(Permission.ViewAuditLogs);
-        shopUser.AddPermission(Permission.BackupData);
+            shopUser.AddPermission(Permission.ViewSales);
+            shopUser.AddPermission(Permission.RefundSales);
+            shopUser.AddPermission(Permission.ApplyDiscounts);
+            shopUser.AddPermission(Permission.ViewInventory);
+            shopUser.AddPermission(Permission.AddStock);
+            shopUser.AddPermission(Permission.ReduceStock);
+            shopUser.AddPermission(Permission.UpdatePricing);
+            shopUser.AddPermission(Permission.ManageProducts);
+            shopUser.AddPermission(Permission.StockAudit);
+            shopUser.AddPermission(Permission.ViewOrders);
+            shopUser.AddPermission(Permission.CreateOrders);
+            shopUser.AddPermission(Permission.ApproveOrders);
+            shopUser.AddPermission(Permission.ReceiveOrders);
+            shopUser.AddPermission(Permission.CancelOrders);
+            shopUser.AddPermission(Permission.ViewSuppliers);
+            shopUser.AddPermission(Permission.ManageSuppliers);
+            shopUser.AddPermission(Permission.ViewCustomers);
+            shopUser.AddPermission(Permission.ManageCustomers);
+            shopUser.AddPermission(Permission.ViewStaff);
+            shopUser.AddPermission(Permission.InviteStaff);
+            shopUser.AddPermission(Permission.RemoveStaff);
+            shopUser.AddPermission(Permission.UpdateStaffPermissions);
+            shopUser.AddPermission(Permission.ViewReports);
+            shopUser.AddPermission(Permission.ExportReports);
+            shopUser.AddPermission(Permission.ViewAnalytics);
+            shopUser.AddPermission(Permission.UpdateShopInfo);
+            shopUser.AddPermission(Permission.UpdateReceiptConfig);
+            shopUser.AddPermission(Permission.UpdateHardwareConfig);
+            shopUser.AddPermission(Permission.ManagePaymentMethods);
+            shopUser.AddPermission(Permission.ManageTaxes);
+            shopUser.AddPermission(Permission.ViewFinancials);
+            shopUser.AddPermission(Permission.RecordExpenses);
+            shopUser.AddPermission(Permission.CloseCashRegister);
+            shopUser.AddPermission(Permission.ViewAuditLogs);
+            shopUser.AddPermission(Permission.BackupData);
 
-        // Save shop user membership
-        await _shopUserRepository.CreateAsync(shopUser, cancellationToken);
+            // Save shop user membership
+            await _shopUserRepository.CreateAsync(shopUser, cancellationToken);
 
-        // Map to DTO
-        return MapToDto(createdShop);
+            // Map to DTO
+            return MapToDto(createdShop);
         }
         catch (Exception ex)
         {

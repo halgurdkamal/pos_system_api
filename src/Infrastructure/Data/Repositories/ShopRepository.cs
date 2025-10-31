@@ -31,9 +31,9 @@ public class ShopRepository : IShopRepository
     }
 
     public async Task<(IEnumerable<Shop> Shops, int TotalCount)> GetAllAsync(
-        int page, 
-        int limit, 
-        ShopStatus? status = null, 
+        int page,
+        int limit,
+        ShopStatus? status = null,
         CancellationToken cancellationToken = default)
     {
         var query = _context.Shops.AsNoTracking();
@@ -55,7 +55,7 @@ public class ShopRepository : IShopRepository
     }
 
     public async Task<IEnumerable<Shop>> SearchByNameAsync(
-        string searchTerm, 
+        string searchTerm,
         CancellationToken cancellationToken = default)
     {
         return await _context.Shops
@@ -92,8 +92,8 @@ public class ShopRepository : IShopRepository
     }
 
     public async Task<bool> LicenseNumberExistsAsync(
-        string licenseNumber, 
-        string? excludeShopId = null, 
+        string licenseNumber,
+        string? excludeShopId = null,
         CancellationToken cancellationToken = default)
     {
         var query = _context.Shops.Where(s => s.LicenseNumber == licenseNumber);

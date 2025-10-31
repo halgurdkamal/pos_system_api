@@ -11,21 +11,21 @@ public enum UnitType
     /// Base unit: Piece, Tablet, Capsule, Suppository, Patch, Vial, Ampoule
     /// </summary>
     Count = 1,
-    
+
     /// <summary>
     /// Volume-based units (liquids measured in milliliters)
     /// Base unit: Milliliter (ml)
     /// Used for: Syrups, Suspensions, Drops, Injections, IV fluids
     /// </summary>
     Volume = 2,
-    
+
     /// <summary>
     /// Weight-based units (powders/ointments measured in grams)
     /// Base unit: Gram (g) or Milligram (mg)
     /// Used for: Creams, Ointments, Gels, Powders for reconstitution
     /// </summary>
     Weight = 3,
-    
+
     /// <summary>
     /// Dose-based units (metered doses)
     /// Base unit: Dose, Puff, Spray

@@ -41,7 +41,7 @@ public class StockCount : BaseEntity
     {
         if (Status != StockCountStatus.InProgress && Status != StockCountStatus.Scheduled)
             throw new InvalidOperationException($"Cannot record count with status {Status}");
-        
+
         PhysicalQuantity = physicalQuantity;
         VarianceQuantity = physicalQuantity - SystemQuantity;
         VarianceReason = varianceReason;
@@ -55,7 +55,7 @@ public class StockCount : BaseEntity
             throw new InvalidOperationException($"Cannot complete count with status {Status}");
         if (!PhysicalQuantity.HasValue)
             throw new InvalidOperationException("Physical quantity must be recorded before completing");
-        
+
         Status = StockCountStatus.Completed;
         CompletedAt = DateTime.UtcNow;
     }

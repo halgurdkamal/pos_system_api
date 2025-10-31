@@ -42,79 +42,79 @@ try
     builder.Services.AddInfrastructureLayer(builder.Configuration);
     builder.Services.AddAPILayer(builder.Configuration);
 
-var app = builder.Build();
+    var app = builder.Build();
 
-// Seed database on startup (Development only)
-if (app.Environment.IsDevelopment())
-{
-    using (var scope = app.Services.CreateScope())
+    // Seed database on startup (Development only)
+    if (app.Environment.IsDevelopment())
     {
-        var services = scope.ServiceProvider;
-        try
+        using (var scope = app.Services.CreateScope())
         {
-            var context = services.GetRequiredService<pos_system_api.Infrastructure.Data.ApplicationDbContext>();
-            var seeder = new pos_system_api.Infrastructure.Data.Seeders.DatabaseSeeder(context);
-            await seeder.SeedAllAsync();
-        }
-        catch (Exception ex)
-        {
-            var logger = services.GetRequiredService<ILogger<Program>>();
-            logger.LogError(ex, "An error occurred while seeding the database.");
+            var services = scope.ServiceProvider;
+            try
+            {
+                var context = services.GetRequiredService<pos_system_api.Infrastructure.Data.ApplicationDbContext>();
+                var seeder = new pos_system_api.Infrastructure.Data.Seeders.DatabaseSeeder(context);
+                await seeder.SeedAllAsync();
+            }
+            catch (Exception ex)
+            {
+                var logger = services.GetRequiredService<ILogger<Program>>();
+                logger.LogError(ex, "An error occurred while seeding the database.");
+            }
         }
     }
-}
 
-// Configure the HTTP request pipeline.
+    // Configure the HTTP request pipeline.
 
-// Global exception handling (must be first)
-app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
+    // Global exception handling (must be first)
+    app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
-// Request/Response logging (after exception handling)
-app.UseMiddleware<RequestResponseLoggingMiddleware>();
+    // Request/Response logging (after exception handling)
+    app.UseMiddleware<RequestResponseLoggingMiddleware>();
 
-// Use Serilog request logging
-app.UseSerilogRequestLogging(options =>
-{
-    options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000}ms";
-    options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+    // Use Serilog request logging
+    app.UseSerilogRequestLogging(options =>
     {
-        diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value);
-        diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
-        diagnosticContext.Set("UserAgent", httpContext.Request.Headers["User-Agent"].ToString());
-        
-        // Add user info if authenticated
-        if (httpContext.User.Identity?.IsAuthenticated == true)
+        options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000}ms";
+        options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
         {
-            diagnosticContext.Set("UserName", httpContext.User.Identity.Name);
-            diagnosticContext.Set("UserId", httpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value);
-        }
-    };
-});
+            diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value);
+            diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
+            diagnosticContext.Set("UserAgent", httpContext.Request.Headers["User-Agent"].ToString());
 
-app.UseSwagger();
-app.UseSwaggerUI();
+            // Add user info if authenticated
+            if (httpContext.User.Identity?.IsAuthenticated == true)
+            {
+                diagnosticContext.Set("UserName", httpContext.User.Identity.Name);
+                diagnosticContext.Set("UserId", httpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value);
+            }
+        };
+    });
 
-// Enable CORS
-app.UseCors();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 
-// Authentication & Authorization
-app.UseAuthentication();
-app.UseAuthorization();
+    // Enable CORS
+    app.UseCors();
 
-// Map controllers (Clean Architecture endpoints)
-app.MapControllers();
+    // Authentication & Authorization
+    app.UseAuthentication();
+    app.UseAuthorization();
 
-// Health check endpoint
-app.MapGet("/health", () => Results.Ok(new 
-{ 
-    status = "Healthy", 
-    timestamp = DateTime.UtcNow
-}));
+    // Map controllers (Clean Architecture endpoints)
+    app.MapControllers();
 
-app.MapGet("/", () => "Welcome to the POS System API! Visit /swagger for API documentation.");
+    // Health check endpoint
+    app.MapGet("/health", () => Results.Ok(new
+    {
+        status = "Healthy",
+        timestamp = DateTime.UtcNow
+    }));
 
-Log.Information("POS System API started successfully");
-app.Run();
+    app.MapGet("/", () => "Welcome to the POS System API! Visit /swagger for API documentation.");
+
+    Log.Information("POS System API started successfully");
+    app.Run();
 }
 catch (Exception ex)
 {

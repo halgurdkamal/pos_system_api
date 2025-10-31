@@ -22,7 +22,7 @@ public class GetSalesDashboardQueryHandler : IRequestHandler<GetSalesDashboardQu
     public async Task<SalesOrderDashboardDto> Handle(GetSalesDashboardQuery request, CancellationToken cancellationToken)
     {
         var today = DateTime.UtcNow.Date;
-        
+
         // Get all metrics in parallel for dashboard performance
         var totalSalesTask = _repository.GetTotalSalesAsync(request.ShopId, request.FromDate, request.ToDate, cancellationToken);
         var totalCountTask = _repository.GetOrderCountAsync(request.ShopId, null, request.FromDate, request.ToDate, cancellationToken);

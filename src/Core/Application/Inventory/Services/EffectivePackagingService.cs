@@ -159,6 +159,7 @@ public class EffectivePackagingService : IEffectivePackagingService
 
         HarmonizeDefaultSellUnit(dto, globalLevels, inventory);
         dto.PackagingLevels = dto.PackagingLevels
+            .Where(l => l.OverrideId != null || l.IsCustomLevel)
             .OrderBy(l => l.IsGlobal ? 0 : 1)
             .ThenBy(l => l.Sequence)
             .ThenBy(l => l.UnitName, StringComparer.OrdinalIgnoreCase)

@@ -32,7 +32,7 @@ public class StockTransfersController : BaseApiController
             var command = new CreateTransferCommand(
                 fromShopId, dto.ToShopId, dto.DrugId, dto.BatchNumber,
                 dto.Quantity, userId, dto.Notes);
-            
+
             var result = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetPendingTransfers), new { shopId = fromShopId }, result);
         }

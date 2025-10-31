@@ -33,7 +33,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, UserDto>
 
         // Parse system role (default to User, only SuperAdmins can create other SuperAdmins)
         var systemRole = SystemRole.User;
-        if (!string.IsNullOrWhiteSpace(request.Role) && 
+        if (!string.IsNullOrWhiteSpace(request.Role) &&
             Enum.TryParse<SystemRole>(request.Role, true, out var parsedRole))
         {
             systemRole = parsedRole;

@@ -14,25 +14,25 @@ public class PackagingInfo
     /// The type of unit measurement system used for this drug
     /// </summary>
     public UnitType UnitType { get; set; }
-    
+
     /// <summary>
     /// The base unit symbol used for measurement
     /// Examples: "ml", "tablet", "g", "puff"
     /// </summary>
     public string BaseUnit { get; set; } = string.Empty;
-    
+
     /// <summary>
     /// Display name for the base unit
     /// Examples: "Milliliter", "Tablet", "Gram", "Puff"
     /// </summary>
     public string BaseUnitDisplayName { get; set; } = string.Empty;
-    
+
     /// <summary>
     /// Whether the base unit can be subdivided
     /// Example: Liquids (true), Inhalers (false)
     /// </summary>
     public bool IsSubdivisible { get; set; } = true;
-    
+
     /// <summary>
     /// All packaging levels for this drug (ordered by level number)
     /// Must include at least the base level (LevelNumber = 1)

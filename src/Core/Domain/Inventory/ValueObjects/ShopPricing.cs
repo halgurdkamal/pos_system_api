@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace pos_system_api.Core.Domain.Inventory.ValueObjects;
 
 /// <summary>
@@ -11,7 +13,7 @@ public class ShopPricing
     public string Currency { get; set; } = "USD";
     public decimal TaxRate { get; set; }
     public DateTime LastPriceUpdate { get; set; }
-    
+
     /// <summary>
     /// Shop-specific pricing for different packaging levels
     /// Key: Packaging level name (e.g., "Box", "Strip", "Tablet")
@@ -19,7 +21,7 @@ public class ShopPricing
     /// </summary>
     public Dictionary<string, decimal> PackagingLevelPrices { get; set; } = new();
 
-    public ShopPricing() 
+    public ShopPricing()
     {
         LastPriceUpdate = DateTime.UtcNow;
     }
@@ -59,6 +61,7 @@ public class ShopPricing
     public void SetPackagingLevelPrice(string packagingLevel, decimal price)
     {
         PackagingLevelPrices[packagingLevel] = price;
+        PackagingLevelPrices = new Dictionary<string, decimal>(PackagingLevelPrices);
         LastPriceUpdate = DateTime.UtcNow;
     }
 

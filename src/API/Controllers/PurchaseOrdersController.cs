@@ -41,7 +41,7 @@ public class PurchaseOrdersController : BaseApiController
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "system";
         var commandWithUser = command with { CreatedBy = userId };
-        
+
         var result = await _mediator.Send(commandWithUser);
         return CreatedAtAction(nameof(GetPurchaseOrder), new { id = result.Id }, result);
     }
@@ -83,7 +83,7 @@ public class PurchaseOrdersController : BaseApiController
             priorityEnum = p;
 
         var (orders, totalCount) = await _repository.GetPagedAsync(
-            shopId, supplierId, statusEnum, fromDate, toDate, 
+            shopId, supplierId, statusEnum, fromDate, toDate,
             priorityEnum, isPaid, searchTerm, page, pageSize);
 
         var dtos = orders.Select(MapToSummaryDto).ToList();
@@ -106,10 +106,10 @@ public class PurchaseOrdersController : BaseApiController
     public async Task<ActionResult<PurchaseOrderDto>> SubmitPurchaseOrder(string id)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "system";
-        var result = await _mediator.Send(new SubmitPurchaseOrderCommand 
-        { 
-            OrderId = id, 
-            SubmittedBy = userId 
+        var result = await _mediator.Send(new SubmitPurchaseOrderCommand
+        {
+            OrderId = id,
+            SubmittedBy = userId
         });
         return Ok(result);
     }
@@ -123,7 +123,7 @@ public class PurchaseOrdersController : BaseApiController
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "system";
         var purchaseOrder = await _repository.GetByIdAsync(id);
-        
+
         if (purchaseOrder == null)
             return NotFound();
 
@@ -142,7 +142,7 @@ public class PurchaseOrdersController : BaseApiController
     public async Task<ActionResult<PurchaseOrderDto>> ReceiveStock(string id, [FromBody] ReceiveStockRequestDto request)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "system";
-        
+
         var command = new ReceiveStockCommand
         {
             OrderId = id,
@@ -163,7 +163,7 @@ public class PurchaseOrdersController : BaseApiController
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "system";
         var purchaseOrder = await _repository.GetByIdAsync(id);
-        
+
         if (purchaseOrder == null)
             return NotFound();
 
@@ -182,7 +182,7 @@ public class PurchaseOrdersController : BaseApiController
     public async Task<ActionResult<PurchaseOrderDto>> MarkAsPaid(string id, [FromBody] MarkAsPaidRequestDto? request = null)
     {
         var purchaseOrder = await _repository.GetByIdAsync(id);
-        
+
         if (purchaseOrder == null)
             return NotFound();
 

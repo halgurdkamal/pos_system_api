@@ -86,7 +86,7 @@ public class DatabaseSeeder
     {
         var drugs = new List<Drug>();
         var categoryIds = categories.Select(c => c.CategoryId).ToList();
-        
+
         // Create sample drugs for each category
         foreach (var categoryId in categoryIds.Take(5)) // Limit to first 5 categories for seeding
         {
@@ -100,7 +100,7 @@ public class DatabaseSeeder
                 drugs.Add(drug);
             }
         }
-        
+
         return drugs;
     }
 

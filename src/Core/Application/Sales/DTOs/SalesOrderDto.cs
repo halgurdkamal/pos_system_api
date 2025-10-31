@@ -9,7 +9,7 @@ public record SalesOrderDto
     public string? CustomerName { get; init; }
     public string? CustomerPhone { get; init; }
     public string Status { get; init; } = string.Empty;
-    
+
     // Financial
     public decimal SubTotal { get; init; }
     public decimal TaxAmount { get; init; }
@@ -17,30 +17,30 @@ public record SalesOrderDto
     public decimal TotalAmount { get; init; }
     public decimal AmountPaid { get; init; }
     public decimal ChangeGiven { get; init; }
-    
+
     // Payment
     public string? PaymentMethod { get; init; }
     public string? PaymentReference { get; init; }
     public DateTime? PaidAt { get; init; }
-    
+
     // Dates
     public DateTime OrderDate { get; init; }
     public DateTime? CompletedAt { get; init; }
     public DateTime? CancelledAt { get; init; }
-    
+
     // Users
     public string CashierId { get; init; } = string.Empty;
     public string? CancelledBy { get; init; }
     public string? CancellationReason { get; init; }
-    
+
     // Additional
     public string? Notes { get; init; }
     public bool IsPrescriptionRequired { get; init; }
     public string? PrescriptionNumber { get; init; }
-    
+
     // Items
     public List<SalesOrderItemDto> Items { get; init; } = new();
-    
+
     // Analytics
     public decimal ProfitMargin { get; init; }
     public int TotalItemsCount { get; init; }

@@ -13,29 +13,29 @@ public class ShopDto
     public string LicenseNumber { get; set; } = string.Empty;
     public string VatRegistrationNumber { get; set; } = string.Empty;
     public string PharmacyRegistrationNumber { get; set; } = string.Empty;
-    
+
     // Contact and Address
     public AddressDto Address { get; set; } = new();
     public ContactDto Contact { get; set; } = new();
-    
+
     // Branding
     public string? LogoUrl { get; set; }
     public List<string> ShopImageUrls { get; set; } = new();
     public string? BrandColorPrimary { get; set; }
     public string? BrandColorSecondary { get; set; }
-    
+
     // Configuration
     public ReceiptConfigurationDto ReceiptConfig { get; set; } = new();
     public HardwareConfigurationDto HardwareConfig { get; set; } = new();
-    
+
     // Operating Schedule
     public Dictionary<string, string> OperatingHours { get; set; } = new();
-    
+
     // Compliance
     public bool RequiresPrescriptionVerification { get; set; }
     public bool AllowsControlledSubstances { get; set; }
     public List<string> AcceptedInsuranceProviders { get; set; } = new();
-    
+
     // Status
     public string Status { get; set; } = "Active";
     public DateTime RegistrationDate { get; set; }

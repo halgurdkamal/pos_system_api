@@ -144,7 +144,7 @@ public class SalesOrderRepository : ISalesOrderRepository
         CancellationToken cancellationToken = default)
     {
         var query = _context.SalesOrders
-            .Where(so => so.ShopId == shopId && 
+            .Where(so => so.ShopId == shopId &&
                         (so.Status == SalesOrderStatus.Completed || so.Status == SalesOrderStatus.Paid));
 
         if (fromDate.HasValue)
@@ -206,7 +206,7 @@ public class SalesOrderRepository : ISalesOrderRepository
         CancellationToken cancellationToken = default)
     {
         var query = _context.SalesOrders
-            .Where(so => so.ShopId == shopId && 
+            .Where(so => so.ShopId == shopId &&
                         (so.Status == SalesOrderStatus.Completed || so.Status == SalesOrderStatus.Paid));
 
         if (fromDate.HasValue)
@@ -249,7 +249,7 @@ public class SalesOrderRepository : ISalesOrderRepository
         CancellationToken cancellationToken = default)
     {
         var query = _context.SalesOrders
-            .Where(so => so.ShopId == shopId && 
+            .Where(so => so.ShopId == shopId &&
                         so.PaymentMethod.HasValue &&
                         (so.Status == SalesOrderStatus.Completed || so.Status == SalesOrderStatus.Paid));
 
@@ -273,7 +273,7 @@ public class SalesOrderRepository : ISalesOrderRepository
         CancellationToken cancellationToken = default)
     {
         var query = _context.SalesOrders
-            .Where(so => so.ShopId == shopId && 
+            .Where(so => so.ShopId == shopId &&
                         (so.Status == SalesOrderStatus.Completed || so.Status == SalesOrderStatus.Paid));
 
         if (fromDate.HasValue)

@@ -7,8 +7,8 @@ public interface IStockAdjustmentRepository
     Task<StockAdjustment> AddAsync(StockAdjustment adjustment, CancellationToken cancellationToken = default);
     Task<StockAdjustment?> GetByIdAsync(string id, CancellationToken cancellationToken = default);
     Task<IEnumerable<StockAdjustment>> GetByShopAsync(
-        string shopId, 
-        DateTime? startDate = null, 
+        string shopId,
+        DateTime? startDate = null,
         DateTime? endDate = null,
         AdjustmentType? adjustmentType = null,
         int? limit = null,

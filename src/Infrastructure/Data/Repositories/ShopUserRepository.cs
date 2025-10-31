@@ -96,17 +96,17 @@ public class ShopUserRepository : IShopUserRepository
 
         _context.ShopUsers.Add(shopUser);
         await _context.SaveChangesAsync(cancellationToken);
-        
+
         return shopUser;
     }
 
     public async Task<ShopUser> UpdateAsync(ShopUser shopUser, CancellationToken cancellationToken = default)
     {
         shopUser.LastUpdated = DateTime.UtcNow;
-        
+
         _context.ShopUsers.Update(shopUser);
         await _context.SaveChangesAsync(cancellationToken);
-        
+
         return shopUser;
     }
 

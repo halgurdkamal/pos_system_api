@@ -47,7 +47,7 @@ public class ShopsController : BaseApiController
         {
             // Get user ID from JWT claims
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            
+
             if (string.IsNullOrEmpty(userId))
             {
                 return Unauthorized(new { error = "User not authenticated" });
@@ -69,7 +69,7 @@ public class ShopsController : BaseApiController
             );
 
             var result = await _mediator.Send(command);
-            
+
             return CreatedAtAction(nameof(GetShop), new { id = result.Id }, result);
         }
         catch (InvalidOperationException ex)

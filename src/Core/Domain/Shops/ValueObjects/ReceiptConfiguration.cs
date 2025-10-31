@@ -11,7 +11,7 @@ public class ReceiptConfiguration
     public string? ReceiptFooterText { get; set; } // "Thank you for your purchase!"
     public string? ReturnPolicyText { get; set; } // Return policy on receipt
     public string? PharmacistName { get; set; } // Pharmacist name for prescription receipts
-    
+
     // Receipt Content Settings
     public bool ShowLogoOnReceipt { get; set; } = true;
     public bool ShowTaxBreakdown { get; set; } = true;
@@ -19,16 +19,16 @@ public class ReceiptConfiguration
     public bool ShowQrCode { get; set; } = false; // QR code for digital receipt
     public bool ShowPharmacyLicense { get; set; } = true;
     public bool ShowVatNumber { get; set; } = true;
-    
+
     // Receipt Format
     public int ReceiptWidth { get; set; } = 80; // 80mm thermal paper (standard)
     public string ReceiptLanguage { get; set; } = "en-US";
     public bool PrintDuplicateReceipt { get; set; } = false; // Auto-print duplicate
-    
+
     // Regulatory Compliance
     public string? PharmacyWarningText { get; set; } // "Keep out of reach of children"
     public string? ControlledSubstanceWarning { get; set; } // For Schedule drugs
-    
+
     public ReceiptConfiguration() { }
 
     public ReceiptConfiguration(

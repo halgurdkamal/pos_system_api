@@ -25,12 +25,12 @@ public class Drug : BaseEntity
     public List<string> InteractionNotes { get; set; } = new();
     public List<string> Tags { get; set; } = new();
     public List<string> RelatedDrugs { get; set; } = new();
-    
+
     // Value Objects (shared catalog data - no shop-specific info)
     public Formulation Formulation { get; set; } = new();
     public BasePricing BasePricing { get; set; } = new(); // Suggested pricing only
     public Regulatory Regulatory { get; set; } = new();
     public PackagingInfo PackagingInfo { get; set; } = new(); // Packaging hierarchy and default sell unit
-    
+
     // NOTE: Inventory, shop-specific pricing, and supplier info are now in ShopInventory entity
 }

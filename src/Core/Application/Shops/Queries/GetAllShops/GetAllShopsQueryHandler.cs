@@ -21,9 +21,9 @@ public class GetAllShopsQueryHandler : IRequestHandler<GetAllShopsQuery, PagedRe
     public async Task<PagedResult<ShopDto>> Handle(GetAllShopsQuery request, CancellationToken cancellationToken)
     {
         var (shops, totalCount) = await _shopRepository.GetAllAsync(
-            request.Page, 
-            request.Limit, 
-            request.Status, 
+            request.Page,
+            request.Limit,
+            request.Status,
             cancellationToken
         );
 

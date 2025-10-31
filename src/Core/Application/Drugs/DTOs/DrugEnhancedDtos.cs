@@ -16,20 +16,20 @@ public record DrugListItemDto
     public string? CategoryColorCode { get; init; }
     public string? PrimaryImageUrl { get; init; } // First image only for list view
     public string Manufacturer { get; init; } = string.Empty;
-    
+
     // Formulation basics
     public string Strength { get; init; } = string.Empty;
     public string Form { get; init; } = string.Empty;
-    
+
     // Pricing
     public decimal SuggestedRetailPrice { get; init; }
     public decimal WholesalePrice { get; init; }
-    
+
     // Stock summary (total across all shops)
     public int TotalQuantityInStock { get; init; }
     public int ShopCount { get; init; } // How many shops have this drug
     public bool IsAvailable { get; init; } // At least one shop has stock
-    
+
     // Quick info
     public bool RequiresPrescription { get; init; }
 }
@@ -57,26 +57,26 @@ public record DrugDetailDto
     public List<string> InteractionNotes { get; init; } = new();
     public List<string> Tags { get; init; } = new();
     public List<string> RelatedDrugs { get; init; } = new();
-    
+
     // Formulation details
     public FormulationDto Formulation { get; init; } = new();
-    
+
     // Pricing details
     public PricingDto Pricing { get; init; } = new();
-    
+
     // Regulatory details
     public RegulatoryDto Regulatory { get; init; } = new();
-    
+
     // Shop inventory summary (NEW - this is what you requested!)
     public List<ShopInventorySummaryDto> ShopInventories { get; init; } = new();
-    
+
     // Overall stock summary
     public int TotalQuantityInStock { get; init; }
     public int TotalShopsWithStock { get; init; }
     public decimal AveragePriceAcrossShops { get; init; }
     public decimal LowestPriceAvailable { get; init; }
     public decimal HighestPriceAvailable { get; init; }
-    
+
     public DateTime CreatedAt { get; init; }
     public DateTime? LastUpdated { get; init; }
 }

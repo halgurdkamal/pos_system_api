@@ -58,7 +58,7 @@ public class RegisterShopCommandHandler : IRequestHandler<RegisterShopCommand, S
         // Set additional properties
         shop.VatRegistrationNumber = dto.VatRegistrationNumber;
         shop.PharmacyRegistrationNumber = dto.PharmacyRegistrationNumber;
-        
+
         // Map Receipt Configuration if provided
         if (dto.ReceiptConfig != null)
         {

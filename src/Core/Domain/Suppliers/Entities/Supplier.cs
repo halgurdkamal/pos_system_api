@@ -12,18 +12,18 @@ public class Supplier : BaseEntity
     public SupplierType SupplierType { get; set; }
     public string ContactNumber { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
-    
+
     // Value Object (will be configured as owned entity)
     public Address Address { get; set; } = new();
-    
+
     // Business Terms
     public string PaymentTerms { get; set; } = "Net 30"; // e.g., "Net 30", "Net 60", "COD"
     public int DeliveryLeadTime { get; set; } // In days
     public decimal MinimumOrderValue { get; set; }
-    
+
     // Status
     public bool IsActive { get; set; } = true;
-    
+
     // Additional Info
     public string? Website { get; set; }
     public string? TaxId { get; set; }

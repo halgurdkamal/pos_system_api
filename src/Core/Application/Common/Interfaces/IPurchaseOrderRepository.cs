@@ -37,7 +37,7 @@ public interface IPurchaseOrderRepository
     Task<List<PurchaseOrder>> GetPendingOrdersAsync(string shopId, CancellationToken cancellationToken = default);
     Task<List<PurchaseOrder>> GetOverduePaymentsAsync(string shopId, CancellationToken cancellationToken = default);
     Task<List<PurchaseOrder>> GetRecentOrdersAsync(string shopId, int count = 10, CancellationToken cancellationToken = default);
-    
+
     // Supplier performance analytics
     Task<Dictionary<string, decimal>> GetSupplierSpendingAsync(string shopId, DateTime? fromDate = null, DateTime? toDate = null, CancellationToken cancellationToken = default);
     Task<Dictionary<string, int>> GetSupplierOrderCountAsync(string shopId, DateTime? fromDate = null, DateTime? toDate = null, CancellationToken cancellationToken = default);

@@ -137,8 +137,8 @@ public static class InventorySeeder
     /// Create inventory for multiple shops
     /// </summary>
     public static List<ShopInventory> GetSeedDataForAllShops(
-        List<string> shopIds, 
-        List<string> drugIds, 
+        List<string> shopIds,
+        List<string> drugIds,
         List<string> supplierIds)
     {
         var allInventories = new List<ShopInventory>();

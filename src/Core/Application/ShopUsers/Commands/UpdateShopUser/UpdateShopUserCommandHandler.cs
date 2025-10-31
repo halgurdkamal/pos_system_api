@@ -32,8 +32,8 @@ public class UpdateShopUserCommandHandler : IRequestHandler<UpdateShopUserComman
     {
         // Get the shop user relationship
         var shopUser = await _shopUserRepository.GetByUserAndShopAsync(
-            request.UserId, 
-            request.ShopId, 
+            request.UserId,
+            request.ShopId,
             cancellationToken);
 
         if (shopUser == null)
@@ -56,7 +56,7 @@ public class UpdateShopUserCommandHandler : IRequestHandler<UpdateShopUserComman
             if (Enum.TryParse<ShopRole>(request.Role, out var shopRole))
             {
                 shopUser.Role = shopRole;
-                
+
                 // If custom permissions not provided, use default permissions for role
                 if (request.CustomPermissions == null || !request.CustomPermissions.Any())
                 {
@@ -99,7 +99,7 @@ public class UpdateShopUserCommandHandler : IRequestHandler<UpdateShopUserComman
                     throw new InvalidOperationException("Cannot remove owner status from the last owner. Assign another owner first.");
                 }
             }
-            
+
             shopUser.IsOwner = request.IsOwner.Value;
         }
 

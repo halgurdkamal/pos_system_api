@@ -59,20 +59,28 @@ public class CreateStockCountHandler : IRequestHandler<CreateStockCountCommand, 
     {
         var inventory = await _inventoryRepository.GetByShopAndDrugAsync(request.ShopId, request.DrugId, cancellationToken);
         if (inventory == null) throw new KeyNotFoundException($"Inventory not found");
-        
+
         var stockCount = new StockCount(request.ShopId, request.DrugId, inventory.TotalStock, request.CountedBy, request.ScheduledAt, request.Notes);
         await _repository.AddAsync(stockCount, cancellationToken);
-        
+
         return MapToDto(stockCount);
     }
 
     private StockCountDto MapToDto(StockCount sc) => new()
     {
-        Id = sc.Id, ShopId = sc.ShopId, DrugId = sc.DrugId, Status = sc.Status.ToString(),
-        SystemQuantity = sc.SystemQuantity, PhysicalQuantity = sc.PhysicalQuantity,
-        VarianceQuantity = sc.VarianceQuantity, VarianceReason = sc.VarianceReason,
-        CountedBy = sc.CountedBy, ScheduledAt = sc.ScheduledAt, CountedAt = sc.CountedAt,
-        CompletedAt = sc.CompletedAt, Notes = sc.Notes
+        Id = sc.Id,
+        ShopId = sc.ShopId,
+        DrugId = sc.DrugId,
+        Status = sc.Status.ToString(),
+        SystemQuantity = sc.SystemQuantity,
+        PhysicalQuantity = sc.PhysicalQuantity,
+        VarianceQuantity = sc.VarianceQuantity,
+        VarianceReason = sc.VarianceReason,
+        CountedBy = sc.CountedBy,
+        ScheduledAt = sc.ScheduledAt,
+        CountedAt = sc.CountedAt,
+        CompletedAt = sc.CompletedAt,
+        Notes = sc.Notes
     };
 }
 
@@ -91,10 +99,10 @@ public class RecordCountHandler : IRequestHandler<RecordCountCommand, StockCount
     {
         var stockCount = await _repository.GetByIdAsync(request.CountId, cancellationToken);
         if (stockCount == null) throw new KeyNotFoundException($"Stock count {request.CountId} not found");
-        
+
         stockCount.RecordCount(request.PhysicalQuantity, request.VarianceReason);
         await _repository.UpdateAsync(stockCount, cancellationToken);
-        
+
         // Create adjustment if there's variance
         if (stockCount.VarianceQuantity.HasValue && stockCount.VarianceQuantity.Value != 0)
         {
@@ -105,17 +113,25 @@ public class RecordCountHandler : IRequestHandler<RecordCountCommand, StockCount
                 stockCount.CountedBy, null, stockCount.Id, "StockCount");
             await _adjustmentRepository.AddAsync(adjustment, cancellationToken);
         }
-        
+
         return MapToDto(stockCount);
     }
 
     private StockCountDto MapToDto(StockCount sc) => new()
     {
-        Id = sc.Id, ShopId = sc.ShopId, DrugId = sc.DrugId, Status = sc.Status.ToString(),
-        SystemQuantity = sc.SystemQuantity, PhysicalQuantity = sc.PhysicalQuantity,
-        VarianceQuantity = sc.VarianceQuantity, VarianceReason = sc.VarianceReason,
-        CountedBy = sc.CountedBy, ScheduledAt = sc.ScheduledAt, CountedAt = sc.CountedAt,
-        CompletedAt = sc.CompletedAt, Notes = sc.Notes
+        Id = sc.Id,
+        ShopId = sc.ShopId,
+        DrugId = sc.DrugId,
+        Status = sc.Status.ToString(),
+        SystemQuantity = sc.SystemQuantity,
+        PhysicalQuantity = sc.PhysicalQuantity,
+        VarianceQuantity = sc.VarianceQuantity,
+        VarianceReason = sc.VarianceReason,
+        CountedBy = sc.CountedBy,
+        ScheduledAt = sc.ScheduledAt,
+        CountedAt = sc.CountedAt,
+        CompletedAt = sc.CompletedAt,
+        Notes = sc.Notes
     };
 }
 
@@ -129,20 +145,28 @@ public class CompleteStockCountHandler : IRequestHandler<CompleteStockCountComma
     {
         var stockCount = await _repository.GetByIdAsync(request.CountId, cancellationToken);
         if (stockCount == null) throw new KeyNotFoundException($"Stock count {request.CountId} not found");
-        
+
         stockCount.Complete();
         await _repository.UpdateAsync(stockCount, cancellationToken);
-        
+
         return MapToDto(stockCount);
     }
 
     private StockCountDto MapToDto(StockCount sc) => new()
     {
-        Id = sc.Id, ShopId = sc.ShopId, DrugId = sc.DrugId, Status = sc.Status.ToString(),
-        SystemQuantity = sc.SystemQuantity, PhysicalQuantity = sc.PhysicalQuantity,
-        VarianceQuantity = sc.VarianceQuantity, VarianceReason = sc.VarianceReason,
-        CountedBy = sc.CountedBy, ScheduledAt = sc.ScheduledAt, CountedAt = sc.CountedAt,
-        CompletedAt = sc.CompletedAt, Notes = sc.Notes
+        Id = sc.Id,
+        ShopId = sc.ShopId,
+        DrugId = sc.DrugId,
+        Status = sc.Status.ToString(),
+        SystemQuantity = sc.SystemQuantity,
+        PhysicalQuantity = sc.PhysicalQuantity,
+        VarianceQuantity = sc.VarianceQuantity,
+        VarianceReason = sc.VarianceReason,
+        CountedBy = sc.CountedBy,
+        ScheduledAt = sc.ScheduledAt,
+        CountedAt = sc.CountedAt,
+        CompletedAt = sc.CompletedAt,
+        Notes = sc.Notes
     };
 }
 
@@ -157,18 +181,26 @@ public class GetStockCountsHandler : IRequestHandler<GetStockCountsQuery, IEnume
         StockCountStatus? status = null;
         if (!string.IsNullOrEmpty(request.Status) && Enum.TryParse<StockCountStatus>(request.Status, true, out var parsed))
             status = parsed;
-        
+
         var counts = await _repository.GetByShopAsync(request.ShopId, status, cancellationToken);
         return counts.Select(MapToDto);
     }
 
     private StockCountDto MapToDto(StockCount sc) => new()
     {
-        Id = sc.Id, ShopId = sc.ShopId, DrugId = sc.DrugId, Status = sc.Status.ToString(),
-        SystemQuantity = sc.SystemQuantity, PhysicalQuantity = sc.PhysicalQuantity,
-        VarianceQuantity = sc.VarianceQuantity, VarianceReason = sc.VarianceReason,
-        CountedBy = sc.CountedBy, ScheduledAt = sc.ScheduledAt, CountedAt = sc.CountedAt,
-        CompletedAt = sc.CompletedAt, Notes = sc.Notes
+        Id = sc.Id,
+        ShopId = sc.ShopId,
+        DrugId = sc.DrugId,
+        Status = sc.Status.ToString(),
+        SystemQuantity = sc.SystemQuantity,
+        PhysicalQuantity = sc.PhysicalQuantity,
+        VarianceQuantity = sc.VarianceQuantity,
+        VarianceReason = sc.VarianceReason,
+        CountedBy = sc.CountedBy,
+        ScheduledAt = sc.ScheduledAt,
+        CountedAt = sc.CountedAt,
+        CompletedAt = sc.CompletedAt,
+        Notes = sc.Notes
     };
 }
 

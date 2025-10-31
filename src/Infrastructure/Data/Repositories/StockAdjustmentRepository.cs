@@ -29,8 +29,8 @@ public class StockAdjustmentRepository : IStockAdjustmentRepository
     }
 
     public async Task<IEnumerable<StockAdjustment>> GetByShopAsync(
-        string shopId, 
-        DateTime? startDate = null, 
+        string shopId,
+        DateTime? startDate = null,
         DateTime? endDate = null,
         AdjustmentType? adjustmentType = null,
         int? limit = null,

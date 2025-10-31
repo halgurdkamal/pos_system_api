@@ -12,57 +12,57 @@ public class ShopConfiguration : IEntityTypeConfiguration<Shop>
     public void Configure(EntityTypeBuilder<Shop> builder)
     {
         builder.ToTable("Shops");
-        
+
         builder.HasKey(s => s.Id);
-        
+
         builder.Property(s => s.Id)
             .IsRequired()
             .HasMaxLength(50);
-        
+
         builder.Property(s => s.ShopName)
             .IsRequired()
             .HasMaxLength(200);
-        
+
         builder.Property(s => s.LegalName)
             .IsRequired()
             .HasMaxLength(300);
-        
+
         builder.Property(s => s.LicenseNumber)
             .IsRequired()
             .HasMaxLength(100);
-        
+
         builder.Property(s => s.TaxId)
             .HasMaxLength(100);
-        
+
         builder.Property(s => s.VatRegistrationNumber)
             .HasMaxLength(100);
-        
+
         builder.Property(s => s.PharmacyRegistrationNumber)
             .HasMaxLength(100);
-        
+
         builder.Property(s => s.LogoUrl)
             .HasMaxLength(500);
-        
+
         builder.Property(s => s.BrandColorPrimary)
             .HasMaxLength(10);
-        
+
         builder.Property(s => s.BrandColorSecondary)
             .HasMaxLength(10);
-        
+
         builder.Property(s => s.Currency)
             .IsRequired()
             .HasMaxLength(10);
-        
+
         builder.Property(s => s.DefaultTaxRate)
             .HasColumnType("decimal(5,2)");
-        
+
         builder.Property(s => s.Status)
             .IsRequired()
             .HasConversion<int>();
-        
+
         builder.Property(s => s.RegistrationDate)
             .IsRequired();
-        
+
         // Configure Address as owned entity
         builder.OwnsOne(s => s.Address, address =>
         {
@@ -72,7 +72,7 @@ public class ShopConfiguration : IEntityTypeConfiguration<Shop>
             address.Property(a => a.ZipCode).HasColumnName("Address_ZipCode").HasMaxLength(20);
             address.Property(a => a.Country).HasColumnName("Address_Country").HasMaxLength(100);
         });
-        
+
         // Configure Contact as owned entity
         builder.OwnsOne(s => s.Contact, contact =>
         {
@@ -80,7 +80,7 @@ public class ShopConfiguration : IEntityTypeConfiguration<Shop>
             contact.Property(c => c.Email).HasColumnName("Contact_Email").HasMaxLength(200);
             contact.Property(c => c.Website).HasColumnName("Contact_Website").HasMaxLength(300);
         });
-        
+
         // Configure Receipt Configuration as owned entity
         builder.OwnsOne(s => s.ReceiptConfig, receipt =>
         {
@@ -101,7 +101,7 @@ public class ShopConfiguration : IEntityTypeConfiguration<Shop>
             receipt.Property(r => r.PharmacyWarningText).HasColumnName("Receipt_PharmacyWarning").HasMaxLength(500);
             receipt.Property(r => r.ControlledSubstanceWarning).HasColumnName("Receipt_ControlledSubstanceWarning").HasMaxLength(500);
         });
-        
+
         // Configure Hardware Configuration as owned entity
         builder.OwnsOne(s => s.HardwareConfig, hardware =>
         {
@@ -128,29 +128,29 @@ public class ShopConfiguration : IEntityTypeConfiguration<Shop>
             hardware.Property(h => h.CustomerDisplayEnabled).HasColumnName("Hardware_CustomerDisplayEnabled");
             hardware.Property(h => h.CustomerDisplayType).HasColumnName("Hardware_CustomerDisplayType").HasMaxLength(100);
         });
-        
+
         // Store JSON collections
         builder.Property(s => s.OperatingHours)
             .HasColumnType("jsonb");
-        
+
         builder.Property(s => s.ShopImageUrls)
             .HasColumnType("jsonb");
-        
+
         builder.Property(s => s.AcceptedInsuranceProviders)
             .HasColumnType("jsonb");
-        
+
         // Many-to-many relationship with Users via ShopUser
         builder.HasMany(s => s.Members)
             .WithOne(su => su.Shop)
             .HasForeignKey(su => su.ShopId)
             .OnDelete(DeleteBehavior.Cascade);
-        
+
         // Base entity properties
         builder.Property(s => s.CreatedAt).IsRequired();
         builder.Property(s => s.CreatedBy).HasMaxLength(100);
         builder.Property(s => s.LastUpdated);
         builder.Property(s => s.UpdatedBy).HasMaxLength(100);
-        
+
         // Indexes
         builder.HasIndex(s => s.LicenseNumber).IsUnique();
         builder.HasIndex(s => s.ShopName);

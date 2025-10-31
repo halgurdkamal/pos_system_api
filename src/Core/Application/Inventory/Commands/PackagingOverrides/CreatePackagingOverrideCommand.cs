@@ -163,10 +163,10 @@ public class CreatePackagingOverrideCommandHandler : IRequestHandler<CreatePacka
                 throw new ArgumentException("Global packaging level reference is invalid.");
             }
 
-             if (payload.OverrideQuantityPerParent.HasValue && payload.OverrideQuantityPerParent <= 0)
-             {
-                 throw new ArgumentException("OverrideQuantityPerParent must be greater than zero when specified.");
-             }
+            if (payload.OverrideQuantityPerParent.HasValue && payload.OverrideQuantityPerParent <= 0)
+            {
+                throw new ArgumentException("OverrideQuantityPerParent must be greater than zero when specified.");
+            }
         }
     }
 

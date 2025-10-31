@@ -9,11 +9,11 @@ public class PagedResult<T>
     public int Limit { get; set; }
     public int Total { get; set; }
     public List<T> Data { get; set; } = new();
-    
+
     public PagedResult()
     {
     }
-    
+
     public PagedResult(List<T> data, int page, int limit, int total)
     {
         Data = data;

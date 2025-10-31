@@ -11,23 +11,23 @@ public class StockTransfer : BaseEntity
     public string ToShopId { get; private set; } = string.Empty;
     public string DrugId { get; private set; } = string.Empty;
     public string? BatchNumber { get; private set; }
-    
+
     public int Quantity { get; private set; }
     public TransferStatus Status { get; private set; }
-    
+
     public string InitiatedBy { get; private set; } = string.Empty;  // User ID
     public DateTime InitiatedAt { get; private set; }
-    
+
     public string? ApprovedBy { get; private set; }
     public DateTime? ApprovedAt { get; private set; }
-    
+
     public string? ReceivedBy { get; private set; }
     public DateTime? ReceivedAt { get; private set; }
-    
+
     public string? CancelledBy { get; private set; }
     public DateTime? CancelledAt { get; private set; }
     public string? CancellationReason { get; private set; }
-    
+
     public string? Notes { get; private set; }
 
     private StockTransfer() { }  // EF Core
@@ -102,16 +102,16 @@ public enum TransferStatus
 {
     /// <summary>Transfer requested, awaiting approval</summary>
     Pending = 0,
-    
+
     /// <summary>Transfer approved, ready to ship</summary>
     Approved = 1,
-    
+
     /// <summary>Transfer in transit</summary>
     InTransit = 2,
-    
+
     /// <summary>Transfer completed and received</summary>
     Completed = 3,
-    
+
     /// <summary>Transfer cancelled</summary>
     Cancelled = 4
 }

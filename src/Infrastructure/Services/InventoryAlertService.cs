@@ -107,7 +107,7 @@ public class InventoryAlertService : IInventoryAlertService
             {
                 alert.Resolve("System", resolutionNote);
                 await _alertRepository.UpdateAsync(alert, cancellationToken);
-                _logger.LogInformation("Auto-resolved alert {AlertId} for shop {ShopId}: {Note}", 
+                _logger.LogInformation("Auto-resolved alert {AlertId} for shop {ShopId}: {Note}",
                     alert.Id, shopId, resolutionNote);
             }
         }
@@ -116,8 +116,8 @@ public class InventoryAlertService : IInventoryAlertService
     private async Task CheckLowStockForInventory(ShopInventory inventory, CancellationToken cancellationToken)
     {
         var existingAlerts = await _alertRepository.GetAlertsByDrugAsync(inventory.ShopId, inventory.DrugId, cancellationToken);
-        var hasActiveLowStockAlert = existingAlerts.Any(a => 
-            a.Status == AlertStatus.Active && 
+        var hasActiveLowStockAlert = existingAlerts.Any(a =>
+            a.Status == AlertStatus.Active &&
             (a.AlertType == AlertType.LowStock || a.AlertType == AlertType.OutOfStock));
 
         if (inventory.TotalStock == 0 && !hasActiveLowStockAlert)
@@ -133,7 +133,7 @@ public class InventoryAlertService : IInventoryAlertService
                 inventory.ReorderPoint);
 
             await _alertRepository.AddAsync(alert, cancellationToken);
-            _logger.LogWarning("Out of stock alert generated for drug {DrugId} in shop {ShopId}", 
+            _logger.LogWarning("Out of stock alert generated for drug {DrugId} in shop {ShopId}",
                 inventory.DrugId, inventory.ShopId);
         }
         else if (inventory.TotalStock > 0 && inventory.TotalStock <= inventory.ReorderPoint && !hasActiveLowStockAlert)
@@ -149,7 +149,7 @@ public class InventoryAlertService : IInventoryAlertService
                 inventory.ReorderPoint);
 
             await _alertRepository.AddAsync(alert, cancellationToken);
-            _logger.LogWarning("Low stock alert generated for drug {DrugId} in shop {ShopId}", 
+            _logger.LogWarning("Low stock alert generated for drug {DrugId} in shop {ShopId}",
                 inventory.DrugId, inventory.ShopId);
         }
     }

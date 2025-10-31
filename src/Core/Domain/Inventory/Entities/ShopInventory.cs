@@ -12,12 +12,12 @@ public class ShopInventory : BaseEntity
     // Foreign Keys
     public string ShopId { get; set; } = string.Empty;
     public string DrugId { get; set; } = string.Empty;
-    
+
     // Stock Information
     public int TotalStock { get; set; }
     public int ReorderPoint { get; set; } = 50;
     public string StorageLocation { get; set; } = string.Empty;
-    
+
     // Shop-Specific Packaging Configuration
     /// <summary>
     /// Optional override for the default sell unit for this drug in this shop
@@ -25,16 +25,16 @@ public class ShopInventory : BaseEntity
     /// Example: Drug default is "Strip", but this shop prefers to sell by "Box"
     /// </summary>
     public string? ShopSpecificSellUnit { get; set; }
-    
+
     /// <summary>
     /// Minimum quantity that can be sold at the shop level
     /// Overrides the packaging level minimum if specified
     /// </summary>
     public decimal? MinimumSaleQuantity { get; set; }
-    
+
     // Batches (owned collection - configured in EF Core)
     public List<Batch> Batches { get; set; } = new();
-    
+
     // Shop-Specific Pricing (owned entity)
     public ShopPricing ShopPricing { get; set; } = new();
 
@@ -42,7 +42,7 @@ public class ShopInventory : BaseEntity
     /// Shop-level overrides for packaging quantities, sellability, and pricing.
     /// </summary>
     public List<ShopPackagingOverride> PackagingOverrides { get; set; } = new();
-    
+
     // Inventory Status
     public bool IsAvailable { get; set; } = true;
     public DateTime? LastRestockDate { get; set; }
@@ -87,7 +87,7 @@ public class ShopInventory : BaseEntity
     public void ReduceStock(int quantity)
     {
         var remainingQuantity = quantity;
-        
+
         // Sort batches by received date (FIFO)
         var activeBatches = Batches
             .Where(b => b.Status == BatchStatus.Active && b.QuantityOnHand > 0)
@@ -122,7 +122,7 @@ public class ShopInventory : BaseEntity
         TotalStock = Batches
             .Where(b => b.Status == BatchStatus.Active)
             .Sum(b => b.QuantityOnHand);
-        
+
         IsAvailable = TotalStock > 0;
     }
 
@@ -172,15 +172,15 @@ public class ShopInventory : BaseEntity
     public void RestockShopFloor(int quantity, string? specificBatchNumber = null)
     {
         var remainingQuantity = quantity;
-        
+
         IEnumerable<Batch> batchesToRestock;
-        
+
         if (!string.IsNullOrEmpty(specificBatchNumber))
         {
             // Restock from specific batch
             batchesToRestock = Batches
-                .Where(b => b.Status == BatchStatus.Active 
-                    && b.Location == BatchLocation.Storage 
+                .Where(b => b.Status == BatchStatus.Active
+                    && b.Location == BatchLocation.Storage
                     && b.BatchNumber == specificBatchNumber
                     && b.QuantityOnHand > 0)
                 .OrderBy(b => b.ExpiryDate); // Use oldest expiry first (FEFO)
@@ -189,8 +189,8 @@ public class ShopInventory : BaseEntity
         {
             // Restock from any storage batch (FEFO - First Expired First Out)
             batchesToRestock = Batches
-                .Where(b => b.Status == BatchStatus.Active 
-                    && b.Location == BatchLocation.Storage 
+                .Where(b => b.Status == BatchStatus.Active
+                    && b.Location == BatchLocation.Storage
                     && b.QuantityOnHand > 0)
                 .OrderBy(b => b.ExpiryDate);
         }
@@ -200,10 +200,10 @@ public class ShopInventory : BaseEntity
             if (remainingQuantity <= 0) break;
 
             var quantityToMove = Math.Min(batch.QuantityOnHand, remainingQuantity);
-            
+
             // Create a new batch entry for shop floor or update existing
-            var existingFloorBatch = Batches.FirstOrDefault(b => 
-                b.BatchNumber == batch.BatchNumber && 
+            var existingFloorBatch = Batches.FirstOrDefault(b =>
+                b.BatchNumber == batch.BatchNumber &&
                 b.Location == BatchLocation.ShopFloor);
 
             if (existingFloorBatch != null)
@@ -243,14 +243,14 @@ public class ShopInventory : BaseEntity
     public void ReturnToStorage(int quantity, string? specificBatchNumber = null)
     {
         var remainingQuantity = quantity;
-        
+
         var batchesToReturn = string.IsNullOrEmpty(specificBatchNumber)
-            ? Batches.Where(b => b.Status == BatchStatus.Active 
-                && b.Location == BatchLocation.ShopFloor 
+            ? Batches.Where(b => b.Status == BatchStatus.Active
+                && b.Location == BatchLocation.ShopFloor
                 && b.QuantityOnHand > 0)
                 .OrderBy(b => b.ExpiryDate)
-            : Batches.Where(b => b.Status == BatchStatus.Active 
-                && b.Location == BatchLocation.ShopFloor 
+            : Batches.Where(b => b.Status == BatchStatus.Active
+                && b.Location == BatchLocation.ShopFloor
                 && b.BatchNumber == specificBatchNumber
                 && b.QuantityOnHand > 0)
                 .OrderBy(b => b.ExpiryDate);
@@ -260,10 +260,10 @@ public class ShopInventory : BaseEntity
             if (remainingQuantity <= 0) break;
 
             var quantityToMove = Math.Min(batch.QuantityOnHand, remainingQuantity);
-            
+
             // Find or create storage batch
-            var existingStorageBatch = Batches.FirstOrDefault(b => 
-                b.BatchNumber == batch.BatchNumber && 
+            var existingStorageBatch = Batches.FirstOrDefault(b =>
+                b.BatchNumber == batch.BatchNumber &&
                 b.Location == BatchLocation.Storage);
 
             if (existingStorageBatch != null)
@@ -322,7 +322,7 @@ public class ShopInventory : BaseEntity
         {
             batch.Status = BatchStatus.Expired;
         }
-        
+
         RecalculateTotalStock();
         LastUpdated = DateTime.UtcNow;
     }

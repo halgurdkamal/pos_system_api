@@ -40,7 +40,7 @@ public class SalesOrder : BaseEntity
     public string? CustomerName { get; private set; }
     public string? CustomerPhone { get; private set; }
     public SalesOrderStatus Status { get; private set; }
-    
+
     // Financial Information (for dashboard analytics)
     public decimal SubTotal { get; private set; }
     public decimal TaxAmount { get; private set; }
@@ -48,27 +48,27 @@ public class SalesOrder : BaseEntity
     public decimal TotalAmount { get; private set; }
     public decimal AmountPaid { get; private set; }
     public decimal ChangeGiven { get; private set; }
-    
+
     // Payment Information
     public PaymentMethod? PaymentMethod { get; private set; }
     public string? PaymentReference { get; private set; }
     public DateTime? PaidAt { get; private set; }
-    
+
     // Dates (for tracking and analytics)
     public DateTime OrderDate { get; private set; }
     public DateTime? CompletedAt { get; private set; }
     public DateTime? CancelledAt { get; private set; }
-    
+
     // User Tracking (for audit and performance analytics)
     public string CashierId { get; private set; }
     public string? CancelledBy { get; private set; }
     public string? CancellationReason { get; private set; }
-    
+
     // Additional Information
     public string? Notes { get; private set; }
     public bool IsPrescriptionRequired { get; private set; }
     public string? PrescriptionNumber { get; private set; }
-    
+
     // Items
     public List<SalesOrderItem> Items { get; private set; } = new();
 
@@ -96,7 +96,7 @@ public class SalesOrder : BaseEntity
         IsPrescriptionRequired = isPrescriptionRequired;
         PrescriptionNumber = prescriptionNumber;
         Notes = notes;
-        
+
         SubTotal = 0;
         TaxAmount = 0;
         DiscountAmount = 0;
@@ -170,7 +170,7 @@ public class SalesOrder : BaseEntity
     {
         SubTotal = Items.Sum(i => i.TotalPrice);
         TotalAmount = SubTotal + TaxAmount - DiscountAmount;
-        
+
         if (TotalAmount < 0)
             TotalAmount = 0;
     }
@@ -267,18 +267,18 @@ public class SalesOrderItem
     public string Id { get; private set; } = string.Empty;
     public string SalesOrderId { get; private set; } = string.Empty;
     public string DrugId { get; private set; } = string.Empty;
-    
+
     // Order details
     public int Quantity { get; private set; }
     public decimal UnitPrice { get; private set; }
     public decimal DiscountPercentage { get; private set; }
     public decimal DiscountAmount { get; private set; }
     public decimal TotalPrice { get; private set; }
-    
+
     // Packaging information
     public string? PackagingLevelSold { get; private set; } // e.g., "Box", "Strip"
     public decimal BaseUnitsConsumed { get; private set; } // Total base units used
-    
+
     // Batch tracking
     public string? BatchNumber { get; private set; }
 
@@ -303,7 +303,7 @@ public class SalesOrderItem
         BatchNumber = batchNumber;
         PackagingLevelSold = packagingLevelSold;
         BaseUnitsConsumed = baseUnitsConsumed;
-        
+
         CalculateAmounts();
     }
 
@@ -312,7 +312,7 @@ public class SalesOrderItem
         Quantity = quantity;
         UnitPrice = unitPrice;
         DiscountPercentage = discountPercentage ?? 0;
-        
+
         CalculateAmounts();
     }
 

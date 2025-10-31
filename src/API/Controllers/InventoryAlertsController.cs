@@ -89,11 +89,22 @@ public class AcknowledgeAlertHandler : IRequestHandler<AcknowledgeAlertCommand, 
 
     private AlertDto MapToDto(InventoryAlert a) => new()
     {
-        Id = a.Id, ShopId = a.ShopId, DrugId = a.DrugId, BatchNumber = a.BatchNumber,
-        AlertType = a.AlertType.ToString(), Severity = a.Severity.ToString(), Status = a.Status.ToString(),
-        Message = a.Message, CurrentQuantity = a.CurrentQuantity, ThresholdQuantity = a.ThresholdQuantity,
-        ExpiryDate = a.ExpiryDate, GeneratedAt = a.GeneratedAt, AcknowledgedAt = a.AcknowledgedAt,
-        AcknowledgedBy = a.AcknowledgedBy, ResolvedAt = a.ResolvedAt, ResolvedBy = a.ResolvedBy,
+        Id = a.Id,
+        ShopId = a.ShopId,
+        DrugId = a.DrugId,
+        BatchNumber = a.BatchNumber,
+        AlertType = a.AlertType.ToString(),
+        Severity = a.Severity.ToString(),
+        Status = a.Status.ToString(),
+        Message = a.Message,
+        CurrentQuantity = a.CurrentQuantity,
+        ThresholdQuantity = a.ThresholdQuantity,
+        ExpiryDate = a.ExpiryDate,
+        GeneratedAt = a.GeneratedAt,
+        AcknowledgedAt = a.AcknowledgedAt,
+        AcknowledgedBy = a.AcknowledgedBy,
+        ResolvedAt = a.ResolvedAt,
+        ResolvedBy = a.ResolvedBy,
         ResolutionNotes = a.ResolutionNotes
     };
 }
@@ -117,11 +128,22 @@ public class ResolveAlertHandler : IRequestHandler<ResolveAlertCommand, AlertDto
 
     private AlertDto MapToDto(InventoryAlert a) => new()
     {
-        Id = a.Id, ShopId = a.ShopId, DrugId = a.DrugId, BatchNumber = a.BatchNumber,
-        AlertType = a.AlertType.ToString(), Severity = a.Severity.ToString(), Status = a.Status.ToString(),
-        Message = a.Message, CurrentQuantity = a.CurrentQuantity, ThresholdQuantity = a.ThresholdQuantity,
-        ExpiryDate = a.ExpiryDate, GeneratedAt = a.GeneratedAt, AcknowledgedAt = a.AcknowledgedAt,
-        AcknowledgedBy = a.AcknowledgedBy, ResolvedAt = a.ResolvedAt, ResolvedBy = a.ResolvedBy,
+        Id = a.Id,
+        ShopId = a.ShopId,
+        DrugId = a.DrugId,
+        BatchNumber = a.BatchNumber,
+        AlertType = a.AlertType.ToString(),
+        Severity = a.Severity.ToString(),
+        Status = a.Status.ToString(),
+        Message = a.Message,
+        CurrentQuantity = a.CurrentQuantity,
+        ThresholdQuantity = a.ThresholdQuantity,
+        ExpiryDate = a.ExpiryDate,
+        GeneratedAt = a.GeneratedAt,
+        AcknowledgedAt = a.AcknowledgedAt,
+        AcknowledgedBy = a.AcknowledgedBy,
+        ResolvedAt = a.ResolvedAt,
+        ResolvedBy = a.ResolvedBy,
         ResolutionNotes = a.ResolutionNotes
     };
 }
@@ -148,11 +170,22 @@ public class GetActiveAlertsHandler : IRequestHandler<GetActiveAlertsQuery, IEnu
 
     private AlertDto MapToDto(InventoryAlert a) => new()
     {
-        Id = a.Id, ShopId = a.ShopId, DrugId = a.DrugId, BatchNumber = a.BatchNumber,
-        AlertType = a.AlertType.ToString(), Severity = a.Severity.ToString(), Status = a.Status.ToString(),
-        Message = a.Message, CurrentQuantity = a.CurrentQuantity, ThresholdQuantity = a.ThresholdQuantity,
-        ExpiryDate = a.ExpiryDate, GeneratedAt = a.GeneratedAt, AcknowledgedAt = a.AcknowledgedAt,
-        AcknowledgedBy = a.AcknowledgedBy, ResolvedAt = a.ResolvedAt, ResolvedBy = a.ResolvedBy,
+        Id = a.Id,
+        ShopId = a.ShopId,
+        DrugId = a.DrugId,
+        BatchNumber = a.BatchNumber,
+        AlertType = a.AlertType.ToString(),
+        Severity = a.Severity.ToString(),
+        Status = a.Status.ToString(),
+        Message = a.Message,
+        CurrentQuantity = a.CurrentQuantity,
+        ThresholdQuantity = a.ThresholdQuantity,
+        ExpiryDate = a.ExpiryDate,
+        GeneratedAt = a.GeneratedAt,
+        AcknowledgedAt = a.AcknowledgedAt,
+        AcknowledgedBy = a.AcknowledgedBy,
+        ResolvedAt = a.ResolvedAt,
+        ResolvedBy = a.ResolvedBy,
         ResolutionNotes = a.ResolutionNotes
     };
 }

@@ -12,50 +12,50 @@ public class SupplierConfiguration : IEntityTypeConfiguration<Supplier>
     public void Configure(EntityTypeBuilder<Supplier> builder)
     {
         builder.ToTable("Suppliers");
-        
+
         builder.HasKey(s => s.Id);
-        
+
         builder.Property(s => s.Id)
             .IsRequired()
             .HasMaxLength(50);
-        
+
         builder.Property(s => s.SupplierName)
             .IsRequired()
             .HasMaxLength(200);
-        
+
         builder.Property(s => s.SupplierType)
             .IsRequired()
             .HasConversion<int>();
-        
+
         builder.Property(s => s.ContactNumber)
             .IsRequired()
             .HasMaxLength(50);
-        
+
         builder.Property(s => s.Email)
             .IsRequired()
             .HasMaxLength(200);
-        
+
         builder.Property(s => s.PaymentTerms)
             .HasMaxLength(100);
-        
+
         builder.Property(s => s.DeliveryLeadTime)
             .IsRequired();
-        
+
         builder.Property(s => s.MinimumOrderValue)
             .HasColumnType("decimal(18,2)");
-        
+
         builder.Property(s => s.IsActive)
             .IsRequired();
-        
+
         builder.Property(s => s.Website)
             .HasMaxLength(300);
-        
+
         builder.Property(s => s.TaxId)
             .HasMaxLength(100);
-        
+
         builder.Property(s => s.LicenseNumber)
             .HasMaxLength(100);
-        
+
         // Configure Address as owned entity
         builder.OwnsOne(s => s.Address, address =>
         {
@@ -65,13 +65,13 @@ public class SupplierConfiguration : IEntityTypeConfiguration<Supplier>
             address.Property(a => a.ZipCode).HasColumnName("Address_ZipCode").HasMaxLength(20);
             address.Property(a => a.Country).HasColumnName("Address_Country").HasMaxLength(100);
         });
-        
+
         // Base entity properties
         builder.Property(s => s.CreatedAt).IsRequired();
         builder.Property(s => s.CreatedBy).HasMaxLength(100);
         builder.Property(s => s.LastUpdated);
         builder.Property(s => s.UpdatedBy).HasMaxLength(100);
-        
+
         // Indexes
         builder.HasIndex(s => s.SupplierName);
         builder.HasIndex(s => s.Email);

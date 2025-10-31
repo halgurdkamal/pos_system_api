@@ -36,11 +36,11 @@ public interface ISalesOrderRepository
     Task<int> GetOrderCountAsync(string shopId, SalesOrderStatus? status = null, DateTime? fromDate = null, DateTime? toDate = null, CancellationToken cancellationToken = default);
     Task<List<SalesOrder>> GetTodaysOrdersAsync(string shopId, CancellationToken cancellationToken = default);
     Task<List<SalesOrder>> GetRecentOrdersAsync(string shopId, int count = 10, CancellationToken cancellationToken = default);
-    
+
     // Cashier performance analytics
     Task<Dictionary<string, decimal>> GetCashierSalesAsync(string shopId, DateTime? fromDate = null, DateTime? toDate = null, CancellationToken cancellationToken = default);
     Task<Dictionary<string, int>> GetCashierOrderCountAsync(string shopId, DateTime? fromDate = null, DateTime? toDate = null, CancellationToken cancellationToken = default);
-    
+
     // Sales analytics
     Task<Dictionary<string, decimal>> GetSalesByPaymentMethodAsync(string shopId, DateTime? fromDate = null, DateTime? toDate = null, CancellationToken cancellationToken = default);
     Task<Dictionary<string, int>> GetTopSellingDrugsAsync(string shopId, int topCount = 10, DateTime? fromDate = null, DateTime? toDate = null, CancellationToken cancellationToken = default);

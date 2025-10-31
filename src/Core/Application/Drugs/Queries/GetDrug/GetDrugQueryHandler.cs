@@ -20,7 +20,7 @@ public class GetDrugQueryHandler : IRequestHandler<GetDrugQuery, DrugDto?>
     public async Task<DrugDto?> Handle(GetDrugQuery request, CancellationToken cancellationToken)
     {
         var drug = await _drugRepository.GetByIdAsync(request.DrugId, cancellationToken);
-        
+
         if (drug == null)
             return null;
 

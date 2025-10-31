@@ -156,8 +156,8 @@ public class GetStockValuationHandler : IRequestHandler<GetStockValuationQuery, 
             var drug = await _drugRepository.GetByIdAsync(inventory.DrugId, cancellationToken);
             if (drug == null) continue;
 
-            decimal avgCost = inventory.Batches.Any() 
-                ? inventory.Batches.Average(b => b.PurchasePrice) 
+            decimal avgCost = inventory.Batches.Any()
+                ? inventory.Batches.Average(b => b.PurchasePrice)
                 : 0;
 
             items.Add(new StockValuationItemDto
@@ -186,27 +186,27 @@ public class GetStockMovementHandler : IRequestHandler<GetStockMovementQuery, St
 {
     private readonly IStockAdjustmentRepository _adjustmentRepository;
 
-    public GetStockMovementHandler(IStockAdjustmentRepository adjustmentRepository) 
+    public GetStockMovementHandler(IStockAdjustmentRepository adjustmentRepository)
         => _adjustmentRepository = adjustmentRepository;
 
     public async Task<StockMovementReportDto> Handle(GetStockMovementQuery request, CancellationToken cancellationToken)
     {
         IEnumerable<StockAdjustment> adjustments;
-        
+
         if (!string.IsNullOrEmpty(request.DrugId))
         {
             adjustments = await _adjustmentRepository.GetByDrugAsync(
-                request.ShopId, 
+                request.ShopId,
                 request.DrugId,
-                request.FromDate, 
-                request.ToDate, 
+                request.FromDate,
+                request.ToDate,
                 cancellationToken);
         }
         else
         {
             adjustments = await _adjustmentRepository.GetByShopAsync(
-                request.ShopId, 
-                request.FromDate, 
+                request.ShopId,
+                request.FromDate,
                 request.ToDate,
                 null,
                 null,
@@ -256,8 +256,8 @@ public class GetABCAnalysisHandler : IRequestHandler<GetABCAnalysisQuery, ABCAna
             var drug = await _drugRepository.GetByIdAsync(inventory.DrugId, cancellationToken);
             if (drug == null) continue;
 
-            decimal avgCost = inventory.Batches.Any() 
-                ? inventory.Batches.Average(b => b.PurchasePrice) 
+            decimal avgCost = inventory.Batches.Any()
+                ? inventory.Batches.Average(b => b.PurchasePrice)
                 : 0;
             decimal value = inventory.TotalStock * avgCost;
 
@@ -502,11 +502,11 @@ public class GetDeadStockHandler : IRequestHandler<GetDeadStockQuery, DeadStockR
                 request.ShopId, inventory.DrugId, thresholdDate, DateTime.UtcNow, cancellationToken);
 
             var lastMovement = adjustments.OrderByDescending(a => a.AdjustedAt).FirstOrDefault();
-            
+
             if (lastMovement == null || lastMovement.AdjustedAt < thresholdDate)
             {
-                var daysSinceMovement = lastMovement == null 
-                    ? request.DaysThreshold + 1 
+                var daysSinceMovement = lastMovement == null
+                    ? request.DaysThreshold + 1
                     : (int)(DateTime.UtcNow - lastMovement.AdjustedAt).TotalDays;
 
                 items.Add(new DeadStockItemDto
