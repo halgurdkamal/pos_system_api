@@ -35,7 +35,9 @@ public static class ServiceCollectionExtensions
         // Register MediatR pipeline behaviors
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
+        // Register application services
         services.AddScoped<IEffectivePackagingService, EffectivePackagingService>();
+        services.AddScoped<IPackagingPricingService, PackagingPricingService>();
 
         return services;
     }

@@ -48,8 +48,12 @@ public class GetCashierItemByBarcodeQueryHandler : IRequestHandler<GetCashierIte
         // Get category details (logo and color)
         var categoryInfo = await _categoryRepository.GetByIdAsync(drug.CategoryId, cancellationToken);
 
-        // Get oldest batch info
-        var oldestBatch = shopInventory.Batches.OrderBy(b => b.ExpiryDate).FirstOrDefault();
+        // Get active batch (FIFO - oldest received date with stock > 0)
+        var activeBatch = shopInventory.Batches
+            .Where(b => b.Status == pos_system_api.Core.Domain.Inventory.ValueObjects.BatchStatus.Active 
+                     && b.QuantityOnHand > 0)
+            .OrderBy(b => b.ReceivedDate)
+            .FirstOrDefault();
 
         // Calculate pricing
         var unitPrice = shopInventory.ShopPricing?.SellingPrice ?? drug.BasePricing.SuggestedRetailPrice;
@@ -71,8 +75,8 @@ public class GetCashierItemByBarcodeQueryHandler : IRequestHandler<GetCashierIte
 
             AvailableStock = shopInventory.TotalStock,
             IsAvailable = shopInventory.TotalStock > 0,
-            OldestBatchNumber = oldestBatch?.BatchNumber,
-            NearestExpiryDate = oldestBatch?.ExpiryDate,
+            OldestBatchNumber = activeBatch?.BatchNumber,
+            NearestExpiryDate = activeBatch?.ExpiryDate,
 
             UnitPrice = unitPrice,
             DiscountPercentage = discount > 0 ? discount : null,

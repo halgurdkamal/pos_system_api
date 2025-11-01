@@ -21,6 +21,11 @@ public record CashierItemDto
     // Stock information
     public int AvailableStock { get; init; }
     public bool IsAvailable { get; init; }
+    
+    /// <summary>
+    /// Active batch number (FIFO - oldest batch with stock)
+    /// Use this when recording sales to track which batch was sold
+    /// </summary>
     public string? OldestBatchNumber { get; init; }
     public DateTime? NearestExpiryDate { get; init; }
 

@@ -161,6 +161,13 @@ public class GetCashierItemsQueryHandler : IRequestHandler<GetCashierItemsQuery,
                 ? shopPricing.TaxRate
                 : drug.BasePricing?.SuggestedTaxRate ?? 0;
 
+            // Get active batch number (FIFO - oldest batch with stock)
+            var activeBatch = inventory.Batches
+                .Where(b => b.Status == pos_system_api.Core.Domain.Inventory.ValueObjects.BatchStatus.Active 
+                         && b.QuantityOnHand > 0)
+                .OrderBy(b => b.ReceivedDate)
+                .FirstOrDefault();
+
             items.Add(new ShopPosItemDto
             {
                 InventoryId = inventory.Id,
@@ -176,6 +183,7 @@ public class GetCashierItemsQueryHandler : IRequestHandler<GetCashierItemsQuery,
                 IsAvailable = inventory.IsAvailable,
                 TotalStock = inventory.TotalStock,
                 ReorderPoint = inventory.ReorderPoint,
+                ActiveBatchNumber = activeBatch?.BatchNumber,
                 Packaging = packagingDto,
                 ShopPricing = new ShopPosItemPricingDto
                 {

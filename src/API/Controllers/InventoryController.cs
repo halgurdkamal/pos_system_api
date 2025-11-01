@@ -39,6 +39,7 @@ public class InventoryController : BaseApiController
     private readonly IStockAdjustmentRepository _stockAdjustmentRepository;
     private readonly IShopPackagingOverrideRepository _packagingOverrideRepository;
     private readonly IEffectivePackagingService _effectivePackagingService;
+    private readonly IPackagingPricingService _packagingPricingService;
     private readonly ICategoryRepository _categoryRepository;
     private readonly ILoggerFactory _loggerFactory;
     private readonly ILogger<InventoryController> _logger;
@@ -50,6 +51,7 @@ public class InventoryController : BaseApiController
         IStockAdjustmentRepository stockAdjustmentRepository,
         IShopPackagingOverrideRepository packagingOverrideRepository,
         IEffectivePackagingService effectivePackagingService,
+        IPackagingPricingService packagingPricingService,
         ICategoryRepository categoryRepository,
         ILoggerFactory loggerFactory,
         ILogger<InventoryController> logger)
@@ -60,6 +62,7 @@ public class InventoryController : BaseApiController
         _stockAdjustmentRepository = stockAdjustmentRepository;
         _packagingOverrideRepository = packagingOverrideRepository;
         _effectivePackagingService = effectivePackagingService;
+        _packagingPricingService = packagingPricingService;
         _categoryRepository = categoryRepository;
         _loggerFactory = loggerFactory;
         _logger = logger;
@@ -364,6 +367,37 @@ public class InventoryController : BaseApiController
     }
 
     /// <summary>
+    /// Update packaging level prices from the active batch
+    /// Automatically calculates prices for packaging levels with null/zero values
+    /// Preserves custom shop-defined prices (non-null, non-zero)
+    /// </summary>
+    /// <param name="shopId">Shop ID</param>
+    /// <param name="drugId">Drug ID</param>
+    /// <returns>Summary of price updates made</returns>
+    [HttpPost("shops/{shopId}/drugs/{drugId}/packaging-pricing/update-from-batch")]
+    [ProducesResponseType(typeof(PackagingPricingUpdateResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<PackagingPricingUpdateResult>> UpdatePackagingPricesFromBatch(
+        string shopId,
+        string drugId)
+    {
+        try
+        {
+            var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
+            var handler = CreateUpdatePackagingPricesFromBatchHandler();
+            var command = new pos_system_api.Core.Application.Inventory.Commands.UpdatePackagingPrices.UpdatePackagingPricesFromBatchCommand(
+                shopId,
+                drugId);
+            var result = await handler.Handle(command, cancellationToken);
+            return Ok(result);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFoundWithDetails(ex);
+        }
+    }
+
+    /// <summary>
     /// Get paginated inventory for a shop
     /// </summary>
     /// <param name="shopId">Shop ID</param>
@@ -570,7 +604,7 @@ public class InventoryController : BaseApiController
         new(_inventoryRepository, _drugRepository, _supplierRepository);
 
     private ReduceStockCommandHandler CreateReduceStockHandler() =>
-        new(_inventoryRepository, _stockAdjustmentRepository, _loggerFactory.CreateLogger<ReduceStockCommandHandler>());
+        new(_inventoryRepository, _stockAdjustmentRepository, _packagingPricingService, _loggerFactory.CreateLogger<ReduceStockCommandHandler>());
 
     private UpdatePricingCommandHandler CreateUpdatePricingHandler() =>
         new(_inventoryRepository);
@@ -620,4 +654,7 @@ public class InventoryController : BaseApiController
 
     private GetCashierItemByBarcodeQueryHandler CreateGetCashierItemByBarcodeQueryHandler() =>
         new(_inventoryRepository, _drugRepository, _categoryRepository);
+
+    private pos_system_api.Core.Application.Inventory.Commands.UpdatePackagingPrices.UpdatePackagingPricesFromBatchCommandHandler CreateUpdatePackagingPricesFromBatchHandler() =>
+        new(_inventoryRepository, _packagingPricingService, _loggerFactory.CreateLogger<pos_system_api.Core.Application.Inventory.Commands.UpdatePackagingPrices.UpdatePackagingPricesFromBatchCommandHandler>());
 }

@@ -18,6 +18,13 @@ public class ShopPosItemDto
     public bool IsAvailable { get; set; }
     public int TotalStock { get; set; }
     public int ReorderPoint { get; set; }
+    
+    /// <summary>
+    /// Current active batch number (FIFO - oldest batch with stock)
+    /// Use this when recording sales to track which batch was sold
+    /// </summary>
+    public string? ActiveBatchNumber { get; set; }
+    
     public ShopPosItemPackagingDto Packaging { get; set; } = new();
     public ShopPosItemPricingDto ShopPricing { get; set; } = new();
 }

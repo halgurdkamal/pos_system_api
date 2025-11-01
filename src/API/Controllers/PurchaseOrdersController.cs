@@ -1,15 +1,15 @@
+using System.Security.Claims;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using pos_system_api.Core.Application.Common.Interfaces;
 using pos_system_api.Core.Application.PurchaseOrders.Commands.CreatePurchaseOrder;
-using pos_system_api.Core.Application.PurchaseOrders.Commands.SubmitPurchaseOrder;
 using pos_system_api.Core.Application.PurchaseOrders.Commands.ReceiveStock;
+using pos_system_api.Core.Application.PurchaseOrders.Commands.SubmitPurchaseOrder;
+using pos_system_api.Core.Application.PurchaseOrders.DTOs;
 using pos_system_api.Core.Application.PurchaseOrders.Queries.GetPurchaseOrder;
 using pos_system_api.Core.Application.PurchaseOrders.Queries.GetPurchaseOrderDashboard;
-using pos_system_api.Core.Application.PurchaseOrders.DTOs;
-using pos_system_api.Core.Application.Common.Interfaces;
 using pos_system_api.Core.Domain.PurchaseOrders.Entities;
-using System.Security.Claims;
 
 namespace pos_system_api.API.Controllers;
 
@@ -25,7 +25,8 @@ public class PurchaseOrdersController : BaseApiController
     public PurchaseOrdersController(
         IMediator mediator,
         IPurchaseOrderRepository repository,
-        ILogger<PurchaseOrdersController> logger)
+        ILogger<PurchaseOrdersController> logger
+    )
     {
         _mediator = mediator;
         _repository = repository;
@@ -37,7 +38,9 @@ public class PurchaseOrdersController : BaseApiController
     /// </summary>
     [HttpPost]
     [Authorize(Policy = "ShopAccess")]
-    public async Task<ActionResult<PurchaseOrderDto>> CreatePurchaseOrder([FromBody] CreatePurchaseOrderCommand command)
+    public async Task<ActionResult<PurchaseOrderDto>> CreatePurchaseOrder(
+        [FromBody] CreatePurchaseOrderCommand command
+    )
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "system";
         var commandWithUser = command with { CreatedBy = userId };
@@ -72,30 +75,48 @@ public class PurchaseOrdersController : BaseApiController
         [FromQuery] bool? isPaid = null,
         [FromQuery] string? searchTerm = null,
         [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 20)
+        [FromQuery] int pageSize = 20
+    )
     {
         PurchaseOrderStatus? statusEnum = null;
-        if (!string.IsNullOrEmpty(status) && Enum.TryParse<PurchaseOrderStatus>(status, ignoreCase: true, out var s))
+        if (
+            !string.IsNullOrEmpty(status)
+            && Enum.TryParse<PurchaseOrderStatus>(status, ignoreCase: true, out var s)
+        )
             statusEnum = s;
 
         OrderPriority? priorityEnum = null;
-        if (!string.IsNullOrEmpty(priority) && Enum.TryParse<OrderPriority>(priority, ignoreCase: true, out var p))
+        if (
+            !string.IsNullOrEmpty(priority)
+            && Enum.TryParse<OrderPriority>(priority, ignoreCase: true, out var p)
+        )
             priorityEnum = p;
 
         var (orders, totalCount) = await _repository.GetPagedAsync(
-            shopId, supplierId, statusEnum, fromDate, toDate,
-            priorityEnum, isPaid, searchTerm, page, pageSize);
+            shopId,
+            supplierId,
+            statusEnum,
+            fromDate,
+            toDate,
+            priorityEnum,
+            isPaid,
+            searchTerm,
+            page,
+            pageSize
+        );
 
         var dtos = orders.Select(MapToSummaryDto).ToList();
 
-        return Ok(new PagedPurchaseOrdersDto
-        {
-            Orders = dtos,
-            TotalCount = totalCount,
-            Page = page,
-            PageSize = pageSize,
-            TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize)
-        });
+        return Ok(
+            new PagedPurchaseOrdersDto
+            {
+                Orders = dtos,
+                TotalCount = totalCount,
+                Page = page,
+                PageSize = pageSize,
+                TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize),
+            }
+        );
     }
 
     /// <summary>
@@ -106,11 +127,9 @@ public class PurchaseOrdersController : BaseApiController
     public async Task<ActionResult<PurchaseOrderDto>> SubmitPurchaseOrder(string id)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "system";
-        var result = await _mediator.Send(new SubmitPurchaseOrderCommand
-        {
-            OrderId = id,
-            SubmittedBy = userId
-        });
+        var result = await _mediator.Send(
+            new SubmitPurchaseOrderCommand { OrderId = id, SubmittedBy = userId }
+        );
         return Ok(result);
     }
 
@@ -139,7 +158,10 @@ public class PurchaseOrdersController : BaseApiController
     /// </summary>
     [HttpPost("{id}/receive")]
     [Authorize(Policy = "ShopAccess")]
-    public async Task<ActionResult<PurchaseOrderDto>> ReceiveStock(string id, [FromBody] ReceiveStockRequestDto request)
+    public async Task<ActionResult<PurchaseOrderDto>> ReceiveStock(
+        string id,
+        [FromBody] ReceiveStockRequestDto request
+    )
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "system";
 
@@ -147,7 +169,7 @@ public class PurchaseOrdersController : BaseApiController
         {
             OrderId = id,
             ReceivedBy = userId,
-            Items = request.Items
+            Items = request.Items,
         };
 
         var result = await _mediator.Send(command);
@@ -159,7 +181,10 @@ public class PurchaseOrdersController : BaseApiController
     /// </summary>
     [HttpPost("{id}/cancel")]
     [Authorize(Policy = "ShopAccess")]
-    public async Task<ActionResult<PurchaseOrderDto>> CancelPurchaseOrder(string id, [FromBody] CancelOrderRequestDto request)
+    public async Task<ActionResult<PurchaseOrderDto>> CancelPurchaseOrder(
+        string id,
+        [FromBody] CancelOrderRequestDto request
+    )
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "system";
         var purchaseOrder = await _repository.GetByIdAsync(id);
@@ -179,7 +204,10 @@ public class PurchaseOrdersController : BaseApiController
     /// </summary>
     [HttpPost("{id}/mark-paid")]
     [Authorize(Policy = "ShopAccess")]
-    public async Task<ActionResult<PurchaseOrderDto>> MarkAsPaid(string id, [FromBody] MarkAsPaidRequestDto? request = null)
+    public async Task<ActionResult<PurchaseOrderDto>> MarkAsPaid(
+        string id,
+        [FromBody] MarkAsPaidRequestDto? request = null
+    )
     {
         var purchaseOrder = await _repository.GetByIdAsync(id);
 
@@ -201,9 +229,12 @@ public class PurchaseOrdersController : BaseApiController
     public async Task<ActionResult<PurchaseOrderDashboardDto>> GetDashboard(
         [FromQuery] string shopId,
         [FromQuery] DateTime? fromDate = null,
-        [FromQuery] DateTime? toDate = null)
+        [FromQuery] DateTime? toDate = null
+    )
     {
-        var result = await _mediator.Send(new GetPurchaseOrderDashboardQuery(shopId, fromDate, toDate));
+        var result = await _mediator.Send(
+            new GetPurchaseOrderDashboardQuery(shopId, fromDate, toDate)
+        );
         return Ok(result);
     }
 
@@ -212,7 +243,9 @@ public class PurchaseOrdersController : BaseApiController
     /// </summary>
     [HttpGet("pending")]
     [Authorize(Policy = "ShopAccess")]
-    public async Task<ActionResult<List<PurchaseOrderSummaryDto>>> GetPendingOrders([FromQuery] string shopId)
+    public async Task<ActionResult<List<PurchaseOrderSummaryDto>>> GetPendingOrders(
+        [FromQuery] string shopId
+    )
     {
         var orders = await _repository.GetPendingOrdersAsync(shopId);
         return Ok(orders.Select(MapToSummaryDto).ToList());
@@ -223,7 +256,9 @@ public class PurchaseOrdersController : BaseApiController
     /// </summary>
     [HttpGet("overdue-payments")]
     [Authorize(Policy = "ShopAccess")]
-    public async Task<ActionResult<List<PurchaseOrderSummaryDto>>> GetOverduePayments([FromQuery] string shopId)
+    public async Task<ActionResult<List<PurchaseOrderSummaryDto>>> GetOverduePayments(
+        [FromQuery] string shopId
+    )
     {
         var orders = await _repository.GetOverduePaymentsAsync(shopId);
         return Ok(orders.Select(MapToSummaryDto).ToList());
@@ -237,7 +272,8 @@ public class PurchaseOrdersController : BaseApiController
     public async Task<ActionResult<List<SupplierPerformanceDto>>> GetSupplierPerformance(
         [FromQuery] string shopId,
         [FromQuery] DateTime? fromDate = null,
-        [FromQuery] DateTime? toDate = null)
+        [FromQuery] DateTime? toDate = null
+    )
     {
         var spendingTask = _repository.GetSupplierSpendingAsync(shopId, fromDate, toDate);
         var orderCountTask = _repository.GetSupplierOrderCountAsync(shopId, fromDate, toDate);
@@ -250,17 +286,20 @@ public class PurchaseOrdersController : BaseApiController
         var deliveryTime = await deliveryTimeTask;
 
         var supplierIds = spending.Keys.Union(orderCount.Keys).ToList();
-        var performances = supplierIds.Select(supplierId => new SupplierPerformanceDto
-        {
-            SupplierId = supplierId,
-            SupplierName = supplierId, // Would normally fetch from supplier repository
-            TotalOrders = orderCount.GetValueOrDefault(supplierId, 0),
-            TotalSpending = spending.GetValueOrDefault(supplierId, 0),
-            AverageDeliveryDays = deliveryTime.GetValueOrDefault(supplierId, 0),
-            CompletedOrders = 0, // Would calculate from detailed data
-            CancelledOrders = 0, // Would calculate from detailed data
-            OnTimeDeliveryRate = 0 // Would calculate from detailed data
-        }).OrderByDescending(p => p.TotalSpending).ToList();
+        var performances = supplierIds
+            .Select(supplierId => new SupplierPerformanceDto
+            {
+                SupplierId = supplierId,
+                SupplierName = supplierId, // Would normally fetch from supplier repository
+                TotalOrders = orderCount.GetValueOrDefault(supplierId, 0),
+                TotalSpending = spending.GetValueOrDefault(supplierId, 0),
+                AverageDeliveryDays = deliveryTime.GetValueOrDefault(supplierId, 0),
+                CompletedOrders = 0, // Would calculate from detailed data
+                CancelledOrders = 0, // Would calculate from detailed data
+                OnTimeDeliveryRate = 0, // Would calculate from detailed data
+            })
+            .OrderByDescending(p => p.TotalSpending)
+            .ToList();
 
         return Ok(performances);
     }
@@ -280,7 +319,7 @@ public class PurchaseOrdersController : BaseApiController
             ExpectedDeliveryDate = po.ExpectedDeliveryDate,
             IsPaid = po.IsPaid,
             ItemCount = po.Items.Count,
-            CompletionPercentage = po.GetCompletionPercentage()
+            CompletionPercentage = po.GetCompletionPercentage(),
         };
     }
 }

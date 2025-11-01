@@ -1,0 +1,237 @@
+### Automatic Packaging Price Updates - API Examples
+### Based on AUTOMATIC_PRICING_FROM_BATCH_GUIDE.md
+
+@baseUrl = http://localhost:5000
+@shopId = SHOP-001
+@drugId = DRUG-001
+@token = your-jwt-token-here
+
+### ============================================
+### SETUP: Get current pricing state
+### ============================================
+
+### 1. Get current packaging pricing
+GET {{baseUrl}}/api/inventory/shops/{{shopId}}/drugs/{{drugId}}/packaging-pricing
+Authorization: Bearer {{token}}
+
+### 2. Get effective packaging levels (to see hierarchy)
+GET {{baseUrl}}/api/inventory/shops/{{shopId}}/drugs/{{drugId}}/packaging
+Authorization: Bearer {{token}}
+
+### 3. Get full inventory details (includes batches)
+GET {{baseUrl}}/api/inventory/shops/{{shopId}}/drugs/{{drugId}}
+Authorization: Bearer {{token}}
+
+### ============================================
+### MAIN FEATURE: Update Packaging Prices from Active Batch
+### ============================================
+
+### 4. Update packaging prices from active batch
+# This will:
+# - Auto-calculate prices for packaging levels with null/0 values
+# - Keep custom shop-defined prices (non-null, non-zero)
+# - Add missing packaging levels with auto-calculated prices
+POST {{baseUrl}}/api/inventory/shops/{{shopId}}/drugs/{{drugId}}/packaging-pricing/update-from-batch
+Authorization: Bearer {{token}}
+
+###
+# Expected Response:
+# {
+#   "updatedPricing": {
+#     "costPrice": 0.40,
+#     "sellingPrice": 0.50,
+#     "packagingLevelPrices": {
+#       "Box": 120.00,   // Auto-calculated from batch
+#       "Strip": 5.00,   // Custom price kept
+#       "Tablet": 0.60   // Auto-calculated from batch
+#     },
+#     "lastPriceUpdate": "2025-11-01T10:30:00Z"
+#   },
+#   "summary": {
+#     "batchNumber": "BATCH-002",
+#     "batchSellingPrice": 0.60,
+#     "totalLevels": 3,
+#     "autoCalculatedCount": 2,
+#     "addedCount": 0,
+#     "customPriceCount": 1,
+#     "changes": [
+#       {
+#         "unitName": "Box",
+#         "oldPrice": 0,
+#         "newPrice": 120.00,
+#         "effectiveBaseUnitQuantity": 200,
+#         "changeType": "AutoCalculated",
+#         "calculationFormula": "0.60 (batch) × 200.00 (base units) = 120.00"
+#       }
+#       // ... more changes
+#     ]
+#   }
+# }
+
+### ============================================
+### WORKFLOW EXAMPLE: Add Stock → Update Prices
+### ============================================
+
+### 5. Add new batch with different price
+POST {{baseUrl}}/api/inventory/shops/{{shopId}}/drugs/{{drugId}}/stock
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "batchNumber": "BATCH-003",
+  "supplierId": "SUPPLIER-001",
+  "quantity": 500,
+  "receivedDate": "2025-11-01T10:00:00Z",
+  "expiryDate": "2027-11-01T10:00:00Z",
+  "purchasePrice": 0.35,
+  "sellingPrice": 0.65
+}
+
+### 6. Now update packaging prices to reflect new batch
+POST {{baseUrl}}/api/inventory/shops/{{shopId}}/drugs/{{drugId}}/packaging-pricing/update-from-batch
+Authorization: Bearer {{token}}
+
+### 7. Verify updated prices
+GET {{baseUrl}}/api/inventory/shops/{{shopId}}/drugs/{{drugId}}/packaging-pricing
+Authorization: Bearer {{token}}
+
+### ============================================
+### SCENARIO: Set Custom Price Then Refresh
+### ============================================
+
+### 8. Manually set custom packaging prices
+PUT {{baseUrl}}/api/inventory/shops/{{shopId}}/drugs/{{drugId}}/packaging-pricing
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "Box": 150.00,  // Custom premium price
+  "Strip": 0,     // Will be auto-calculated
+  "Tablet": 0     // Will be auto-calculated
+}
+
+### 9. Update from batch (keeps custom Box price, calculates others)
+POST {{baseUrl}}/api/inventory/shops/{{shopId}}/drugs/{{drugId}}/packaging-pricing/update-from-batch
+Authorization: Bearer {{token}}
+
+###
+# Expected: Box price stays at 150.00 (custom),
+# Strip and Tablet get calculated from batch
+
+### ============================================
+### MULTI-SHOP SCENARIO
+### ============================================
+
+### 10. Shop A - Premium pricing
+POST {{baseUrl}}/api/inventory/shops/SHOP-A/drugs/{{drugId}}/packaging-pricing/update-from-batch
+Authorization: Bearer {{token}}
+
+### 11. Shop B - Budget pricing
+POST {{baseUrl}}/api/inventory/shops/SHOP-B/drugs/{{drugId}}/packaging-pricing/update-from-batch
+Authorization: Bearer {{token}}
+
+### 12. Compare pricing between shops
+GET {{baseUrl}}/api/inventory/shops/SHOP-A/drugs/{{drugId}}/packaging-pricing
+Authorization: Bearer {{token}}
+
+###
+GET {{baseUrl}}/api/inventory/shops/SHOP-B/drugs/{{drugId}}/packaging-pricing
+Authorization: Bearer {{token}}
+
+### ============================================
+### ERROR SCENARIOS
+### ============================================
+
+### 13. Non-existent inventory (404)
+POST {{baseUrl}}/api/inventory/shops/INVALID-SHOP/drugs/{{drugId}}/packaging-pricing/update-from-batch
+Authorization: Bearer {{token}}
+
+###
+# Expected Response: 404 Not Found
+# {
+#   "error": "Inventory not found for Shop INVALID-SHOP and Drug DRUG-001"
+# }
+
+### 14. Inventory with no active batches (returns empty result)
+# First create inventory without batches, then try to update
+POST {{baseUrl}}/api/inventory/shops/{{shopId}}/drugs/DRUG-NO-STOCK/packaging-pricing/update-from-batch
+Authorization: Bearer {{token}}
+
+###
+# Expected: Summary shows no batch number, no changes made
+
+### ============================================
+### INTEGRATION TEST: Full Workflow
+### ============================================
+
+### 15. Full workflow test
+# Step 1: Check current state
+GET {{baseUrl}}/api/inventory/shops/{{shopId}}/drugs/{{drugId}}/packaging-pricing
+Authorization: Bearer {{token}}
+
+### Step 2: Add new batch
+POST {{baseUrl}}/api/inventory/shops/{{shopId}}/drugs/{{drugId}}/stock
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "batchNumber": "BATCH-NEW",
+  "supplierId": "SUPPLIER-001",
+  "quantity": 1000,
+  "receivedDate": "2025-11-01T12:00:00Z",
+  "expiryDate": "2027-11-01T12:00:00Z",
+  "purchasePrice": 0.40,
+  "sellingPrice": 0.70
+}
+
+### Step 3: Update packaging prices
+POST {{baseUrl}}/api/inventory/shops/{{shopId}}/drugs/{{drugId}}/packaging-pricing/update-from-batch
+Authorization: Bearer {{token}}
+
+### Step 4: Verify changes in response summary
+# Check the response for:
+# - autoCalculatedCount > 0
+# - changes array has details
+# - lastPriceUpdate is recent
+
+### Step 5: Confirm persisted changes
+GET {{baseUrl}}/api/inventory/shops/{{shopId}}/drugs/{{drugId}}/packaging-pricing
+Authorization: Bearer {{token}}
+
+###
+# Verify that packagingLevelPrices now reflect:
+# - Auto-calculated prices based on 0.70 selling price
+# - Custom prices preserved (if any were non-zero)
+
+### ============================================
+### ADVANCED: Query Effective Packaging First
+### ============================================
+
+### 16. Get effective packaging to understand calculations
+GET {{baseUrl}}/api/inventory/shops/{{shopId}}/drugs/{{drugId}}/packaging
+Authorization: Bearer {{token}}
+
+###
+# Response shows EffectiveBaseUnitQuantity for each level:
+# {
+#   "packagingLevels": [
+#     {
+#       "unitName": "Box",
+#       "effectiveBaseUnitQuantity": 200,  // Use this in formula
+#       ...
+#     },
+#     {
+#       "unitName": "Strip",
+#       "effectiveBaseUnitQuantity": 10,
+#       ...
+#     }
+#   ]
+# }
+
+### 17. Then update prices (formula will use these quantities)
+POST {{baseUrl}}/api/inventory/shops/{{shopId}}/drugs/{{drugId}}/packaging-pricing/update-from-batch
+Authorization: Bearer {{token}}
+
+###
+# Formula in response:
+# "calculationFormula": "{batchPrice} × {effectiveBaseUnitQuantity} = {result}"
