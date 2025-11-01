@@ -128,6 +128,12 @@ public class SalesOrderItemConfiguration : IEntityTypeConfiguration<SalesOrderIt
         builder.Property(i => i.BatchNumber)
             .HasMaxLength(100);
 
+        builder.Property(i => i.PackagingLevelSold)
+            .HasMaxLength(50);
+
+        builder.Property(i => i.BaseUnitsConsumed)
+            .HasColumnType("decimal(18,2)");
+
         // Indexes
         builder.HasIndex(i => i.SalesOrderId);
         builder.HasIndex(i => i.DrugId);
