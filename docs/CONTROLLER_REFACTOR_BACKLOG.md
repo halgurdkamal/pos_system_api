@@ -16,8 +16,11 @@ Each refactor follows the same template (see `PdfController` and `AdminControlle
 
 - ✅ `PdfController` — extracted `GenerateReceiptPdfQuery` (Phase 2 step 1)
 - ✅ `AdminController` — extracted `GetDatabaseStatsQuery`, injected seeders via DI, removed try/catch (Phase 2 step 3, partial)
+- ✅ `AuthController` — extracted `GetCurrentUserQuery`, removed redundant try/catch blocks (global middleware already handles `UnauthorizedAccessException` / `InvalidOperationException` / `ArgumentException`) (Phase 3 step 1)
 
 ## Top remaining candidates (worst first)
+
+### 0. ~~AuthController~~ — done
 
 ### 1. DrugsController (633 LOC, **very leaky**)
 
@@ -65,21 +68,13 @@ Architectural smell rather than business-logic leak:
 
 **Approach**: Replace handler factories with proper DI registration; extract pricing DTO mapping into a query handler.
 
-### 5. AuthController (181 LOC, **moderate**)
-
-- `GetCurrentUser()` (lines 120-179) — manual DTO construction with nested shop list
-- Three try/catch blocks returning specific error codes (lines 33-61)
-
-**Approach**: Move `GetCurrentUser` body into `GetCurrentUserQuery` handler; rely on global middleware for the error mapping (or use a problem-details mapper).
-
 ## Lower priority
 
 The remaining controllers (Barcodes, Categories, InventoryAlerts, InventoryReports, ShopMembers, Shops, Stock*, Suppliers) are mostly thin. They have try/catch noise that could be removed when the global exception middleware is verified to handle their error cases, but no business logic leaks worth dedicated refactor sessions.
 
 ## Order of attack (recommended)
 
-1. **AuthController** next — small, isolated, sets up the pattern for read-side queries with auth context
-2. **PurchaseOrdersController** — three small command handlers, very repetitive (good template)
-3. **SalesOrdersController** — apply the PurchaseOrders template
-4. **InventoryController** — fix DI smell first, extract pricing query second
-5. **DrugsController** — saved for last because it's the biggest. Tackle in 3-4 sub-sessions, not one go.
+1. **PurchaseOrdersController** — three small command handlers, very repetitive (good template)
+2. **SalesOrdersController** — apply the PurchaseOrders template
+3. **InventoryController** — fix DI smell first, extract pricing query second
+4. **DrugsController** — saved for last because it's the biggest. Tackle in 3-4 sub-sessions, not one go.
