@@ -1,125 +1,71 @@
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Threading;
-using pos_system_api.Core.Application.Common.Interfaces;
 using pos_system_api.Core.Application.Common.Models;
 using pos_system_api.Core.Application.Inventory.Commands.AddStock;
-using pos_system_api.Core.Application.Inventory.Commands.ReduceStock;
-using pos_system_api.Core.Application.Inventory.Commands.UpdatePricing;
-using pos_system_api.Core.Application.Inventory.Commands.UpdateReorderPoint;
-using pos_system_api.Core.Application.Inventory.Commands.UpdatePackagingPricing;
-using pos_system_api.Core.Application.Inventory.Commands.PackagingOverrides;
 using pos_system_api.Core.Application.Inventory.Commands.MoveToShopFloor;
 using pos_system_api.Core.Application.Inventory.Commands.MoveToStorage;
+using pos_system_api.Core.Application.Inventory.Commands.PackagingOverrides;
+using pos_system_api.Core.Application.Inventory.Commands.ReduceStock;
+using pos_system_api.Core.Application.Inventory.Commands.UpdatePackagingPricing;
+using pos_system_api.Core.Application.Inventory.Commands.UpdatePackagingPrices;
+using pos_system_api.Core.Application.Inventory.Commands.UpdatePricing;
+using pos_system_api.Core.Application.Inventory.Commands.UpdateReorderPoint;
 using pos_system_api.Core.Application.Inventory.DTOs;
-using pos_system_api.Core.Application.Inventory.Services;
+using pos_system_api.Core.Application.Inventory.Queries.GetCashierItemByBarcode;
+using pos_system_api.Core.Application.Inventory.Queries.GetCashierItems;
+using pos_system_api.Core.Application.Inventory.Queries.GetEffectivePackaging;
 using pos_system_api.Core.Application.Inventory.Queries.GetExpiringBatches;
 using pos_system_api.Core.Application.Inventory.Queries.GetLowStock;
+using pos_system_api.Core.Application.Inventory.Queries.GetPackagingPricing;
 using pos_system_api.Core.Application.Inventory.Queries.GetShopInventory;
 using pos_system_api.Core.Application.Inventory.Queries.GetTotalStockValue;
-using pos_system_api.Core.Application.Inventory.Queries.GetCashierItems;
-using pos_system_api.Core.Application.Inventory.Queries.GetCashierItemByBarcode;
+using pos_system_api.Core.Application.Inventory.Services;
 
 namespace pos_system_api.API.Controllers;
 
 /// <summary>
-/// API Controller for shop inventory operations (Multi-tenant inventory management)
+/// API Controller for shop inventory operations (Multi-tenant inventory management).
 /// </summary>
 [ApiController]
 [Route("api/inventory")]
 [Produces("application/json")]
-// [Authorize(Policy = "ShopAccess")] // All inventory endpoints require shop-specific access
 public class InventoryController : BaseApiController
 {
-    private readonly IInventoryRepository _inventoryRepository;
-    private readonly IDrugRepository _drugRepository;
-    private readonly ISupplierRepository _supplierRepository;
-    private readonly IStockAdjustmentRepository _stockAdjustmentRepository;
-    private readonly IShopPackagingOverrideRepository _packagingOverrideRepository;
-    private readonly IEffectivePackagingService _effectivePackagingService;
-    private readonly IPackagingPricingService _packagingPricingService;
-    private readonly ICategoryRepository _categoryRepository;
-    private readonly ILoggerFactory _loggerFactory;
-    private readonly ILogger<InventoryController> _logger;
+    private readonly IMediator _mediator;
 
-    public InventoryController(
-        IInventoryRepository inventoryRepository,
-        IDrugRepository drugRepository,
-        ISupplierRepository supplierRepository,
-        IStockAdjustmentRepository stockAdjustmentRepository,
-        IShopPackagingOverrideRepository packagingOverrideRepository,
-        IEffectivePackagingService effectivePackagingService,
-        IPackagingPricingService packagingPricingService,
-        ICategoryRepository categoryRepository,
-        ILoggerFactory loggerFactory,
-        ILogger<InventoryController> logger)
+    public InventoryController(IMediator mediator)
     {
-        _inventoryRepository = inventoryRepository;
-        _drugRepository = drugRepository;
-        _supplierRepository = supplierRepository;
-        _stockAdjustmentRepository = stockAdjustmentRepository;
-        _packagingOverrideRepository = packagingOverrideRepository;
-        _effectivePackagingService = effectivePackagingService;
-        _packagingPricingService = packagingPricingService;
-        _categoryRepository = categoryRepository;
-        _loggerFactory = loggerFactory;
-        _logger = logger;
+        _mediator = mediator;
     }
 
-    /// <summary>
-    /// Get merged packaging configuration for a drug in a specific shop
-    /// </summary>
+    /// <summary>Get merged packaging configuration for a drug in a specific shop.</summary>
     [HttpGet("shops/{shopId}/drugs/{drugId}/packaging")]
     [ProducesResponseType(typeof(EffectivePackagingDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<EffectivePackagingDto>> GetPackaging(string shopId, string drugId)
+    public async Task<ActionResult<EffectivePackagingDto>> GetPackaging(
+        string shopId, string drugId, CancellationToken cancellationToken)
     {
-        try
-        {
-            var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
-            var result = await _effectivePackagingService.GetEffectivePackagingAsync(shopId, drugId, cancellationToken);
-            return Ok(result);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { error = ex.Message });
-        }
+        var result = await _mediator.Send(new GetEffectivePackagingQuery(shopId, drugId), cancellationToken);
+        return Ok(result);
     }
 
-    /// <summary>
-    /// Create a packaging override (global override or custom level) for a shop
-    /// </summary>
+    /// <summary>Create a packaging override (global override or custom level) for a shop.</summary>
     [HttpPost("shops/{shopId}/drugs/{drugId}/packaging-overrides")]
     [ProducesResponseType(typeof(EffectivePackagingDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<EffectivePackagingDto>> CreatePackagingOverride(
         string shopId,
         string drugId,
-        [FromBody] PackagingOverrideInputDto dto)
+        [FromBody] PackagingOverrideInputDto dto,
+        CancellationToken cancellationToken)
     {
-        try
-        {
-            var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
-            var handler = CreatePackagingOverrideHandler();
-            var command = new CreatePackagingOverrideCommand(shopId, drugId, dto);
-            var result = await handler.Handle(command, cancellationToken);
-            return Ok(result);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { error = ex.Message });
-        }
-        catch (Exception ex)
-        {
-            return BadRequestWithDetails(ex);
-        }
+        var result = await _mediator.Send(
+            new CreatePackagingOverrideCommand(shopId, drugId, dto), cancellationToken);
+        return Ok(result);
     }
 
-    /// <summary>
-    /// Update packaging override or global linked level for a shop
-    /// </summary>
+    /// <summary>Update packaging override or global linked level for a shop.</summary>
     [HttpPut("shops/{shopId}/drugs/{drugId}/packaging-levels/{levelId}")]
     [ProducesResponseType(typeof(EffectivePackagingDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -128,356 +74,178 @@ public class InventoryController : BaseApiController
         string shopId,
         string drugId,
         string levelId,
-        [FromBody] PackagingOverrideInputDto dto)
+        [FromBody] PackagingOverrideInputDto dto,
+        CancellationToken cancellationToken)
     {
-        try
-        {
-            var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
-            var handler = CreateUpdatePackagingLevelHandler();
-            var command = new UpdatePackagingLevelCommand(shopId, drugId, levelId, dto);
-            var result = await handler.Handle(command, cancellationToken);
-            return Ok(result);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { error = ex.Message });
-        }
-        catch (Exception ex)
-        {
-            return BadRequestWithDetails(ex);
-        }
+        var result = await _mediator.Send(
+            new UpdatePackagingLevelCommand(shopId, drugId, levelId, dto), cancellationToken);
+        return Ok(result);
     }
 
-    /// <summary>
-    /// Add stock to shop inventory (creates a new batch)
-    /// </summary>
-    /// <param name="shopId">Shop ID</param>
-    /// <param name="dto">Stock details including batch information</param>
-    /// <returns>Updated inventory details</returns>
+    /// <summary>Add stock to shop inventory (creates a new batch).</summary>
     [HttpPost("shops/{shopId}/stock")]
     [ProducesResponseType(typeof(InventoryDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<InventoryDto>> AddStock(string shopId, [FromBody] AddStockDto dto)
+    public async Task<ActionResult<InventoryDto>> AddStock(
+        string shopId,
+        [FromBody] AddStockDto dto,
+        CancellationToken cancellationToken)
     {
-        try
-        {
-            var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
-            var handler = CreateAddStockHandler();
-            var command = new AddStockCommand(
-                shopId,
-                dto.DrugId,
-                dto.BatchNumber,
-                dto.SupplierId,
-                dto.Quantity,
-                dto.ExpiryDate,
-                dto.PurchasePrice,
-                dto.SellingPrice,
-                dto.StorageLocation
-            );
-            var result = await handler.Handle(command, cancellationToken);
-            return CreatedAtAction(
-                nameof(GetShopInventory),
+        var result = await _mediator.Send(new AddStockCommand(
+            shopId,
+            dto.DrugId,
+            dto.BatchNumber,
+            dto.SupplierId,
+            dto.Quantity,
+            dto.ExpiryDate,
+            dto.PurchasePrice,
+            dto.SellingPrice,
+            dto.StorageLocation), cancellationToken);
 
-                new { shopId = result.ShopId },
-
-                result
-            );
-        }
-        catch (Exception ex)
-        {
-            return BadRequestWithDetails(ex);
-        }
+        return CreatedAtAction(nameof(GetShopInventory), new { shopId = result.ShopId }, result);
     }
 
-    /// <summary>
-    /// Reduce stock from shop inventory (FIFO - First In First Out)
-    /// </summary>
-    /// <param name="shopId">Shop ID</param>
-    /// <param name="drugId">Drug ID</param>
-    /// <param name="dto">Quantity to reduce</param>
-    /// <returns>Updated inventory details</returns>
+    /// <summary>Reduce stock from shop inventory (FIFO - First In First Out).</summary>
     [HttpPut("shops/{shopId}/drugs/{drugId}/reduce")]
     [ProducesResponseType(typeof(InventoryDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<InventoryDto>> ReduceStock(
         string shopId,
-
         string drugId,
-
-        [FromBody] ReduceStockDto dto)
+        [FromBody] ReduceStockDto dto,
+        CancellationToken cancellationToken)
     {
-        try
-        {
-            var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
-            var handler = CreateReduceStockHandler();
-            var command = new ReduceStockCommand(shopId, drugId, dto.Quantity);
-            var result = await handler.Handle(command, cancellationToken);
-            return Ok(result);
-        }
-        catch (InvalidOperationException ex)
-        {
-            if (ex.Message.Contains("not found"))
-                return NotFoundWithDetails(ex);
-            return BadRequestWithDetails(ex);
-        }
+        var result = await _mediator.Send(
+            new ReduceStockCommand(shopId, drugId, dto.Quantity), cancellationToken);
+        return Ok(result);
     }
 
-    /// <summary>
-    /// Update shop-specific pricing for an inventory item
-    /// </summary>
-    /// <param name="shopId">Shop ID</param>
-    /// <param name="drugId">Drug ID</param>
-    /// <param name="dto">Updated pricing details</param>
-    /// <returns>Updated inventory details</returns>
+    /// <summary>Update shop-specific pricing for an inventory item.</summary>
     [HttpPut("shops/{shopId}/drugs/{drugId}/pricing")]
     [ProducesResponseType(typeof(InventoryDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<InventoryDto>> UpdatePricing(
         string shopId,
-
         string drugId,
-
-        [FromBody] UpdatePricingDto dto)
+        [FromBody] UpdatePricingDto dto,
+        CancellationToken cancellationToken)
     {
-        try
-        {
-            var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
-            var handler = CreateUpdatePricingHandler();
-            var command = new UpdatePricingCommand(
-                shopId,
-                drugId,
-
-                dto.CostPrice,
-
-                dto.SellingPrice,
-
-                dto.TaxRate
-            );
-            var result = await handler.Handle(command, cancellationToken);
-            return Ok(result);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return NotFoundWithDetails(ex);
-        }
+        var result = await _mediator.Send(
+            new UpdatePricingCommand(shopId, drugId, dto.CostPrice, dto.SellingPrice, dto.TaxRate),
+            cancellationToken);
+        return Ok(result);
     }
 
-    /// <summary>
-    /// Update reorder point for an inventory item
-    /// </summary>
-    /// <param name="shopId">Shop ID</param>
-    /// <param name="drugId">Drug ID</param>
-    /// <param name="dto">Updated reorder point</param>
-    /// <returns>Updated inventory details</returns>
+    /// <summary>Update reorder point for an inventory item.</summary>
     [HttpPut("shops/{shopId}/drugs/{drugId}/reorder-point")]
     [ProducesResponseType(typeof(InventoryDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<InventoryDto>> UpdateReorderPoint(
         string shopId,
-
         string drugId,
-
-        [FromBody] UpdateReorderPointDto dto)
+        [FromBody] UpdateReorderPointDto dto,
+        CancellationToken cancellationToken)
     {
-        try
-        {
-            var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
-            var handler = CreateUpdateReorderPointHandler();
-            var command = new UpdateReorderPointCommand(shopId, drugId, dto.ReorderPoint);
-            var result = await handler.Handle(command, cancellationToken);
-            return Ok(result);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return NotFoundWithDetails(ex);
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequestWithDetails(ex);
-        }
+        var result = await _mediator.Send(
+            new UpdateReorderPointCommand(shopId, drugId, dto.ReorderPoint), cancellationToken);
+        return Ok(result);
     }
 
-    /// <summary>
-    /// Update packaging-level pricing for an inventory item
-    /// </summary>
-    /// <param name="shopId">Shop ID</param>
-    /// <param name="drugId">Drug ID</param>
-    /// <param name="packagingPrices">Dictionary of packaging level names to prices</param>
-    /// <returns>Updated inventory details</returns>
+    /// <summary>Update packaging-level pricing for an inventory item.</summary>
     [HttpPut("shops/{shopId}/drugs/{drugId}/packaging-pricing")]
     [ProducesResponseType(typeof(InventoryDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<InventoryDto>> UpdatePackagingPricing(
         string shopId,
         string drugId,
-        [FromBody] Dictionary<string, decimal> packagingPrices)
+        [FromBody] Dictionary<string, decimal> packagingPrices,
+        CancellationToken cancellationToken)
     {
-        try
-        {
-            var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
-            var handler = CreateUpdatePackagingPricingHandler();
-            var command = new UpdatePackagingPricingCommand(shopId, drugId, packagingPrices);
-            var result = await handler.Handle(command, cancellationToken);
-            return Ok(result);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return NotFoundWithDetails(ex);
-        }
+        var result = await _mediator.Send(
+            new UpdatePackagingPricingCommand(shopId, drugId, packagingPrices), cancellationToken);
+        return Ok(result);
     }
 
-    /// <summary>
-    /// Get packaging-level pricing for an inventory item
-    /// </summary>
-    /// <param name="shopId">Shop ID</param>
-    /// <param name="drugId">Drug ID</param>
-    /// <returns>Shop pricing details including packaging level prices</returns>
+    /// <summary>Get packaging-level pricing for an inventory item.</summary>
     [HttpGet("shops/{shopId}/drugs/{drugId}/packaging-pricing")]
     [ProducesResponseType(typeof(ShopPricingDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ShopPricingDto>> GetPackagingPricing(string shopId, string drugId)
+    public async Task<ActionResult<ShopPricingDto>> GetPackagingPricing(
+        string shopId, string drugId, CancellationToken cancellationToken)
     {
-        var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
-        var inventory = await _inventoryRepository.GetByShopAndDrugAsync(shopId, drugId, cancellationToken);
-
-        if (inventory == null)
-        {
-            return NotFound(new { error = $"Inventory not found for Shop '{shopId}' and Drug '{drugId}'." });
-        }
-
-        var pricing = inventory.ShopPricing;
-        var finalPrice = pricing.GetFinalPrice();
-
-        var dto = new ShopPricingDto
-        {
-            CostPrice = pricing.CostPrice,
-            SellingPrice = pricing.SellingPrice,
-            Discount = pricing.Discount,
-            Currency = pricing.Currency,
-            TaxRate = pricing.TaxRate,
-            ProfitMargin = finalPrice - pricing.CostPrice,
-            ProfitMarginPercentage = pricing.GetProfitMargin(),
-            LastPriceUpdate = pricing.LastPriceUpdate,
-            PackagingLevelPrices = new Dictionary<string, decimal>(pricing.PackagingLevelPrices)
-        };
-
-        return Ok(dto);
+        var result = await _mediator.Send(
+            new GetPackagingPricingQuery(shopId, drugId), cancellationToken);
+        return result == null
+            ? NotFound(new { error = $"Inventory not found for Shop '{shopId}' and Drug '{drugId}'." })
+            : Ok(result);
     }
 
     /// <summary>
-    /// Update packaging level prices from the active batch
-    /// Automatically calculates prices for packaging levels with null/zero values
-    /// Preserves custom shop-defined prices (non-null, non-zero)
+    /// Update packaging level prices from the active batch. Auto-calculates
+    /// prices for null/zero packaging levels; preserves shop-defined custom prices.
     /// </summary>
-    /// <param name="shopId">Shop ID</param>
-    /// <param name="drugId">Drug ID</param>
-    /// <returns>Summary of price updates made</returns>
     [HttpPost("shops/{shopId}/drugs/{drugId}/packaging-pricing/update-from-batch")]
     [ProducesResponseType(typeof(PackagingPricingUpdateResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<PackagingPricingUpdateResult>> UpdatePackagingPricesFromBatch(
-        string shopId,
-        string drugId)
+        string shopId, string drugId, CancellationToken cancellationToken)
     {
-        try
-        {
-            var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
-            var handler = CreateUpdatePackagingPricesFromBatchHandler();
-            var command = new pos_system_api.Core.Application.Inventory.Commands.UpdatePackagingPrices.UpdatePackagingPricesFromBatchCommand(
-                shopId,
-                drugId);
-            var result = await handler.Handle(command, cancellationToken);
-            return Ok(result);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFoundWithDetails(ex);
-        }
+        var result = await _mediator.Send(
+            new UpdatePackagingPricesFromBatchCommand(shopId, drugId), cancellationToken);
+        return Ok(result);
     }
 
-    /// <summary>
-    /// Get paginated inventory for a shop
-    /// </summary>
-    /// <param name="shopId">Shop ID</param>
-    /// <param name="page">Page number (default: 1)</param>
-    /// <param name="limit">Items per page (default: 20)</param>
-    /// <param name="isAvailable">Filter by availability (optional)</param>
-    /// <returns>Paginated list of inventory items</returns>
+    /// <summary>Get paginated inventory for a shop.</summary>
     [HttpGet("shops/{shopId}")]
     [ProducesResponseType(typeof(PagedResult<InventoryDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<PagedResult<InventoryDto>>> GetShopInventory(
         string shopId,
+        CancellationToken cancellationToken,
         [FromQuery] int page = 1,
         [FromQuery] int limit = 20,
         [FromQuery] bool? isAvailable = null)
     {
-        var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
-        var handler = CreateGetShopInventoryQueryHandler();
-        var query = new GetShopInventoryQuery(shopId, page, limit, isAvailable);
-        var result = await handler.Handle(query, cancellationToken);
+        var result = await _mediator.Send(
+            new GetShopInventoryQuery(shopId, page, limit, isAvailable), cancellationToken);
         return Ok(result);
     }
 
-    /// <summary>
-    /// Get low stock items for a shop (below reorder point)
-    /// </summary>
-    /// <param name="shopId">Shop ID</param>
-    /// <returns>List of low stock items</returns>
+    /// <summary>Get low stock items for a shop (below reorder point).</summary>
     [HttpGet("shops/{shopId}/low-stock")]
     [ProducesResponseType(typeof(IEnumerable<InventoryDto>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<InventoryDto>>> GetLowStock(string shopId)
+    public async Task<ActionResult<IEnumerable<InventoryDto>>> GetLowStock(
+        string shopId, CancellationToken cancellationToken)
     {
-        var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
-        var handler = CreateGetLowStockQueryHandler();
-        var query = new GetLowStockQuery(shopId);
-        var result = await handler.Handle(query, cancellationToken);
+        var result = await _mediator.Send(new GetLowStockQuery(shopId), cancellationToken);
         return Ok(result);
     }
 
-    /// <summary>
-    /// Get inventory items with expiring batches
-    /// </summary>
-    /// <param name="shopId">Shop ID</param>
-    /// <param name="days">Number of days to check for expiration (default: 30)</param>
-    /// <returns>List of items with expiring batches</returns>
+    /// <summary>Get inventory items with batches expiring within the given window.</summary>
     [HttpGet("shops/{shopId}/expiring")]
     [ProducesResponseType(typeof(IEnumerable<InventoryDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<InventoryDto>>> GetExpiringBatches(
         string shopId,
+        CancellationToken cancellationToken,
         [FromQuery] int days = 30)
     {
-        var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
-        var handler = CreateGetExpiringBatchesQueryHandler();
-        var query = new GetExpiringBatchesQuery(shopId, days);
-        var result = await handler.Handle(query, cancellationToken);
+        var result = await _mediator.Send(
+            new GetExpiringBatchesQuery(shopId, days), cancellationToken);
         return Ok(result);
     }
 
-    /// <summary>
-    /// Get total stock value for a shop
-    /// </summary>
-    /// <param name="shopId">Shop ID</param>
-    /// <returns>Total stock value in the shop's currency</returns>
+    /// <summary>Get total stock value for a shop.</summary>
     [HttpGet("shops/{shopId}/value")]
     [ProducesResponseType(typeof(decimal), StatusCodes.Status200OK)]
-    public async Task<ActionResult<object>> GetTotalStockValue(string shopId)
+    public async Task<ActionResult<object>> GetTotalStockValue(
+        string shopId, CancellationToken cancellationToken)
     {
-        var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
-        var handler = CreateGetTotalStockValueQueryHandler();
-        var query = new GetTotalStockValueQuery(shopId);
-        var result = await handler.Handle(query, cancellationToken);
+        var result = await _mediator.Send(new GetTotalStockValueQuery(shopId), cancellationToken);
         return Ok(new { shopId, totalValue = result, currency = "USD" });
     }
 
-    /// <summary>
-    /// Move stock from storage to shop floor (for display/customer access)
-    /// </summary>
-    /// <param name="shopId">Shop ID</param>
-    /// <param name="drugId">Drug ID</param>
-    /// <param name="dto">Move details (quantity and optional batch number)</param>
-    /// <returns>Updated inventory with location breakdown</returns>
+    /// <summary>Move stock from storage to shop floor (for display/customer access).</summary>
     [HttpPost("shops/{shopId}/drugs/{drugId}/move-to-floor")]
     [ProducesResponseType(typeof(InventoryDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -485,38 +253,16 @@ public class InventoryController : BaseApiController
     public async Task<ActionResult<InventoryDto>> MoveToShopFloor(
         string shopId,
         string drugId,
-        [FromBody] MoveStockDto dto)
+        [FromBody] MoveStockDto dto,
+        CancellationToken cancellationToken)
     {
-        try
-        {
-            var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
-            var handler = CreateMoveToShopFloorHandler();
-            var command = new pos_system_api.Core.Application.Inventory.Commands.MoveToShopFloor.MoveToShopFloorCommand(
-                shopId,
-                drugId,
-                dto.Quantity,
-                dto.BatchNumber
-            );
-            var result = await handler.Handle(command, cancellationToken);
-            return Ok(result);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { error = ex.Message });
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(new { error = ex.Message });
-        }
+        var result = await _mediator.Send(
+            new MoveToShopFloorCommand(shopId, drugId, dto.Quantity, dto.BatchNumber),
+            cancellationToken);
+        return Ok(result);
     }
 
-    /// <summary>
-    /// Move stock from shop floor back to storage
-    /// </summary>
-    /// <param name="shopId">Shop ID</param>
-    /// <param name="drugId">Drug ID</param>
-    /// <param name="dto">Move details (quantity and optional batch number)</param>
-    /// <returns>Updated inventory with location breakdown</returns>
+    /// <summary>Move stock from shop floor back to storage.</summary>
     [HttpPost("shops/{shopId}/drugs/{drugId}/move-to-storage")]
     [ProducesResponseType(typeof(InventoryDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -524,137 +270,46 @@ public class InventoryController : BaseApiController
     public async Task<ActionResult<InventoryDto>> MoveToStorage(
         string shopId,
         string drugId,
-        [FromBody] MoveStockDto dto)
+        [FromBody] MoveStockDto dto,
+        CancellationToken cancellationToken)
     {
-        try
-        {
-            var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
-            var handler = CreateMoveToStorageHandler();
-            var command = new pos_system_api.Core.Application.Inventory.Commands.MoveToStorage.MoveToStorageCommand(
-                shopId,
-                drugId,
-                dto.Quantity,
-                dto.BatchNumber
-            );
-            var result = await handler.Handle(command, cancellationToken);
-            return Ok(result);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { error = ex.Message });
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(new { error = ex.Message });
-        }
+        var result = await _mediator.Send(
+            new MoveToStorageCommand(shopId, drugId, dto.Quantity, dto.BatchNumber),
+            cancellationToken);
+        return Ok(result);
     }
 
     /// <summary>
-    /// Get available items for cashier POS - includes drug info, images, stock, and pricing
+    /// Get available items for cashier POS — drug info, images, stock, and pricing.
     /// </summary>
-    /// <param name="shopId">Shop ID</param>
-    /// <param name="searchTerm">Search by name, barcode, or category (optional)</param>
-    /// <param name="category">Filter by category (optional)</param>
-    /// <param name="page">Page number (default: 1)</param>
-    /// <param name="limit">Items per page (default: 50)</param>
-    /// <returns>Cashier-friendly list of available items with all necessary info</returns>
     [HttpGet("shops/{shopId}/pos-items")]
     [Authorize(Policy = "ShopAccess")]
     [ProducesResponseType(typeof(PagedResult<ShopPosItemDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<PagedResult<ShopPosItemDto>>> GetPosItems(
         string shopId,
+        CancellationToken cancellationToken,
         [FromQuery] string? searchTerm = null,
         [FromQuery] string? category = null,
         [FromQuery] int page = 1,
         [FromQuery] int limit = 50)
     {
-        var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
-        var handler = CreateGetCashierItemsQueryHandler();
-        var query = new GetCashierItemsQuery(shopId, searchTerm, category, page, limit);
-        var result = await handler.Handle(query, cancellationToken);
+        var result = await _mediator.Send(
+            new GetCashierItemsQuery(shopId, searchTerm, category, page, limit), cancellationToken);
         return Ok(result);
     }
 
-    /// <summary>
-    /// Get single item for cashier by barcode scan
-    /// </summary>
-    /// <param name="shopId">Shop ID</param>
-    /// <param name="barcode">Drug barcode</param>
-    /// <returns>Item details with stock and pricing</returns>
+    /// <summary>Get single item for cashier by barcode scan.</summary>
     [HttpGet("shops/{shopId}/pos-items/by-barcode/{barcode}")]
     [Authorize(Policy = "ShopAccess")]
     [ProducesResponseType(typeof(CashierItemDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<CashierItemDto>> GetPosItemByBarcode(string shopId, string barcode)
+    public async Task<ActionResult<CashierItemDto>> GetPosItemByBarcode(
+        string shopId, string barcode, CancellationToken cancellationToken)
     {
-        var cancellationToken = HttpContext?.RequestAborted ?? CancellationToken.None;
-        var handler = CreateGetCashierItemByBarcodeQueryHandler();
-        var query = new GetCashierItemByBarcodeQuery(shopId, barcode);
-        var result = await handler.Handle(query, cancellationToken);
-
-
-        if (result == null)
-            return NotFound(new { error = $"Item with barcode '{barcode}' not found or out of stock in this shop" });
-
-
-        return Ok(result);
+        var result = await _mediator.Send(
+            new GetCashierItemByBarcodeQuery(shopId, barcode), cancellationToken);
+        return result == null
+            ? NotFound(new { error = $"Item with barcode '{barcode}' not found or out of stock in this shop" })
+            : Ok(result);
     }
-
-    private AddStockCommandHandler CreateAddStockHandler() =>
-        new(_inventoryRepository, _drugRepository, _supplierRepository);
-
-    private ReduceStockCommandHandler CreateReduceStockHandler() =>
-        new(_inventoryRepository, _stockAdjustmentRepository, _packagingPricingService, _loggerFactory.CreateLogger<ReduceStockCommandHandler>());
-
-    private UpdatePricingCommandHandler CreateUpdatePricingHandler() =>
-        new(_inventoryRepository);
-
-    private UpdateReorderPointCommandHandler CreateUpdateReorderPointHandler() =>
-        new(_inventoryRepository);
-
-    private UpdatePackagingPricingCommandHandler CreateUpdatePackagingPricingHandler() =>
-        new(_inventoryRepository, _loggerFactory.CreateLogger<UpdatePackagingPricingCommandHandler>());
-
-    private CreatePackagingOverrideCommandHandler CreatePackagingOverrideHandler() =>
-        new(
-            _packagingOverrideRepository,
-            _inventoryRepository,
-            _drugRepository,
-            _effectivePackagingService,
-            _loggerFactory.CreateLogger<CreatePackagingOverrideCommandHandler>());
-
-    private UpdatePackagingLevelCommandHandler CreateUpdatePackagingLevelHandler() =>
-        new(
-            _packagingOverrideRepository,
-            _inventoryRepository,
-            _drugRepository,
-            _effectivePackagingService,
-            _loggerFactory.CreateLogger<UpdatePackagingLevelCommandHandler>());
-
-    private GetShopInventoryQueryHandler CreateGetShopInventoryQueryHandler() =>
-        new(_inventoryRepository, _effectivePackagingService);
-
-    private GetLowStockQueryHandler CreateGetLowStockQueryHandler() =>
-        new(_inventoryRepository);
-
-    private GetExpiringBatchesQueryHandler CreateGetExpiringBatchesQueryHandler() =>
-        new(_inventoryRepository);
-
-    private GetTotalStockValueQueryHandler CreateGetTotalStockValueQueryHandler() =>
-        new(_inventoryRepository);
-
-    private MoveToShopFloorCommandHandler CreateMoveToShopFloorHandler() =>
-        new(_inventoryRepository, _loggerFactory.CreateLogger<MoveToShopFloorCommandHandler>());
-
-    private MoveToStorageCommandHandler CreateMoveToStorageHandler() =>
-        new(_inventoryRepository, _loggerFactory.CreateLogger<MoveToStorageCommandHandler>());
-
-    private GetCashierItemsQueryHandler CreateGetCashierItemsQueryHandler() =>
-        new(_inventoryRepository, _drugRepository, _effectivePackagingService);
-
-    private GetCashierItemByBarcodeQueryHandler CreateGetCashierItemByBarcodeQueryHandler() =>
-        new(_inventoryRepository, _drugRepository, _categoryRepository);
-
-    private pos_system_api.Core.Application.Inventory.Commands.UpdatePackagingPrices.UpdatePackagingPricesFromBatchCommandHandler CreateUpdatePackagingPricesFromBatchHandler() =>
-        new(_inventoryRepository, _packagingPricingService, _loggerFactory.CreateLogger<pos_system_api.Core.Application.Inventory.Commands.UpdatePackagingPrices.UpdatePackagingPricesFromBatchCommandHandler>());
 }

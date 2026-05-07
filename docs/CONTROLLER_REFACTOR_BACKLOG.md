@@ -19,10 +19,11 @@ Each refactor follows the same template (see `PdfController` and `AdminControlle
 - ✅ `AuthController` — extracted `GetCurrentUserQuery`, removed redundant try/catch blocks (global middleware already handles `UnauthorizedAccessException` / `InvalidOperationException` / `ArgumentException`) (Phase 3 step 1)
 - ✅ `PurchaseOrdersController` — extracted Confirm/Cancel/MarkAsPaid commands and 4 list/analytics queries (paged, pending, overdue payments, supplier performance); removed direct `IPurchaseOrderRepository` injection; introduced `PurchaseOrderMappers` shared helper (Phase 3 step 2)
 - ✅ `SalesOrdersController` — extracted Confirm/Complete/Cancel/Refund commands and 5 list/analytics queries (paged, today's, cashier performance, sales-by-payment-method, top-selling drugs); removed direct `ISalesOrderRepository` injection; introduced `SalesOrderMappers` shared helper (Phase 3 step 3)
+- ✅ `InventoryController` — replaced 16 manual `CreateXxxHandler()` factory methods with `IMediator.Send(...)`; removed all 8 repository/service injections; extracted inline DTO assembly into new `GetPackagingPricingQuery`; wired existing `GetEffectivePackagingQuery` into the controller; removed redundant try/catch (global middleware handles `KeyNotFoundException` / `InvalidOperationException` / `ArgumentException`); added `CancellationToken` parameter binding (Phase 3 step 4)
 
 ## Top remaining candidates (worst first)
 
-### 0. ~~AuthController, PurchaseOrdersController, SalesOrdersController~~ — done
+### 0. ~~AuthController, PurchaseOrdersController, SalesOrdersController, InventoryController~~ — done
 
 ### 1. DrugsController (633 LOC, **very leaky**)
 
@@ -40,20 +41,10 @@ Biggest offender. ~180 LOC of business logic in the controller.
 3. Extract `CreateDrugInternalAsync` → `CreateDrugCommand` handler (write path, needs validator + tests)
 4. Replace `_context` injection with `IDrugRepository` (already exists)
 
-### 2. InventoryController (661 LOC, **moderate**)
-
-Architectural smell rather than business-logic leak:
-
-- Lines 603-659 — private factory methods like `CreateAddStockHandler()` that `new` up handlers manually, bypassing DI
-- `GetPackagingPricing` (lines 340-367) — inline DTO assembly
-
-**Approach**: Replace handler factories with proper DI registration; extract pricing DTO mapping into a query handler.
-
 ## Lower priority
 
 The remaining controllers (Barcodes, Categories, InventoryAlerts, InventoryReports, ShopMembers, Shops, Stock*, Suppliers) are mostly thin. They have try/catch noise that could be removed when the global exception middleware is verified to handle their error cases, but no business logic leaks worth dedicated refactor sessions.
 
 ## Order of attack (recommended)
 
-1. **InventoryController** — fix DI smell first, extract pricing query second
-2. **DrugsController** — saved for last because it's the biggest. Tackle in 3-4 sub-sessions, not one go.
+1. **DrugsController** — only major leak left. Tackle in 3-4 sub-sessions, not one go.
