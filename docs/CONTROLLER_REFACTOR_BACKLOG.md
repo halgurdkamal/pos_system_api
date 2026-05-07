@@ -20,26 +20,18 @@ Each refactor follows the same template (see `PdfController` and `AdminControlle
 - ✅ `PurchaseOrdersController` — extracted Confirm/Cancel/MarkAsPaid commands and 4 list/analytics queries (paged, pending, overdue payments, supplier performance); removed direct `IPurchaseOrderRepository` injection; introduced `PurchaseOrderMappers` shared helper (Phase 3 step 2)
 - ✅ `SalesOrdersController` — extracted Confirm/Complete/Cancel/Refund commands and 5 list/analytics queries (paged, today's, cashier performance, sales-by-payment-method, top-selling drugs); removed direct `ISalesOrderRepository` injection; introduced `SalesOrderMappers` shared helper (Phase 3 step 3)
 - ✅ `InventoryController` — replaced 16 manual `CreateXxxHandler()` factory methods with `IMediator.Send(...)`; removed all 8 repository/service injections; extracted inline DTO assembly into new `GetPackagingPricingQuery`; wired existing `GetEffectivePackagingQuery` into the controller; removed redundant try/catch (global middleware handles `KeyNotFoundException` / `InvalidOperationException` / `ArgumentException`); added `CancellationToken` parameter binding (Phase 3 step 4)
+- ✅ `DrugsController` read paths (Phase 3 step 5a) — wired existing `GetDrugQuery`, `GetDrugListQuery`, `GetDrugListEnhancedQuery`, `GetDrugDetailQuery` handlers (already existed in the codebase but the controller wasn't using them). Removed `MapToDto` / `MapToListItemDto` / `BuildDrugDetailDto` / `EnsurePagedResultConsistency` / `GetPagedDrugsAsync` / `ApplyBrowseFilters` private helpers — all duplicated in the handlers. `CreateDrug` write path still uses `_context` directly and is intentionally untouched until step 5b/5c.
 
 ## Top remaining candidates (worst first)
 
 ### 0. ~~AuthController, PurchaseOrdersController, SalesOrdersController, InventoryController~~ — done
 
-### 1. DrugsController (633 LOC, **very leaky**)
+### 1. DrugsController (write path remaining, ~250 LOC)
 
-Biggest offender. ~180 LOC of business logic in the controller.
+Read paths done in Phase 3.5a. The write path (`CreateDrug` + 6 supporting helpers) still injects `ApplicationDbContext` directly. To finish:
 
-- `CreateDrugInternalAsync()` (lines 192-295) — 104-line method building entities and saving via `_context` directly
-- `BuildDrugDetailDto()` (lines 526-626) — 100+ line DTO assembly
-- `MapToDto()` / `MapToListItemDto()` (lines 335-362) — should live in query handlers
-- `GetPagedDrugsAsync()` (lines 297-320) — pagination logic with raw EF queries
-- Direct `_context.Drugs.Include(...).FirstOrDefaultAsync(...)` throughout
-
-**Approach**: This is multi-session work. Suggested order:
-1. Extract `BuildDrugDetailDto` → `GetDrugDetailQuery` handler (read path, low risk)
-2. Extract `MapToDto` / `MapToListItemDto` → into the existing list query handlers
-3. Extract `CreateDrugInternalAsync` → `CreateDrugCommand` handler (write path, needs validator + tests)
-4. Replace `_context` injection with `IDrugRepository` (already exists)
+- **Step 5b**: Move `CreateDrugInternalAsync` body into a `CreateDrugCommand` + handler. Move `MapFormulation` / `MapBasePricing` / `MapRegulatory` / `BuildPackagingInfo` / `MapToDto` / `GenerateDrugId` along with it. Add a FluentValidation `CreateDrugCommandValidator` so the inline argument-checks in `CreateDrugInternalAsync` become declarative validation.
+- **Step 5c**: Remove the controller's `ApplicationDbContext` injection entirely. Add a few handler-level integration tests using `TestDbContextFactory.Create()` to lock in the create flow.
 
 ## Lower priority
 
@@ -47,4 +39,4 @@ The remaining controllers (Barcodes, Categories, InventoryAlerts, InventoryRepor
 
 ## Order of attack (recommended)
 
-1. **DrugsController** — only major leak left. Tackle in 3-4 sub-sessions, not one go.
+1. **DrugsController write path** — split into 5b (CreateDrugCommand handler + validator) and 5c (remove ApplicationDbContext injection + add integration tests).

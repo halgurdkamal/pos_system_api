@@ -1,10 +1,14 @@
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using pos_system_api.Core.Application.Common.Models;
 using pos_system_api.Core.Application.Drugs.DTOs;
-using pos_system_api.Core.Domain.Categories.Entities;
+using pos_system_api.Core.Application.Drugs.Queries.GetDrug;
+using pos_system_api.Core.Application.Drugs.Queries.GetDrugDetail;
+using pos_system_api.Core.Application.Drugs.Queries.GetDrugList;
+using pos_system_api.Core.Application.Drugs.Queries.GetDrugListEnhanced;
 using pos_system_api.Core.Domain.Drugs.Entities;
 using pos_system_api.Core.Domain.Drugs.ValueObjects;
 using pos_system_api.Infrastructure.Data;
@@ -12,27 +16,31 @@ using pos_system_api.Infrastructure.Data;
 namespace pos_system_api.API.Controllers;
 
 /// <summary>
-/// API Controller for drug operations
+/// API Controller for drug operations.
+/// Read paths dispatch through MediatR; the write path (CreateDrug) still
+/// uses ApplicationDbContext directly and will be moved to a CreateDrugCommand
+/// handler in a future change (see docs/CONTROLLER_REFACTOR_BACKLOG.md).
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
 public class DrugsController : BaseApiController
 {
+    private readonly IMediator _mediator;
     private readonly ApplicationDbContext _context;
     private readonly ILogger<DrugsController> _logger;
 
-    public DrugsController(ApplicationDbContext context, ILogger<DrugsController> logger)
+    public DrugsController(
+        IMediator mediator,
+        ApplicationDbContext context,
+        ILogger<DrugsController> logger)
     {
+        _mediator = mediator;
         _context = context;
         _logger = logger;
     }
 
-    /// <summary>
-    /// Create a new drug in the catalog
-    /// </summary>
-    /// <param name="dto">Drug details including packaging information</param>
-    /// <returns>The created drug</returns>
+    /// <summary>Create a new drug in the catalog.</summary>
     [HttpPost]
     [Authorize(Policy = "AdminOnly")]
     [ProducesResponseType(typeof(DrugDto), StatusCodes.Status201Created)]
@@ -55,144 +63,72 @@ public class DrugsController : BaseApiController
         }
     }
 
-    /// <summary>
-    /// Get a single drug by ID
-    /// </summary>
-    /// <param name="id">Drug ID</param>
-    /// <returns>Drug details</returns>
+    /// <summary>Get a single drug by ID.</summary>
     [HttpGet("{id}")]
     [AllowAnonymous] // Drug catalog is public
     [ProducesResponseType(typeof(DrugDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<DrugDto>> GetDrug(string id)
+    public async Task<ActionResult<DrugDto>> GetDrug(string id, CancellationToken cancellationToken)
     {
-        var cancellationToken = HttpContext.RequestAborted;
-        var drug = await _context
-            .Drugs.Include(d => d.Category)
-            .AsNoTracking()
-            .FirstOrDefaultAsync(d => d.DrugId == id, cancellationToken);
-
-        if (drug == null)
-            return NotFound(new { error = $"Drug with ID '{id}' not found" });
-
-        return Ok(MapToDto(drug));
+        var result = await _mediator.Send(new GetDrugQuery(id), cancellationToken);
+        return result == null
+            ? NotFound(new { error = $"Drug with ID '{id}' not found" })
+            : Ok(result);
     }
 
-    /// <summary>
-    /// Get list of drugs with pagination
-    /// </summary>
-    /// <param name="page">Page number (default: 1)</param>
-    /// <param name="limit">Items per page (default: 20)</param>
-    /// <returns>Paginated list of drugs</returns>
+    /// <summary>Get list of drugs with pagination.</summary>
     [HttpGet]
     [AllowAnonymous] // Drug catalog is public
     [ProducesResponseType(typeof(PagedResult<DrugDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<PagedResult<DrugDto>>> GetDrugs(
+        CancellationToken cancellationToken,
         [FromQuery] int page = 1,
-        [FromQuery] int limit = 20
-    )
+        [FromQuery] int limit = 20)
     {
-        var cancellationToken = HttpContext.RequestAborted;
-        var pagedDrugs = await GetPagedDrugsAsync(page, limit, cancellationToken);
-        EnsurePagedResultConsistency(pagedDrugs);
-
-        var dtoList = pagedDrugs.Data.Select(MapToDto).ToList();
-
-        return Ok(
-            new PagedResult<DrugDto>(dtoList, pagedDrugs.Page, pagedDrugs.Limit, pagedDrugs.Total)
-        );
+        var result = await _mediator.Send(new GetDrugListQuery(page, limit), cancellationToken);
+        return Ok(result);
     }
 
     /// <summary>
-    /// Get enhanced drug list with images, prices, stock, and category info (LIGHTWEIGHT FOR BROWSING)
+    /// Get enhanced drug list with images, prices, stock, and category info
+    /// (lightweight, intended for catalog browsing).
     /// </summary>
-    /// <param name="page">Page number (default: 1)</param>
-    /// <param name="limit">Items per page (default: 20)</param>
-    /// <param name="searchTerm">Search by name, barcode, or manufacturer</param>
-    /// <param name="category">Filter by category</param>
-    /// <param name="inStock">Filter by stock availability</param>
-    /// <returns>Paginated list with essential drug info</returns>
     [HttpGet("browse")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(PagedResult<DrugListItemDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<PagedResult<DrugListItemDto>>> GetDrugsBrowse(
+        CancellationToken cancellationToken,
         [FromQuery] int page = 1,
         [FromQuery] int limit = 20,
         [FromQuery] string? searchTerm = null,
         [FromQuery] string? category = null,
-        [FromQuery] bool? inStock = null
-    )
+        [FromQuery] bool? inStock = null)
     {
-        var cancellationToken = HttpContext.RequestAborted;
-        var pagedDrugs = await GetPagedDrugsAsync(page, limit, cancellationToken);
-        EnsurePagedResultConsistency(pagedDrugs);
-
-        var categories = await _context
-            .Categories.AsNoTracking()
-            .ToDictionaryAsync(
-                c => c.CategoryId,
-                StringComparer.OrdinalIgnoreCase,
-                cancellationToken
-            );
-
-        var items = pagedDrugs.Data.Select(drug => MapToListItemDto(drug, categories)).ToList();
-        items = ApplyBrowseFilters(items, searchTerm, category, inStock);
-
-        var response = new PagedResult<DrugListItemDto>
-        {
-            Data = items,
-            Page = page,
-            Limit = limit,
-            Total = pagedDrugs.Total,
-        };
-
-        return Ok(response);
+        var result = await _mediator.Send(
+            new GetDrugListEnhancedQuery(page, limit, searchTerm, category, inStock),
+            cancellationToken);
+        return Ok(result);
     }
 
-    /// <summary>
-    /// Get FULL drug details including inventory across ALL shops (DETAILED VIEW)
-    /// </summary>
-    /// <param name="id">Drug ID</param>
-    /// <returns>Complete drug information with shop inventories</returns>
+    /// <summary>Get full drug details including inventory across all shops.</summary>
     [HttpGet("{id}/detail")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(DrugDetailDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<DrugDetailDto>> GetDrugDetail(string id)
+    public async Task<ActionResult<DrugDetailDto>> GetDrugDetail(
+        string id, CancellationToken cancellationToken)
     {
-        var cancellationToken = HttpContext.RequestAborted;
-
-        var drug = await _context
-            .Drugs.Include(d => d.Category)
-            .AsNoTracking()
-            .FirstOrDefaultAsync(d => d.DrugId == id, cancellationToken);
-
-        if (drug == null)
-            return NotFound(new { error = $"Drug with ID '{id}' not found" });
-
-        var categoryInfo = await _context
-            .Categories.AsNoTracking()
-            .FirstOrDefaultAsync(c => c.CategoryId == drug.CategoryId, cancellationToken);
-
-        var shopInventories = await _context
-            .ShopInventory.AsNoTracking()
-            .Where(inv => inv.DrugId == id)
-            .ToListAsync(cancellationToken);
-
-        var shopIds = shopInventories.Select(inv => inv.ShopId).Distinct().ToList();
-        var shops = await _context
-            .Shops.AsNoTracking()
-            .Where(s => shopIds.Contains(s.Id))
-            .ToDictionaryAsync(s => s.Id, cancellationToken);
-
-        var detailDto = BuildDrugDetailDto(drug, categoryInfo, shopInventories, shops);
-        return Ok(detailDto);
+        var result = await _mediator.Send(new GetDrugDetailQuery(id), cancellationToken);
+        return result == null
+            ? NotFound(new { error = $"Drug with ID '{id}' not found" })
+            : Ok(result);
     }
+
+    // ----- write path (CreateDrug) — to be extracted into CreateDrugCommand in a future step -----
 
     private async Task<DrugDto> CreateDrugInternalAsync(
         CreateDrugDto dto,
-        CancellationToken cancellationToken
-    )
+        CancellationToken cancellationToken)
     {
         if (dto == null)
             throw new ArgumentNullException(nameof(dto));
@@ -209,43 +145,40 @@ public class DrugsController : BaseApiController
         if (dto.PackagingInfo == null)
             throw new ArgumentException("PackagingInfo is required.", nameof(dto.PackagingInfo));
 
-        if (
-            dto.PackagingInfo.PackagingLevels == null
-            || dto.PackagingInfo.PackagingLevels.Count == 0
-        )
+        if (dto.PackagingInfo.PackagingLevels == null
+            || dto.PackagingInfo.PackagingLevels.Count == 0)
+        {
             throw new ArgumentException(
                 "PackagingLevels must contain at least one level.",
-                nameof(dto.PackagingInfo.PackagingLevels)
-            );
+                nameof(dto.PackagingInfo.PackagingLevels));
+        }
 
         var desiredDrugId = dto.DrugId?.Trim();
         if (!string.IsNullOrWhiteSpace(desiredDrugId))
         {
-            var existingDrug = await _context
-                .Drugs.AsNoTracking()
+            var existingDrug = await _context.Drugs
+                .AsNoTracking()
                 .FirstOrDefaultAsync(d => d.DrugId == desiredDrugId, cancellationToken);
 
             if (existingDrug != null)
                 throw new InvalidOperationException(
-                    $"Drug with ID '{desiredDrugId}' already exists."
-                );
+                    $"Drug with ID '{desiredDrugId}' already exists.");
         }
 
         if (!string.IsNullOrWhiteSpace(dto.Barcode))
         {
             var trimmedBarcode = dto.Barcode.Trim();
-            var existingBarcode = await _context
-                .Drugs.AsNoTracking()
+            var existingBarcode = await _context.Drugs
+                .AsNoTracking()
                 .FirstOrDefaultAsync(d => d.Barcode == trimmedBarcode, cancellationToken);
 
             if (existingBarcode != null)
                 throw new InvalidOperationException(
-                    $"Barcode '{trimmedBarcode}' is already assigned to another drug."
-                );
+                    $"Barcode '{trimmedBarcode}' is already assigned to another drug.");
         }
 
-        var category = await _context
-            .Categories.AsNoTracking()
+        var category = await _context.Categories
+            .AsNoTracking()
             .FirstOrDefaultAsync(c => c.CategoryId == dto.CategoryId.Trim(), cancellationToken);
 
         if (category == null)
@@ -255,19 +188,16 @@ public class DrugsController : BaseApiController
         {
             DrugId = !string.IsNullOrWhiteSpace(desiredDrugId) ? desiredDrugId : GenerateDrugId(),
             Barcode = dto.Barcode?.Trim() ?? string.Empty,
-            BarcodeType = string.IsNullOrWhiteSpace(dto.BarcodeType)
-                ? "EAN-13"
-                : dto.BarcodeType.Trim(),
+            BarcodeType = string.IsNullOrWhiteSpace(dto.BarcodeType) ? "EAN-13" : dto.BarcodeType.Trim(),
             BrandName = dto.BrandName.Trim(),
             GenericName = dto.GenericName.Trim(),
             Manufacturer = dto.Manufacturer?.Trim() ?? string.Empty,
             OriginCountry = dto.OriginCountry?.Trim() ?? string.Empty,
             CategoryName = category.Name,
             CategoryId = category.CategoryId,
-            ImageUrls =
-                dto.ImageUrls?.Where(url => !string.IsNullOrWhiteSpace(url))
-                    .Select(url => url.Trim())
-                    .ToList() ?? new List<string>(),
+            ImageUrls = dto.ImageUrls?.Where(url => !string.IsNullOrWhiteSpace(url))
+                .Select(url => url.Trim())
+                .ToList() ?? new List<string>(),
             Description = dto.Description ?? string.Empty,
             SideEffects = dto.SideEffects ?? new List<string>(),
             InteractionNotes = dto.InteractionNotes ?? new List<string>(),
@@ -287,150 +217,37 @@ public class DrugsController : BaseApiController
 
         _logger.LogInformation(
             "Created drug {DrugId} with barcode {Barcode}.",
-            drug.DrugId,
-            drug.Barcode
-        );
+            drug.DrugId, drug.Barcode);
 
         return MapToDto(drug);
     }
 
-    private async Task<PagedResult<Drug>> GetPagedDrugsAsync(
-        int page,
-        int limit,
-        CancellationToken cancellationToken
-    )
+    private static DrugDto MapToDto(Drug drug) => new()
     {
-        if (page <= 0)
-            page = 1;
-
-        if (limit <= 0)
-            limit = 20;
-
-        var total = await _context.Drugs.CountAsync(cancellationToken);
-
-        var data = await _context
-            .Drugs.Include(d => d.Category)
-            .AsNoTracking()
-            .OrderBy(d => d.BrandName)
-            .Skip((page - 1) * limit)
-            .Take(limit)
-            .ToListAsync(cancellationToken);
-
-        return new PagedResult<Drug>(data, page, limit, total);
-    }
-
-    private static void EnsurePagedResultConsistency(PagedResult<Drug> pagedResult)
-    {
-        var skip = (pagedResult.Page - 1) * pagedResult.Limit;
-        var skipBeyondTotal = skip >= pagedResult.Total;
-
-        if (pagedResult.Total > 0 && pagedResult.Data.Count == 0 && !skipBeyondTotal)
-        {
-            throw new InvalidOperationException(
-                "Detected drugs in the catalog but none could be materialized. Verify category references for each drug."
-            );
-        }
-    }
-
-    private static DrugDto MapToDto(Drug drug)
-    {
-        return new DrugDto
-        {
-            DrugId = drug.DrugId,
-            Barcode = drug.Barcode,
-            BarcodeType = drug.BarcodeType,
-            BrandName = drug.BrandName,
-            GenericName = drug.GenericName,
-            Manufacturer = drug.Manufacturer,
-            OriginCountry = drug.OriginCountry,
-            CategoryId = drug.CategoryId,
-            Category = drug.Category?.Name ?? drug.CategoryName,
-            ImageUrls = drug.ImageUrls,
-            Description = drug.Description,
-            SideEffects = drug.SideEffects,
-            InteractionNotes = drug.InteractionNotes,
-            Tags = drug.Tags,
-            RelatedDrugs = drug.RelatedDrugs,
-            Formulation = drug.Formulation,
-            BasePricing = drug.BasePricing,
-            Regulatory = drug.Regulatory,
-            PackagingInfo = drug.PackagingInfo,
-            CreatedAt = drug.CreatedAt,
-            CreatedBy = drug.CreatedBy,
-            LastUpdated = drug.LastUpdated,
-            UpdatedBy = drug.UpdatedBy,
-        };
-    }
-
-    private static DrugListItemDto MapToListItemDto(
-        Drug drug,
-        IDictionary<string, Category> categoriesById
-    )
-    {
-        categoriesById.TryGetValue(drug.CategoryId, out var categoryInfo);
-
-        return new DrugListItemDto
-        {
-            DrugId = drug.Id,
-            BrandName = drug.BrandName,
-            GenericName = drug.GenericName,
-            Barcode = drug.Barcode,
-            CategoryId = drug.CategoryId,
-            Category = categoryInfo?.Name ?? drug.CategoryName,
-            CategoryLogoUrl = categoryInfo?.LogoUrl,
-            CategoryColorCode = categoryInfo?.ColorCode,
-            PrimaryImageUrl = drug.ImageUrls.FirstOrDefault(),
-            Manufacturer = drug.Manufacturer,
-            Strength = drug.Formulation.Strength,
-            Form = drug.Formulation.Form,
-            SuggestedRetailPrice = drug.BasePricing.SuggestedRetailPrice,
-            WholesalePrice = 0,
-            TotalQuantityInStock = 0,
-            ShopCount = 0,
-            IsAvailable = true,
-            RequiresPrescription = drug.Regulatory.IsPrescriptionRequired,
-        };
-    }
-
-    private static List<DrugListItemDto> ApplyBrowseFilters(
-        List<DrugListItemDto> source,
-        string? searchTerm,
-        string? category,
-        bool? inStock
-    )
-    {
-        var items = source;
-
-        if (!string.IsNullOrEmpty(searchTerm))
-        {
-            var searchLower = searchTerm.ToLowerInvariant();
-            items = items
-                .Where(d =>
-                    d.BrandName.ToLowerInvariant().Contains(searchLower)
-                    || d.GenericName.ToLowerInvariant().Contains(searchLower)
-                    || d.Barcode.ToLowerInvariant().Contains(searchLower)
-                    || d.Manufacturer.ToLowerInvariant().Contains(searchLower)
-                )
-                .ToList();
-        }
-
-        if (!string.IsNullOrEmpty(category))
-        {
-            items = items
-                .Where(d =>
-                    d.CategoryId.Equals(category, StringComparison.OrdinalIgnoreCase)
-                    || d.Category.Equals(category, StringComparison.OrdinalIgnoreCase)
-                )
-                .ToList();
-        }
-
-        if (inStock.HasValue)
-        {
-            items = items.Where(d => d.IsAvailable == inStock.Value).ToList();
-        }
-
-        return items;
-    }
+        DrugId = drug.DrugId,
+        Barcode = drug.Barcode,
+        BarcodeType = drug.BarcodeType,
+        BrandName = drug.BrandName,
+        GenericName = drug.GenericName,
+        Manufacturer = drug.Manufacturer,
+        OriginCountry = drug.OriginCountry,
+        CategoryId = drug.CategoryId,
+        Category = drug.Category?.Name ?? drug.CategoryName,
+        ImageUrls = drug.ImageUrls,
+        Description = drug.Description,
+        SideEffects = drug.SideEffects,
+        InteractionNotes = drug.InteractionNotes,
+        Tags = drug.Tags,
+        RelatedDrugs = drug.RelatedDrugs,
+        Formulation = drug.Formulation,
+        BasePricing = drug.BasePricing,
+        Regulatory = drug.Regulatory,
+        PackagingInfo = drug.PackagingInfo,
+        CreatedAt = drug.CreatedAt,
+        CreatedBy = drug.CreatedBy,
+        LastUpdated = drug.LastUpdated,
+        UpdatedBy = drug.UpdatedBy,
+    };
 
     private static Formulation MapFormulation(CreateFormulationDto? source)
     {
@@ -486,8 +303,7 @@ public class DrugsController : BaseApiController
             source.UnitType,
             source.BaseUnit?.Trim() ?? string.Empty,
             source.BaseUnitDisplayName?.Trim() ?? string.Empty,
-            source.IsSubdivisible
-        );
+            source.IsSubdivisible);
 
         foreach (var level in source.PackagingLevels.OrderBy(l => l.LevelNumber))
         {
@@ -506,8 +322,7 @@ public class DrugsController : BaseApiController
                 parentPackagingLevelId: string.IsNullOrWhiteSpace(level.ParentPackagingLevelId)
                     ? null
                     : level.ParentPackagingLevelId.Trim(),
-                quantityPerParent: level.QuantityPerParent
-            );
+                quantityPerParent: level.QuantityPerParent);
 
             packagingInfo.AddPackagingLevel(packagingLevel);
         }
@@ -516,117 +331,12 @@ public class DrugsController : BaseApiController
         if (!validation.IsValid)
         {
             throw new InvalidOperationException(
-                $"Invalid packaging configuration: {string.Join("; ", validation.Errors)}"
-            );
+                $"Invalid packaging configuration: {string.Join("; ", validation.Errors)}");
         }
 
         return packagingInfo;
     }
 
-    private static DrugDetailDto BuildDrugDetailDto(
-        Drug drug,
-        Category? categoryInfo,
-        List<Core.Domain.Inventory.Entities.ShopInventory> shopInventories,
-        Dictionary<string, Core.Domain.Shops.Entities.Shop> shops
-    )
-    {
-        var shopInventorySummaries = shopInventories
-            .Where(inv => shops.ContainsKey(inv.ShopId))
-            .Select(inv =>
-            {
-                var shop = shops[inv.ShopId];
-                var sellingPrice =
-                    inv.ShopPricing?.SellingPrice ?? drug.BasePricing.SuggestedRetailPrice;
-                var discount = inv.ShopPricing?.Discount ?? 0;
-                var finalPrice = sellingPrice * (1 - discount / 100);
-                var nearestExpiry = inv.Batches.Any()
-                    ? inv.Batches.Min(b => b.ExpiryDate)
-                    : (DateTime?)null;
-
-                return new ShopInventorySummaryDto
-                {
-                    ShopId = shop.Id,
-                    ShopName = shop.ShopName,
-                    ShopAddress = $"{shop.Address.Street}, {shop.Address.City}",
-                    Quantity = inv.TotalStock,
-                    SellingPrice = sellingPrice,
-                    DiscountPercentage = discount > 0 ? discount : null,
-                    FinalPrice = finalPrice,
-                    BatchCount = inv.Batches.Count,
-                    NearestExpiryDate = nearestExpiry,
-                    IsLowStock = inv.TotalStock <= inv.ReorderPoint,
-                    IsAvailable = inv.TotalStock > 0,
-                };
-            })
-            .OrderByDescending(s => s.Quantity)
-            .ToList();
-
-        var totalStock = shopInventorySummaries.Sum(s => s.Quantity);
-        var shopsWithStock = shopInventorySummaries.Count(s => s.IsAvailable);
-        var prices = shopInventorySummaries
-            .Where(s => s.IsAvailable)
-            .Select(s => s.FinalPrice)
-            .ToList();
-        var avgPrice = prices.Any() ? prices.Average() : 0;
-        var lowestPrice = prices.Any() ? prices.Min() : 0;
-        var highestPrice = prices.Any() ? prices.Max() : 0;
-
-        return new DrugDetailDto
-        {
-            DrugId = drug.DrugId,
-            Barcode = drug.Barcode,
-            BarcodeType = drug.BarcodeType,
-            BrandName = drug.BrandName,
-            GenericName = drug.GenericName,
-            Manufacturer = drug.Manufacturer,
-            OriginCountry = drug.OriginCountry,
-            CategoryId = drug.CategoryId,
-            Category = categoryInfo?.Name ?? string.Empty,
-            CategoryLogoUrl = categoryInfo?.LogoUrl,
-            CategoryColorCode = categoryInfo?.ColorCode,
-            ImageUrls = drug.ImageUrls,
-            Description = drug.Description,
-            SideEffects = drug.SideEffects,
-            InteractionNotes = drug.InteractionNotes,
-            Tags = drug.Tags,
-            RelatedDrugs = drug.RelatedDrugs,
-
-            Formulation = new FormulationDto
-            {
-                Strength = drug.Formulation.Strength,
-                Form = drug.Formulation.Form,
-                RouteOfAdministration = drug.Formulation.RouteOfAdministration,
-                ActiveIngredients = string.Empty,
-            },
-
-            Pricing = new PricingDto
-            {
-                SuggestedRetailPrice = drug.BasePricing.SuggestedRetailPrice,
-                WholesalePrice = 0,
-                ManufacturerPrice = 0,
-            },
-
-            Regulatory = new RegulatoryDto
-            {
-                IsPrescriptionRequired = drug.Regulatory.IsPrescriptionRequired,
-                ControlledSubstanceSchedule = null,
-                FdaApprovalNumber = null,
-            },
-
-            ShopInventories = shopInventorySummaries,
-            TotalQuantityInStock = totalStock,
-            TotalShopsWithStock = shopsWithStock,
-            AveragePriceAcrossShops = avgPrice,
-            LowestPriceAvailable = lowestPrice,
-            HighestPriceAvailable = highestPrice,
-
-            CreatedAt = drug.CreatedAt,
-            LastUpdated = drug.LastUpdated,
-        };
-    }
-
-    private static string GenerateDrugId()
-    {
-        return $"DRG-{Guid.NewGuid():N}".Substring(0, 12).ToUpperInvariant();
-    }
+    private static string GenerateDrugId() =>
+        $"DRG-{Guid.NewGuid():N}".Substring(0, 12).ToUpperInvariant();
 }
