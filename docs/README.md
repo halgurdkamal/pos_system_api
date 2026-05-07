@@ -2,6 +2,20 @@
 
 Index for the POS System API docs. Each topic folder has multiple files — the **canonical** one is marked, others are supporting context.
 
+## API Guides (start here if you want to call the API)
+
+Step-by-step walkthroughs of every feature with endpoints, payloads, and lifecycles.
+
+- [`api-guides/README.md`](./api-guides/README.md) — index + end-to-end story
+- [`api-guides/01-authentication.md`](./api-guides/01-authentication.md)
+- [`api-guides/02-shops-and-members.md`](./api-guides/02-shops-and-members.md)
+- [`api-guides/03-items-and-catalog.md`](./api-guides/03-items-and-catalog.md)
+- [`api-guides/04-suppliers-and-purchase-orders.md`](./api-guides/04-suppliers-and-purchase-orders.md)
+- [`api-guides/05-inventory-and-stock.md`](./api-guides/05-inventory-and-stock.md)
+- [`api-guides/06-cashier-pos-checkout.md`](./api-guides/06-cashier-pos-checkout.md)
+- [`api-guides/07-barcodes-and-pdf.md`](./api-guides/07-barcodes-and-pdf.md)
+- [`api-guides/08-data-model-and-recipes.md`](./api-guides/08-data-model-and-recipes.md) — **how it all joins up** + cookbook recipes
+
 ## Setup
 
 - [`../SECURITY_SETUP.md`](../SECURITY_SETUP.md) — required reading before first run; how to provide DB and JWT secrets
