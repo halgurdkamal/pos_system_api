@@ -21,7 +21,7 @@ A **shop** is the multi-tenant boundary: inventory, pricing, sales orders, and s
 | PUT  | `/api/shops/{id}/receipt-config` | bearer ⚠ | Receipt branding & layout |
 | PUT  | `/api/shops/{id}/hardware-config` | bearer ⚠ | Printer / scanner settings |
 
-> ⚠ **Security note**: as of this writing, `receipt-config` and `hardware-config` are protected only by `[Authorize]` (any logged-in user) — the `ShopOwnerOrAdmin` policy is **not** applied at the controller level. The expected behaviour is owner-or-admin only. If you rely on these endpoints, add the policy in `ShopsController.cs` before deploying. (Tracked in [`../CONTROLLER_REFACTOR_BACKLOG.md`](../CONTROLLER_REFACTOR_BACKLOG.md).)
+> ⚠ **Security gap G-2** — `receipt-config` and `hardware-config` are protected only by `[Authorize]` (any logged-in user); the `ShopOwnerOrAdmin` policy is missing. Full details and fix in [`99-known-gaps.md#g-2`](./99-known-gaps.md#g-2-shopupdatereceiptconfig-and-updatehardwareconfig-lack-the-shopowneroradmin-policy).
 
 ### Members
 

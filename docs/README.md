@@ -7,14 +7,18 @@ Index for the POS System API docs. Each topic folder has multiple files — the 
 Step-by-step walkthroughs of every feature with endpoints, payloads, and lifecycles.
 
 - [`api-guides/README.md`](./api-guides/README.md) — index + end-to-end story
+- [`api-guides/00-glossary.md`](./api-guides/00-glossary.md) — FIFO, FEFO, SKU, EAN, PII, CQRS terms used throughout
 - [`api-guides/01-authentication.md`](./api-guides/01-authentication.md)
 - [`api-guides/02-shops-and-members.md`](./api-guides/02-shops-and-members.md)
 - [`api-guides/03-items-and-catalog.md`](./api-guides/03-items-and-catalog.md)
 - [`api-guides/04-suppliers-and-purchase-orders.md`](./api-guides/04-suppliers-and-purchase-orders.md)
-- [`api-guides/05-inventory-and-stock.md`](./api-guides/05-inventory-and-stock.md)
+- [`api-guides/05-inventory-and-stock.md`](./api-guides/05-inventory-and-stock.md) — index for ↓
+  - [`api-guides/05a-inventory-core.md`](./api-guides/05a-inventory-core.md) — view, add stock, pricing, packaging
+  - [`api-guides/05b-stock-operations.md`](./api-guides/05b-stock-operations.md) — adjustments, counts, transfers, alerts, reports
 - [`api-guides/06-cashier-pos-checkout.md`](./api-guides/06-cashier-pos-checkout.md)
 - [`api-guides/07-barcodes-and-pdf.md`](./api-guides/07-barcodes-and-pdf.md)
 - [`api-guides/08-data-model-and-recipes.md`](./api-guides/08-data-model-and-recipes.md) — **how it all joins up** + cookbook recipes
+- [`api-guides/99-known-gaps.md`](./api-guides/99-known-gaps.md) — security gaps, functional TODOs, workarounds
 
 ## Setup
 

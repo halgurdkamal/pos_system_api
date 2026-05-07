@@ -38,6 +38,7 @@ public static class ServiceCollectionExtensions
         // Register application services
         services.AddScoped<IEffectivePackagingService, EffectivePackagingService>();
         services.AddScoped<IPackagingPricingService, PackagingPricingService>();
+        services.AddScoped<ISalesStockService, SalesStockService>();
 
         return services;
     }

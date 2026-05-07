@@ -1,6 +1,7 @@
 using MediatR;
 using pos_system_api.Core.Application.Sales.DTOs;
 using pos_system_api.Core.Application.Common.Interfaces;
+using pos_system_api.Core.Application.Inventory.Services;
 using pos_system_api.Core.Domain.Sales.Entities;
 using Microsoft.Extensions.Logging;
 
@@ -17,13 +18,16 @@ public record ProcessPaymentCommand : IRequest<SalesOrderDto>
 public class ProcessPaymentCommandHandler : IRequestHandler<ProcessPaymentCommand, SalesOrderDto>
 {
     private readonly ISalesOrderRepository _repository;
+    private readonly ISalesStockService _salesStockService;
     private readonly ILogger<ProcessPaymentCommandHandler> _logger;
 
     public ProcessPaymentCommandHandler(
         ISalesOrderRepository repository,
+        ISalesStockService salesStockService,
         ILogger<ProcessPaymentCommandHandler> logger)
     {
         _repository = repository;
+        _salesStockService = salesStockService;
         _logger = logger;
     }
 
@@ -38,10 +42,17 @@ public class ProcessPaymentCommandHandler : IRequestHandler<ProcessPaymentComman
         // Parse payment method
         var paymentMethod = Enum.Parse<PaymentMethod>(request.PaymentMethod, ignoreCase: true);
 
-        // Process payment
+        // Process payment — flips status Draft|Confirmed → Paid. After this point
+        // the goods physically leave the shop, so we must deduct stock.
         salesOrder.ProcessPayment(paymentMethod, request.AmountPaid, request.PaymentReference);
 
         await _repository.UpdateAsync(salesOrder, cancellationToken);
+
+        // Deduct from ShopInventory in the same logical transaction.
+        // (No explicit DB transaction yet; if this fails after the order save, the
+        // order is Paid but inventory wasn't decremented. Wrap in a unit-of-work
+        // when transactional outboxes are added.)
+        await _salesStockService.DeductForSaleAsync(salesOrder, cancellationToken);
 
         _logger.LogInformation("Payment processed for order {OrderNumber}: {PaymentMethod} - {AmountPaid:C}",
             salesOrder.OrderNumber, paymentMethod, request.AmountPaid);

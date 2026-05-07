@@ -65,7 +65,42 @@ Response `201`:
 
 ### Step 2 — Create the drug
 
-This is the heaviest payload in the API. Build it in three logical pieces: identity, regulatory/formulation, and the **packaging hierarchy**.
+The full payload is large. **Start with this minimal version** to confirm the call works, then enrich.
+
+#### Minimal drug (just the required fields)
+
+```http
+POST /api/drugs
+Authorization: Bearer …(SuperAdmin)…
+
+{
+  "brandName":   "Amoxil 500",
+  "genericName": "Amoxicillin",
+  "categoryId":  "CAT-A1B2C3D4",
+  "packagingInfo": {
+    "unitType":            "Count",
+    "baseUnit":            "tablet",
+    "baseUnitDisplayName": "Tablet",
+    "packagingLevels": [
+      {
+        "levelNumber":      1,
+        "unitName":         "Tablet",
+        "baseUnitQuantity": 1,
+        "isSellable":       true,
+        "isDefault":        true
+      }
+    ]
+  }
+}
+```
+
+That's the smallest valid `POST /api/drugs` body — four scalar fields plus one packaging level. The handler will fill in defaults: `barcodeType = "EAN-13"`, `imageUrls = []`, etc., and auto-generate the `drugId`.
+
+Once the minimal call works, expand to the **full payload** below to add barcode, regulatory info, multi-level packaging, base pricing hint, and metadata.
+
+#### Full drug payload
+
+Build it in three logical pieces: identity, regulatory/formulation, and the **packaging hierarchy**.
 
 ```http
 POST /api/drugs

@@ -115,6 +115,64 @@ public class ShopInventory : BaseEntity
     }
 
     /// <summary>
+    /// Add quantity back to inventory after a refund or cancellation of a previously
+    /// paid order. Prefers to return the goods to the original batch (when
+    /// <paramref name="batchNumber"/> is supplied and that batch is still active).
+    /// Otherwise it falls back to the most recently received active batch — when no
+    /// active batches exist, it creates a new "returned" batch in storage.
+    /// </summary>
+    public void RestoreStock(int quantity, string? batchNumber = null)
+    {
+        if (quantity <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(quantity), "Quantity to restore must be positive.");
+        }
+
+        // 1. Try to credit back to the exact batch the sale came from.
+        if (!string.IsNullOrWhiteSpace(batchNumber))
+        {
+            var originalBatch = Batches.FirstOrDefault(b =>
+                b.BatchNumber == batchNumber && b.Status == BatchStatus.Active);
+            if (originalBatch != null)
+            {
+                originalBatch.QuantityOnHand += quantity;
+                RecalculateTotalStock();
+                LastUpdated = DateTime.UtcNow;
+                return;
+            }
+        }
+
+        // 2. Fall back to the most recently received active batch (LIFO).
+        var fallbackBatch = Batches
+            .Where(b => b.Status == BatchStatus.Active)
+            .OrderByDescending(b => b.ReceivedDate)
+            .FirstOrDefault();
+        if (fallbackBatch != null)
+        {
+            fallbackBatch.QuantityOnHand += quantity;
+            RecalculateTotalStock();
+            LastUpdated = DateTime.UtcNow;
+            return;
+        }
+
+        // 3. No active batches at all — synthesise a "returned" batch so the
+        //    quantity isn't silently lost.
+        var returnedBatch = new Batch(
+            batchNumber: $"RET-{DateTime.UtcNow:yyyyMMddHHmmss}",
+            supplierId: null,
+            quantityOnHand: quantity,
+            receivedDate: DateTime.UtcNow,
+            expiryDate: DateTime.UtcNow.AddYears(1),
+            purchasePrice: 0m,
+            sellingPrice: 0m,
+            location: BatchLocation.Storage,
+            storageLocation: StorageLocation);
+        Batches.Add(returnedBatch);
+        RecalculateTotalStock();
+        LastUpdated = DateTime.UtcNow;
+    }
+
+    /// <summary>
     /// Recalculate total stock from all active batches
     /// </summary>
     public void RecalculateTotalStock()

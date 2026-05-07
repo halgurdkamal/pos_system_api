@@ -8,6 +8,23 @@ The other guides explain each feature in isolation. This one answers the practic
 
 If you just want endpoint reference, skip ahead to the [recipes](#cross-api-recipes).
 
+## Contents
+
+- [The cast: every entity in one diagram](#the-cast-every-entity-in-one-diagram)
+  - [What each box is for](#what-each-box-is-for)
+  - [How keys flow](#how-keys-flow)
+- [Cross-API recipes](#cross-api-recipes)
+  - [Recipe 1 — Onboarding a brand-new pharmacy](#recipe-1--onboarding-a-brand-new-pharmacy-the-full-path)
+  - [Recipe 2 — Add a new product to one shop's shelves](#recipe-2--add-a-brand-new-product-to-one-shops-shelves)
+  - [Recipe 3 — Receive stock from a PO (current reality)](#recipe-3--receive-stock-from-a-purchase-order-current-reality)
+  - [Recipe 4 — Daily till workflow](#recipe-4--daily-till-workflow-cashier-point-of-view)
+  - [Recipe 5 — Replenishing the shop floor](#recipe-5--replenishing-the-shop-floor)
+  - [Recipe 6 — Month-end stock count](#recipe-6--month-end-stock-count)
+  - [Recipe 7 — Move stock between shops](#recipe-7--move-stock-from-one-shop-to-another)
+- [Quick "use which API for what"](#quick-use-which-api-for-what)
+- [What is *not* covered by any endpoint](#what-is-not-covered-by-any-endpoint-yet)
+- [Cross-cutting best practices](#cross-cutting-best-practices)
+
 ---
 
 ## The cast: every entity in one diagram

@@ -8,7 +8,7 @@
 
 The till workflow. A `SalesOrder` walks through five states — **Draft → Confirmed → Paid → Completed**, with **Cancelled** and **Refunded** as side branches.
 
-> ⚠ **Inventory deduction is NOT automatic.** Reading `CreateSalesOrderCommandHandler` and `CompleteSalesOrderCommandHandler` confirms that **none of the sales endpoints currently touch stock** — they don't call `ReduceStockCommand` or `ShopInventory.ReduceStock(...)`. The order is persisted, the status walks through Draft → Confirmed → Paid → Completed, and each line stores `baseUnitsConsumed`, but **batches on `ShopInventory` are never decremented by the sales flow**. To deduct, the till must explicitly call `PUT /api/inventory/shops/{shopId}/drugs/{drugId}/reduce` per item after `/complete` succeeds (see [05 — Inventory](./05-inventory-and-stock.md)). This is an open hole tracked in [`CONTROLLER_REFACTOR_BACKLOG`](../CONTROLLER_REFACTOR_BACKLOG.md).
+> ⚠ **Inventory deduction is NOT automatic** (gap F-2 — see [`99-known-gaps.md#f-2`](./99-known-gaps.md#f-2-sales-complete-does-not-deduct-stock)). The sales handlers persist the order and walk it through Draft → Confirmed → Paid → Completed, but never decrement `ShopInventory`. The till must call `PUT /api/inventory/shops/{shopId}/drugs/{drugId}/reduce` per item after `/complete` returns. The same gaps doc covers the refund variant (F-3).
 
 All endpoints require `[Authorize(Policy = "ShopAccess")]`. The cashier's `userId` is taken from the JWT and stamped onto the order — you do **not** pass it in the body.
 

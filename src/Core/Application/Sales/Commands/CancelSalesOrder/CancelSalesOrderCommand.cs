@@ -1,7 +1,9 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using pos_system_api.Core.Application.Common.Interfaces;
+using pos_system_api.Core.Application.Inventory.Services;
 using pos_system_api.Core.Application.Sales.DTOs;
+using pos_system_api.Core.Domain.Sales.Entities;
 
 namespace pos_system_api.Core.Application.Sales.Commands.CancelSalesOrder;
 
@@ -12,13 +14,16 @@ public class CancelSalesOrderCommandHandler
     : IRequestHandler<CancelSalesOrderCommand, SalesOrderDto>
 {
     private readonly ISalesOrderRepository _repository;
+    private readonly ISalesStockService _salesStockService;
     private readonly ILogger<CancelSalesOrderCommandHandler> _logger;
 
     public CancelSalesOrderCommandHandler(
         ISalesOrderRepository repository,
+        ISalesStockService salesStockService,
         ILogger<CancelSalesOrderCommandHandler> logger)
     {
         _repository = repository;
+        _salesStockService = salesStockService;
         _logger = logger;
     }
 
@@ -32,12 +37,22 @@ public class CancelSalesOrderCommandHandler
             throw new KeyNotFoundException($"Sales order {request.OrderId} not found");
         }
 
+        // Capture status BEFORE Cancel(), so we know whether stock was previously
+        // deducted by ProcessPayment. Cancel is valid from Draft, Confirmed, or
+        // Paid; only the Paid case requires a stock restore.
+        var previouslyDeducted = salesOrder.Status == SalesOrderStatus.Paid;
+
         salesOrder.Cancel(request.CancelledBy, request.Reason);
         await _repository.UpdateAsync(salesOrder, cancellationToken);
 
+        if (previouslyDeducted)
+        {
+            await _salesStockService.RestoreForReversalAsync(salesOrder, cancellationToken);
+        }
+
         _logger.LogInformation(
-            "Sales order {OrderNumber} cancelled by {CancelledBy}: {Reason}",
-            salesOrder.OrderNumber, request.CancelledBy, request.Reason);
+            "Sales order {OrderNumber} cancelled by {CancelledBy}: {Reason} (stock restored: {StockRestored})",
+            salesOrder.OrderNumber, request.CancelledBy, request.Reason, previouslyDeducted);
 
         return SalesOrderMappers.ToDto(salesOrder);
     }

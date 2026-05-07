@@ -171,6 +171,56 @@ public class ShopInventoryTests
     }
 
     [Fact]
+    public void RestoreStock_AddsBackToOriginalBatch_WhenBatchNumberMatches()
+    {
+        var inv = NewInventory();
+        var batch = ActiveBatch("B-ORIG", 30, receivedDate: DateTime.UtcNow.AddDays(-10));
+        inv.AddBatch(batch);
+
+        inv.RestoreStock(quantity: 5, batchNumber: "B-ORIG");
+
+        batch.QuantityOnHand.Should().Be(35);
+        inv.TotalStock.Should().Be(35);
+    }
+
+    [Fact]
+    public void RestoreStock_FallsBackToMostRecentBatch_WhenBatchNumberUnknown()
+    {
+        var inv = NewInventory();
+        var older = ActiveBatch("B-OLD", 10, receivedDate: DateTime.UtcNow.AddDays(-30));
+        var newer = ActiveBatch("B-NEW", 5, receivedDate: DateTime.UtcNow.AddDays(-1));
+        inv.AddBatch(older);
+        inv.AddBatch(newer);
+
+        inv.RestoreStock(quantity: 3, batchNumber: null);
+
+        newer.QuantityOnHand.Should().Be(8, "restore prefers the most recently received active batch (LIFO)");
+        older.QuantityOnHand.Should().Be(10);
+        inv.TotalStock.Should().Be(18);
+    }
+
+    [Fact]
+    public void RestoreStock_CreatesReturnedBatch_WhenNoActiveBatchesExist()
+    {
+        var inv = NewInventory();
+
+        inv.RestoreStock(quantity: 4);
+
+        inv.TotalStock.Should().Be(4);
+        inv.Batches.Should().ContainSingle()
+            .Which.BatchNumber.Should().StartWith("RET-");
+    }
+
+    [Fact]
+    public void RestoreStock_NegativeOrZero_Throws()
+    {
+        var inv = NewInventory();
+
+        FluentActions.Invoking(() => inv.RestoreStock(0)).Should().Throw<ArgumentOutOfRangeException>();
+        FluentActions.Invoking(() => inv.RestoreStock(-3)).Should().Throw<ArgumentOutOfRangeException>();
+    }
+
+    [Fact]
     public void MarkExpiredBatches_TransitionsActiveExpiredBatches()
     {
         var inv = NewInventory();

@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using pos_system_api.Core.Application.Common.Interfaces;
+using pos_system_api.Core.Application.Inventory.Services;
 using pos_system_api.Core.Application.Sales.Commands.CancelSalesOrder;
 using pos_system_api.Core.Application.Sales.Commands.CompleteSalesOrder;
 using pos_system_api.Core.Application.Sales.Commands.ConfirmSalesOrder;
@@ -87,7 +88,8 @@ public class SalesOrderCommandHandlerTests
     {
         var so = DraftOrderWithItems();
         var repo = new FakeSalesOrderRepository(so);
-        var handler = new CancelSalesOrderCommandHandler(repo, NullLogger<CancelSalesOrderCommandHandler>.Instance);
+        var stock = new FakeSalesStockService();
+        var handler = new CancelSalesOrderCommandHandler(repo, stock, NullLogger<CancelSalesOrderCommandHandler>.Instance);
 
         var result = await handler.Handle(
             new CancelSalesOrderCommand(so.Id, "user-1", "Customer changed mind"),
@@ -104,7 +106,8 @@ public class SalesOrderCommandHandlerTests
     public async Task Cancel_OrderNotFound_Throws()
     {
         var repo = new FakeSalesOrderRepository();
-        var handler = new CancelSalesOrderCommandHandler(repo, NullLogger<CancelSalesOrderCommandHandler>.Instance);
+        var stock = new FakeSalesStockService();
+        var handler = new CancelSalesOrderCommandHandler(repo, stock, NullLogger<CancelSalesOrderCommandHandler>.Instance);
 
         var act = () => handler.Handle(
             new CancelSalesOrderCommand("missing", "user-1", "n/a"),
@@ -120,7 +123,8 @@ public class SalesOrderCommandHandlerTests
     {
         var so = PaidOrder();
         var repo = new FakeSalesOrderRepository(so);
-        var handler = new RefundSalesOrderCommandHandler(repo, NullLogger<RefundSalesOrderCommandHandler>.Instance);
+        var stock = new FakeSalesStockService();
+        var handler = new RefundSalesOrderCommandHandler(repo, stock, NullLogger<RefundSalesOrderCommandHandler>.Instance);
 
         var result = await handler.Handle(
             new RefundSalesOrderCommand(so.Id, "user-1", "Defective"),
@@ -137,7 +141,8 @@ public class SalesOrderCommandHandlerTests
     {
         var so = DraftOrderWithItems(); // Draft, not Paid/Completed
         var repo = new FakeSalesOrderRepository(so);
-        var handler = new RefundSalesOrderCommandHandler(repo, NullLogger<RefundSalesOrderCommandHandler>.Instance);
+        var stock = new FakeSalesStockService();
+        var handler = new RefundSalesOrderCommandHandler(repo, stock, NullLogger<RefundSalesOrderCommandHandler>.Instance);
 
         var act = () => handler.Handle(
             new RefundSalesOrderCommand(so.Id, "user-1", "n/a"),
@@ -150,13 +155,65 @@ public class SalesOrderCommandHandlerTests
     public async Task Refund_OrderNotFound_Throws()
     {
         var repo = new FakeSalesOrderRepository();
-        var handler = new RefundSalesOrderCommandHandler(repo, NullLogger<RefundSalesOrderCommandHandler>.Instance);
+        var stock = new FakeSalesStockService();
+        var handler = new RefundSalesOrderCommandHandler(repo, stock, NullLogger<RefundSalesOrderCommandHandler>.Instance);
 
         var act = () => handler.Handle(
             new RefundSalesOrderCommand("missing", "user-1", "n/a"),
             CancellationToken.None);
 
         await act.Should().ThrowAsync<KeyNotFoundException>();
+    }
+
+    // ----- Stock-deduction wiring (Claim 2 fix) -----
+
+    [Fact]
+    public async Task Refund_OfPaidOrder_RestoresStock()
+    {
+        var so = PaidOrder();
+        var repo = new FakeSalesOrderRepository(so);
+        var stock = new FakeSalesStockService();
+        var handler = new RefundSalesOrderCommandHandler(repo, stock, NullLogger<RefundSalesOrderCommandHandler>.Instance);
+
+        await handler.Handle(
+            new RefundSalesOrderCommand(so.Id, "user-1", "Defective"),
+            CancellationToken.None);
+
+        stock.RestoreCalls.Should().HaveCount(1);
+        stock.RestoreCalls[0].OrderNumber.Should().Be(so.OrderNumber);
+        stock.DeductCalls.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Cancel_OfDraftOrder_DoesNotTouchStock()
+    {
+        var so = DraftOrderWithItems(); // never paid, no stock change
+        var repo = new FakeSalesOrderRepository(so);
+        var stock = new FakeSalesStockService();
+        var handler = new CancelSalesOrderCommandHandler(repo, stock, NullLogger<CancelSalesOrderCommandHandler>.Instance);
+
+        await handler.Handle(
+            new CancelSalesOrderCommand(so.Id, "user-1", "n/m"),
+            CancellationToken.None);
+
+        stock.DeductCalls.Should().BeEmpty();
+        stock.RestoreCalls.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Cancel_OfPaidOrder_RestoresStock()
+    {
+        var so = PaidOrder(); // status was Paid -> stock had been deducted
+        var repo = new FakeSalesOrderRepository(so);
+        var stock = new FakeSalesStockService();
+        var handler = new CancelSalesOrderCommandHandler(repo, stock, NullLogger<CancelSalesOrderCommandHandler>.Instance);
+
+        await handler.Handle(
+            new CancelSalesOrderCommand(so.Id, "user-1", "Customer changed mind"),
+            CancellationToken.None);
+
+        stock.RestoreCalls.Should().HaveCount(1);
+        stock.RestoreCalls[0].OrderNumber.Should().Be(so.OrderNumber);
     }
 
     // ----- helpers -----
@@ -211,5 +268,23 @@ public class SalesOrderCommandHandlerTests
         public Task<Dictionary<string, int>> GetCashierOrderCountAsync(string shopId, DateTime? fromDate = null, DateTime? toDate = null, CancellationToken cancellationToken = default) => throw new NotImplementedException();
         public Task<Dictionary<string, decimal>> GetSalesByPaymentMethodAsync(string shopId, DateTime? fromDate = null, DateTime? toDate = null, CancellationToken cancellationToken = default) => throw new NotImplementedException();
         public Task<Dictionary<string, int>> GetTopSellingDrugsAsync(string shopId, int topCount = 10, DateTime? fromDate = null, DateTime? toDate = null, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+    }
+
+    private sealed class FakeSalesStockService : ISalesStockService
+    {
+        public List<SalesOrder> DeductCalls { get; } = new();
+        public List<SalesOrder> RestoreCalls { get; } = new();
+
+        public Task DeductForSaleAsync(SalesOrder order, CancellationToken cancellationToken = default)
+        {
+            DeductCalls.Add(order);
+            return Task.CompletedTask;
+        }
+
+        public Task RestoreForReversalAsync(SalesOrder order, CancellationToken cancellationToken = default)
+        {
+            RestoreCalls.Add(order);
+            return Task.CompletedTask;
+        }
     }
 }

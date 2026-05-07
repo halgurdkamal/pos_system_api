@@ -183,7 +183,7 @@ What happens server-side:
 > - **The PO is the source of truth for *what was received*.**
 > - **Stock on `ShopInventory` is not raised by the receive endpoint.** Until that handler is finished, you must add the batch separately via `POST /api/inventory/shops/{shopId}/stock` (covered in [05 — Inventory](./05-inventory-and-stock.md)) — typically right after `/receive` succeeds.
 >
-> Keep this in mind when building UIs: don't trust the till to see new stock just because a PO was marked `Completed`. Tracked in [`CONTROLLER_REFACTOR_BACKLOG`](../CONTROLLER_REFACTOR_BACKLOG.md).
+> Keep this in mind when building UIs: don't trust the till to see new stock just because a PO was marked `Completed`. Full details and the standard workaround in [`99-known-gaps.md#f-1`](./99-known-gaps.md#f-1-po-receive-does-not-create-a-batch-on-shopinventory).
 
 For how prices propagate from a newly-active batch into the shop's selling price, see [`../pricing/from-batch-guide.md`](../pricing/from-batch-guide.md).
 
