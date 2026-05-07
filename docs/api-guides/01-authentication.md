@@ -210,6 +210,32 @@ Granular permissions live in `src/Core/Domain/Auth/` and include `ProcessSales`,
 
 There is no public way to mint a SuperAdmin (intentional). For a fresh database see [`../auth/create-admin-user.md`](../auth/create-admin-user.md) — typical path is to call `POST /api/admin/seed-users` while the `AdminOnly` policy is briefly bypassed in dev, or to insert one row directly.
 
+## Best practices
+
+### Security
+- **Run only over HTTPS.** Bearer tokens are credentials; on plain HTTP they're stolen by every middlebox between client and server.
+- **Lock down `/api/auth/register` in production.** It's public *and* the handler doesn't enforce "only existing SuperAdmins can mint a SuperAdmin." Put it behind a gateway feature flag, IP allow-list, or remove the route in non-dev environments. Bootstrap the first SuperAdmin by inserting the row in the DB.
+- **Rotate `Jwt:SecretKey` periodically.** Use ≥ 64 random bytes (`openssl rand -base64 64`). Rotation invalidates every issued token — schedule it.
+- **Never log tokens, refresh tokens, or password hashes.** Serilog enrichers are easy to misconfigure; review log output for accidental leaks.
+- **Don't put tokens in URLs or query strings.** They land in browser history, server logs, and referrer headers.
+- **Keep `Jwt:Issuer` and `Jwt:Audience` set in `appsettings`.** They're checked on normal requests; `/refresh` skips them deliberately, so token forgery defence rests on the signing key alone.
+- **Treat `LockedUntil` as advisory rate-limiting, not security.** Add a real per-IP rate limiter (gateway, middleware) — five tries per account is trivially side-stepped by a script that walks usernames.
+
+### Performance
+- **Refresh access tokens *before* they expire**, not after a 401. The 60-min default plus a 5–10 min skew gives you a clean window — track `expiresAt` on the client.
+- **Cache the user's claims locally.** Don't call `/me` every page load — the JWT already holds username, system role, shop list, and per-shop permissions. Re-call only after `/refresh`.
+- **Login response carries full `shopDetails`** for every membership (legal name, address, receipt config, hardware config). Useful for one-shot till bootstrap, but it's a heavy payload — strip what you don't use before storing client-side.
+
+### Correctness
+- **Tolerate clock skew.** Validate `expiresAt` against the server's own time, not the client's; many tokens look "expired" because of phone-clock drift.
+- **Refresh tokens rotate** — every `/refresh` issues a brand-new refresh token and invalidates the old one. If you store the refresh token in two places, both must be updated atomically or one will fail.
+- **A logged-in user who is added to a new shop sees no change** until the next `/refresh`. Force a refresh after any membership change.
+- **Account lockout (`LockedUntil`) clears on successful login**, not on expiry. If the lock was caused by a typo, the user can simply wait it out.
+
+### Clean code
+- **Use a single auth service in your client.** Centralise token storage, refresh logic, and 401 retry. Don't sprinkle `Authorization` headers across components.
+- **Stop using the DTO's `"Staff"` default in code paths you control.** Pass `"User"` explicitly so future enum changes don't quietly behave differently.
+
 ## Next
 
 → [02 — Shops & Members](./02-shops-and-members.md)

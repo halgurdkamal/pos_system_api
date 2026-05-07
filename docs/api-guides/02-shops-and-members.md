@@ -176,6 +176,31 @@ Active ─── (suspended by admin) ──► Suspended ──┐
 - **Adding a SuperAdmin as a member is unnecessary** — they implicitly pass `ShopAccess` for any shop.
 - **Don't store passwords or PII in `notes`** — that field appears in member listings.
 
+## Best practices
+
+### Security
+- **Add `[Authorize(Policy = "ShopOwnerOrAdmin")]` to `/{id}/receipt-config` and `/{id}/hardware-config`** before deploying — they currently accept any authenticated user. Pasted from the warning above for emphasis: this is the most likely-to-bite gap in this controller.
+- **Treat `licenseNumber` as PII for compliance audits.** Don't expose it in cross-shop listings to non-admins.
+- **Review `customPermissions` carefully when role = `Custom`.** Defaults are zero, so a typo in the permission name silently grants nothing — but typos in the *role* string fall back to behaviour you didn't intend.
+- **Soft-delete is the default for member removal** (`DELETE /members/{userId}` flips `IsActive=false`). That's correct — never hard-delete; sales orders reference `cashierId`.
+- **Per-shop role claims live in the JWT** (`shop:{shopId}:role`, `shop:{shopId}:permission`). Changing a role in DB doesn't invalidate already-issued tokens — the user still has the old privileges until the token expires or refreshes. Force `/refresh` after privilege changes if it matters.
+
+### Performance
+- **`GET /api/shops/{id}` loads the full shop** including `receiptConfig` and `hardwareConfig` — fine for the till on startup, expensive for a list view. Use `GET /api/shops` (paginated, summary) for grids.
+- **`GetShopMembers` returns the full member list in one shot** (no pagination as of writing). Acceptable for typical pharmacy team sizes; if a shop ever has 100+ members, add filtering server-side rather than fetching all.
+- **The login response embeds every shop's full `shopDetails`.** A user belonging to many shops gets a heavy payload — encourage one user → one or two shops, not dozens.
+
+### Correctness
+- **Always re-issue the JWT after `create-own`** (call `/refresh`). The old token has no `shop:{newShopId}:*` claims; the next call to a `ShopAccess` endpoint returns 403 even though the user just made the shop.
+- **`legalName` ≠ `shopName` for compliant receipts.** `create-own` sets them equal; update `legalName` via `PUT /api/shops/{id}` if regulator names differ.
+- **`description` is repurposed to `pharmacyRegistrationNumber` and truncated at 100 chars.** Don't put marketing copy there; put a real registration number.
+- **One `IsOwner=true` per shop is the contract**, but the API doesn't enforce uniqueness. Keep this invariant in your client UI: promote-and-demote in the same call, not as two separate edits.
+
+### Clean code
+- **In your client, model the active shop as a top-level navigation concept**, not a field on the user. The user is a person; the active shop is a context.
+- **Use `Custom` role only for genuine exceptions.** Pre-defined roles (Cashier/Manager/InventoryClerk/Viewer) carry well-known permission sets — a long-lived audit trail of "what could this person do?" is easier to read with named roles than custom permission lists.
+- **`receipt-config` and `hardware-config` are separate endpoints for a reason** — receipt is a marketing concern (logo, footer), hardware is an ops concern (printer model, IP). Keep them on different screens.
+
 ## Next
 
 → [03 — Items & Catalog](./03-items-and-catalog.md)

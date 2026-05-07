@@ -368,4 +368,55 @@ These are the rough edges to plan around when integrating.
 
 ---
 
+## Cross-cutting best practices
+
+These apply across the whole API, regardless of which guide you're working from.
+
+### Security
+- **The single biggest fix before going to production**: add `[Authorize(Policy = "ShopAccess")]` to the class declaration of `InventoryController`. Today, only the two `pos-items` endpoints check the token; everything else (add stock, reduce stock, change prices) is reachable anonymously. Ditto for the controller-level policy gaps on `/shops/{id}/receipt-config`, `/hardware-config`, and the public `POST /api/barcodes/generate/*`.
+- **Run the app over HTTPS only.** JWT bearer tokens are credentials.
+- **Treat `/api/auth/register` and `/api/admin/seed` as dev-only routes.** Both are public; `register` doesn't enforce role escalation guards.
+- **Do not expose `appsettings.json` JWT secret values via env-var dumps or error pages.** The startup validator rejects placeholders — keep it that way.
+- **Audit logs (`StockAdjustment`, PO `receipts[]`, `cancellationReason`, `refund.reason`) are write-once by intent.** Don't expose UPDATE or DELETE on them.
+- **PII surfaces**: `customerName`, `customerPhone`, `prescriptionNumber` (in sales orders); supplier `taxId`, `licenseNumber`; user `email`, `phone`. Limit who can list/export, and don't log them at info level.
+
+### Performance
+- **Pagination conventions are inconsistent across the API**: most endpoints use `page` + `limit`, but PO and Sales listings use `page` + `pageSize`. Centralise the difference in your client API layer so callers don't have to remember.
+- **Catalog reads are public and cheap to cache** (categories rarely change, drugs change occasionally). Stick a CDN or short-TTL HTTP cache in front of `/api/categories` and `/api/drugs/browse`.
+- **Per-shop reads (`/inventory`, `/salesorders`, `/purchaseorders`) are dynamic** — no global cache. Prefer client-side caching keyed by `(shopId, last-updated)`.
+- **Aggregations** (`/dashboard`, `/supplier-performance`, `/cashier-performance`, `/turnover`) walk full history. Cache responses for 30–60 s; don't poll on every UI refresh.
+- **Hot indices** the DB should have for performance-critical paths:
+  - `Drug(Barcode)` — every till scan
+  - `ShopInventory(ShopId, DrugId)` — every till lookup, every adjustment
+  - `SalesOrder(ShopId, OrderDate)` — dashboard, daily reports
+  - `Batch.ReceivedDate` — FIFO depletion ordering
+  - `Batch.ExpiryDate` — FEFO move-to-floor, expiring-batch report
+
+### Correctness
+- **Invariants the API does not enforce — your client must:**
+  - Exactly one packaging level should have `isDefault = true`.
+  - Exactly one shop member per shop should have `isOwner = true`.
+  - One `ShopInventory` per `(shopId, drugId)`. (`AddStock` enforces this; never go around it.)
+  - `categoryId` referenced by a drug must exist (handler enforces — but if you delete a category at the DB level, drugs go orphan).
+- **Two open TODOs to compensate for in every flow:**
+  1. PO `/receive` does not raise `ShopInventory` — mirror with `POST /api/inventory/shops/{shopId}/stock`.
+  2. Sales `/complete` does not deduct stock — call `PUT /api/inventory/shops/{shopId}/drugs/{drugId}/reduce` per item afterwards.
+  Keep these in a single helper in your client so they're easy to remove when the API is fixed.
+- **Race conditions exist on concurrent stock writes.** Use the DB's transactional guarantees; don't rely on application-level checks alone.
+- **Time zones**: all server-stored timestamps are UTC. Convert on display, not on storage. Don't round-trip dates through the till as local strings.
+- **Decimals**: prices and quantities are `decimal` in C#. If your client uses `double`, you'll accumulate cent-level errors over a busy day. Use a fixed-point or arbitrary-precision type.
+
+### Clean code
+- **One client API layer per resource family.** Mirror the guide structure: `auth.ts`, `shops.ts`, `drugs.ts`, `inventory.ts`, `sales.ts`, `pdf.ts`. Don't sprinkle `fetch('/api/...')` calls throughout components.
+- **Treat the `Drug` and `Category` as "global config", `Shop`-children as "tenant data".** Different cache strategies, different access controls, different change cadences.
+- **Use the slim DTOs (`DrugListItemDto`, `ShopPosItemDto`, `SalesOrderSummaryDto`) for lists.** Reach for the heavy DTOs only when rendering a detail screen.
+- **Return early on errors.** Every guide lists the typical 400/404/409 responses — surface those error messages directly to staff (they're written for humans), don't replace with generic "Something went wrong".
+- **Idempotency**: most state-changing endpoints are not idempotent. If a network blip leaves you uncertain whether the call succeeded, prefer a follow-up GET to verify state over blind retry.
+
+### Deployment & ops
+- **Health checks**: `/health/live` for orchestrators (process up); `/health/ready` for load balancers (DB reachable). Don't point your load balancer at `/health` — it's an alias for live.
+- **Logs**: Serilog writes to console and `logs/` (rolling daily, 30-day retention, 10 MB cap). Optionally Seq via `Serilog:Seq:ServerUrl`. See [`../observability.md`](../observability.md).
+- **Migrations**: `dotnet ef database update` before each deploy. Catalog tables (Categories, Drugs) and the auth tables are foundational — don't skip migration baselines.
+- **Backups**: PostgreSQL native dump on a schedule. The `BackupData` permission exists in the role enum but no endpoint implements it yet — handle backups outside the API.
+
 → Back to [the index](./README.md).

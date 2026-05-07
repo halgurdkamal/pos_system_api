@@ -95,6 +95,7 @@ public class GetPackagingPricingQueryHandlerTests
 
         // Unused interface members — throw to surface accidental usage.
         public Task<ShopInventory?> GetByIdAsync(string id, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public Task<IReadOnlyList<ShopInventory>> GetByShopAndDrugsAsync(string shopId, IReadOnlyCollection<string> drugIds, CancellationToken cancellationToken = default) => throw new NotImplementedException();
         public Task<(IEnumerable<ShopInventory> Items, int TotalCount)> GetByShopAsync(string shopId, int page, int limit, bool? isAvailable = null, CancellationToken cancellationToken = default) => throw new NotImplementedException();
         public Task<IEnumerable<ShopInventory>> GetAllByShopAsync(string shopId, CancellationToken cancellationToken = default) => throw new NotImplementedException();
         public Task<IEnumerable<ShopInventory>> GetLowStockAsync(string shopId, CancellationToken cancellationToken = default) => throw new NotImplementedException();

@@ -28,6 +28,23 @@ public class DrugRepository : IDrugRepository
             .FirstOrDefaultAsync(d => d.DrugId == drugId, cancellationToken);
     }
 
+    public async Task<IReadOnlyList<Drug>> GetByIdsAsync(
+        IReadOnlyCollection<string> drugIds,
+        CancellationToken cancellationToken = default
+    )
+    {
+        if (drugIds == null || drugIds.Count == 0)
+        {
+            return Array.Empty<Drug>();
+        }
+
+        return await _context
+            .Drugs.Include(d => d.Category)
+            .AsNoTracking()
+            .Where(d => drugIds.Contains(d.DrugId))
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<Drug?> GetByBarcodeAsync(
         string barcode,
         CancellationToken cancellationToken = default

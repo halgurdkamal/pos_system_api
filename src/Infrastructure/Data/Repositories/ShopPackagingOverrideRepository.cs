@@ -27,6 +27,26 @@ public class ShopPackagingOverrideRepository : IShopPackagingOverrideRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<IReadOnlyList<ShopPackagingOverride>> GetByShopAndDrugsAsync(
+        string shopId,
+        IReadOnlyCollection<string> drugIds,
+        CancellationToken cancellationToken = default)
+    {
+        if (drugIds == null || drugIds.Count == 0)
+        {
+            return Array.Empty<ShopPackagingOverride>();
+        }
+
+        return await _context.ShopPackagingOverrides
+            .AsNoTracking()
+            .Where(o => o.ShopId == shopId && drugIds.Contains(o.DrugId))
+            .OrderBy(o => o.DrugId)
+            .ThenBy(o => o.PackagingLevelId == null)
+            .ThenBy(o => o.CustomLevelOrder)
+            .ThenBy(o => o.CreatedAt)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<ShopPackagingOverride?> GetByIdAsync(
         string id,
         CancellationToken cancellationToken = default)

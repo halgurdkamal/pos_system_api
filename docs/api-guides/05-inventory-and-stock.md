@@ -287,6 +287,35 @@ If 3 batches hold (100, 200, 150) and 250 units are sold, batch 1 is exhausted, 
 - **Adjustments aren't sales** — they bypass FIFO selection (you must pass `batchNumber`). Use sale endpoints to deduct via FIFO.
 - **Transfers don't auto-receive** — the receiving shop's stock only goes up after `POST /receive`. Stock is in limbo (InTransit) before that.
 
+## Best practices
+
+### Security
+- **Add `[Authorize(Policy = "ShopAccess")]` at the class level on `InventoryController`** before deploying. Today only the two `/pos-items*` endpoints are protected; `AddStock`, `ReduceStock`, and pricing endpoints are reachable without a token. This is the single most important fix in the whole API.
+- **`PUT .../pricing` and `.../packaging-pricing` change what customers are charged.** Once the policy is in place, restrict further with the `UpdatePricing` permission so cashiers can't silently shift prices.
+- **`StockAdjustment` audit rows are the *only* trail of damage/theft/correction events.** Don't expose a way to delete or rewrite them — they exist for compliance.
+- **Stock transfers create a window where stock is "in transit" and not on either shop's shelf.** Make sure both `from` and `to` shops have access controls in your transfer-approval UI; the API doesn't enforce who can approve.
+
+### Performance
+- **`Batches[]` grows unbounded per `ShopInventory`.** Mark exhausted batches as `Expired`/`Recalled` and archive them out of the active list periodically. A drug receiving weekly deliveries for two years has 100+ batch entries by default — every reduce/listing iterates them.
+- **`/pos-items/by-barcode/{barcode}` is the hot path for the till.** Make sure the DB has an index on `Drug.Barcode` and on `(ShopInventory.ShopId, ShopInventory.DrugId)`. The handler joins both.
+- **`GET /shops/{shopId}` returns inventory + batches + pricing.** Heavy. For dashboards use `low-stock` / `expiring` / `value` separately — they each return a focused subset.
+- **`/api/inventory-alerts/.../generate` scans every drug in the shop.** Run it on a cron (e.g. nightly), not on every page load. The alerts are persistent — read them with the listing endpoint.
+- **Reports like `abc-analysis`, `dead-stock`, and `turnover` are O(drugs × time-window).** Cache responses for several minutes; restrict date ranges in the UI.
+
+### Correctness
+- **Always pass `batchNumber` to `StockAdjustment`.** Without it, the adjustment is ambiguous in mixed-batch inventories — which lot was damaged? Reports can't tell.
+- **`/reduce` runs FIFO** across all active batches; `/move-to-floor` with `batchNumber: null` runs FEFO. Pick the right one — using FIFO when you mean FEFO ages near-expiry stock in the back room.
+- **Concurrent `/reduce` calls are not protected by application-level locking.** Two near-simultaneous sales on the last unit of a drug can both succeed and drive stock negative. Mitigate with DB-level row locks (the repository should use `SELECT … FOR UPDATE` or equivalent) and validate stock at the handler before reducing.
+- **`StockCount` records the system quantity at *create* time, not at *record* time.** If you schedule a count for tomorrow but stock changes today, the variance reflects the old baseline. Either schedule and immediately count, or use cycle counts on quiet items.
+- **`StockTransfer` decrements the sender at *initiation*, not at receipt.** Cancelling before `/receive` reverses it; cancelling after `/receive` does not. Keep the workflow strict.
+- **`/value` hard-codes USD in the response.** If your shop's `currency` differs, convert client-side using the shop record.
+
+### Clean code
+- **Prefer `/packaging-pricing` over `/pricing`.** Modern flows price per packaging level; the older `/pricing` (cost / selling / tax flat) is kept for backward compat. New till code should read packaging prices and let the cashier sell at level granularity.
+- **Use `update-from-batch`** instead of recomputing prices in your client when a new batch becomes the active one. The endpoint preserves shop-customised prices and only fills in null/zero levels.
+- **Treat `shopFloorStock` and `storageStock` as physical realities, not numbers to balance.** When the warehouse moves boxes onto the shelf, call `/move-to-floor`. Reading `totalStock` for till availability hides why the cashier sees zero when there are pallets in the back.
+- **One `ShopInventory` per `(shopId, drugId)`** is an invariant — `AddStock` enforces it (creates if missing, appends batch if not). Don't try to "split" inventory by storage location; use `Location` on the `Batch` for that.
+
 ## Next
 
 → [06 — Cashier / POS Checkout](./06-cashier-pos-checkout.md)

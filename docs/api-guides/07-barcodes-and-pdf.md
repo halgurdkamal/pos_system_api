@@ -206,6 +206,33 @@ For deeper architecture (component tree, rendering pipeline, how to add a new pa
 
 ---
 
+## Best practices
+
+### Security
+- **Put `[Authorize]` on `/api/barcodes/generate/barcode` and `/qrcode`** before exposing the API to the internet. They're CPU-intensive image generators that accept arbitrary data — a perfect denial-of-service target.
+- **Lock down `POST /api/pdf/receipt/custom`.** It's `[AllowAnonymous]` for "testing purposes" — fine in dev, dangerous in prod. An attacker can render arbitrary text claiming to be a real shop, complete with logo URL of their choice.
+- **Validate `logoUrl` before rendering.** It's fetched server-side by QuestPDF; an attacker-controlled URL is a server-side request forgery (SSRF) primitive. At minimum, restrict to a known CDN host pattern.
+- **Rate-limit barcode generation per IP/user.** PNG encoding is expensive; a small loop will saturate a CPU.
+- **Don't include full prescription details in receipts** that may be photographed and shared. Use just enough to satisfy compliance (drug name, qty, Rx flag) — `requiresPrescription` toggles the visual mark.
+
+### Performance
+- **Cache `/api/barcodes/drugs/{drugId}` responses on the client.** Both barcode and QR images are deterministic for a given drug. Bust the cache only when the drug's `barcode` field changes.
+- **Generate labels in batch.** If you're printing 100 labels, render them all server-side into one PDF page set rather than 100 separate calls.
+- **PDF receipts are CPU-bound (QuestPDF) but stateless.** Horizontal scaling is fine; don't put heavy in-memory caches on the receipt path.
+- **`Thermal58mm` and `Thermal80mm` produce smaller PDFs** than A4/A5 — use them when delivering to mobile printers over slow networks.
+
+### Correctness
+- **`POST /api/barcodes/scan` returns `{ success, data, message }` only.** It does *not* identify a drug. Always pair it with `GET /api/barcodes/search?barcode=…` (catalog) or `GET /api/inventory/.../pos-items/by-barcode/{barcode}` (till) to resolve.
+- **The PDF endpoint defaults to `paperType = A5`, `currency = "IQD"`, `language = "en-US"`.** If your business uses different defaults, *always* pass them explicitly — the shop's `receiptConfig.receiptLanguage` and `receiptWidth` are not currently merged into the receipt automatically.
+- **`/receipt/{orderId}` reflects the order at fetch time**, not at completion time. Re-printing an old refunded order shows current totals, not the original — keep an immutable copy elsewhere if regulator wants point-in-time receipts.
+- **QR codes embed JSON** (drugId, barcode, brandName, genericName). If you change the schema, mobile apps that decode them will break — version it.
+
+### Clean code
+- **At the till, never use `/api/barcodes/search`** — use `/api/inventory/shops/{shopId}/pos-items/by-barcode/{barcode}` instead. The inventory endpoint returns drug + price + stock + nearest expiry in one call.
+- **Use `/api/barcodes/search` from inventory tools** (label printing, stock-in workflows) where you don't yet care about a specific shop's price.
+- **Build the receipt template once.** Toggles like `showLogo`, `showQrCode`, `showTaxBreakdown`, `showVatNumber` are designed to express variants of one template — don't fork separate code paths per shop.
+- **Pass `language` and `paperType` from the shop's `receiptConfig`/`hardwareConfig`** rather than hard-coding them per call. The till already has those values from login.
+
 ## You're done
 
 You've now seen every major API in the system end to end. From here:

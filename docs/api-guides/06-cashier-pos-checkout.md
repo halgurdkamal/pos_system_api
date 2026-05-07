@@ -258,6 +258,36 @@ Returns a `SalesOrderDashboardDto` with totals, counts, recent orders, and break
 - **Skipping confirm** — payment and complete will both reject a Draft order.
 - **Using a refund as a void** — refund implies money goes back. Use `cancel` for orders that never collected payment.
 
+## Best practices
+
+### Security
+- **Every endpoint here is `[Authorize(Policy = "ShopAccess")]`** — keep that. The till handles money; never weaken the policy "for testing".
+- **Don't accept full PAN (card numbers) in `paymentReference`.** Use it for last-4 or processor-generated tokens only. Anything stored here ends up in the receipt and order log.
+- **Refunds are commercially destructive.** Gate the refund button behind the `RefundSales` permission in the cashier UI even though the API doesn't enforce per-permission checks here today. Audit log refund reasons.
+- **Don't log `customerPhone` or `customerName` at info level.** They're PII; downgrade to debug or hash before structured logging.
+- **The `cashierId` is taken from the JWT, not from the body.** That's correct — never let the client supply it. (If you add customer-facing self-checkout, build a separate endpoint that doesn't take `shopId` from path either.)
+
+### Performance
+- **`/pos-items/by-barcode/{barcode}` is the till's hot path.** Pre-warm on shift start by calling `/pos-items?searchTerm=…&limit=50` for popular categories.
+- **The till should keep an in-memory cache of scanned drugs** for the duration of a shift, keyed by barcode. Stock and price update slowly relative to checkout speed; over-fetching kills printer-attached devices.
+- **The `dashboard`, `top-selling-drugs`, and `cashier-performance` queries run aggregations.** Refresh on demand (or every 30s), not every keystroke.
+- **A long sale with 20+ items means 20+ `PUT /reduce` calls** because of the deduction band-aid. Run them in parallel after `/complete` returns; they touch different `(shopId, drugId)` rows.
+
+### Correctness
+- **Always run `PUT /reduce` *after* `/complete` returns 200.** Doing it before risks deducting on a sale that fails finalisation. Doing it inside a transaction with `/complete` would be ideal but isn't possible from a client.
+- **Refunds do *not* restore stock.** After `POST /refund`, file a `POST /api/stock-adjustments/shops/{shopId}` with `adjustmentType: "Return"`, the affected `batchNumber`, and a positive `quantityChanged`. Otherwise stock counts drift downward over time.
+- **Cancellation rules are enforced server-side**: `Draft` / `Confirmed` / `Paid` are cancellable, `Completed` / `Refunded` are not. Don't show the cancel button after `/complete` succeeded.
+- **`packagingLevel` matching is case-insensitive but typos still hurt.** A typo'd level name doesn't 400 — it falls back to "treat quantity as base units", silently under-deducting. Validate against the drug's level list in the till before sending.
+- **`amountPaid` must be ≥ `totalAmount`.** The handler rejects insufficient amounts; tip/round-up is allowed but goes into `changeGiven`.
+- **One sale = one order**, even with split tender. Today the `payment` endpoint takes a single payment method. If you need split (cash + card), record both in `paymentReference` and pick a primary method.
+
+### Clean code
+- **Drive the till from `SalesOrderDto`** as the source of truth. Compute totals server-side; never trust the client's math.
+- **`save-draft` is a UI affordance, not a state change.** Treat it as "fetch this order again" — drafts are persisted on creation. This means **the cashier can switch devices mid-sale**: any device with `ShopAccess` can resume a draft.
+- **Resume only orders in `Draft` status.** The endpoint enforces this; mirror the check in your UI so users don't try to resume a paid order.
+- **Display `orderNumber` (`SO-yyyyMMddHHmmss-xxxx`), not `id`** to staff and customers. The numeric suffix gives lightweight uniqueness; the timestamp is human-friendly for support tickets.
+- **Encapsulate the post-`/complete` reduce loop in a single client function** so when the API fixes the auto-deduction TODO, you remove it in one place.
+
 ## Next
 
 → [07 — Barcodes & PDF Receipts](./07-barcodes-and-pdf.md)

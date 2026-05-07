@@ -33,6 +33,22 @@ public class InventoryRepository : IInventoryRepository
             .FirstOrDefaultAsync(i => i.ShopId == shopId && i.DrugId == drugId, cancellationToken);
     }
 
+    public async Task<IReadOnlyList<ShopInventory>> GetByShopAndDrugsAsync(
+        string shopId,
+        IReadOnlyCollection<string> drugIds,
+        CancellationToken cancellationToken = default)
+    {
+        if (drugIds == null || drugIds.Count == 0)
+        {
+            return Array.Empty<ShopInventory>();
+        }
+
+        return await _context.ShopInventory
+            .AsNoTracking()
+            .Where(i => i.ShopId == shopId && drugIds.Contains(i.DrugId))
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<(IEnumerable<ShopInventory> Items, int TotalCount)> GetByShopAsync(
         string shopId,
         int page,

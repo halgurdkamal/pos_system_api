@@ -255,6 +255,35 @@ These overrides live on `ShopInventory` and are managed through `/api/inventory/
 
 Every entity inherits `BaseEntity` and tracks `CreatedAt`, `CreatedBy`, `LastUpdated`, `UpdatedBy`. Always include the JWT — `CreatedBy` is taken from the `nameidentifier` claim.
 
+## Best practices
+
+### Security
+- **Keep `POST /api/drugs` and `POST /api/categories` SuperAdmin-only.** They mutate global, shared catalog data — one careless update affects every shop. Don't loosen the policy for "convenience".
+- **The catalog endpoints are public read** (`AllowAnonymous`) by design — you want the storefront to render without a login. That means `description`, `sideEffects`, `interactionNotes`, and `imageUrls` are world-readable; don't include internal commercial notes.
+- **Sanitise `imageUrls` on input.** They go straight into responses and (eventually) onto receipts/labels — `javascript:` URLs or attacker-controlled hosts are an XSS / phishing surface for any browser-based client.
+- **Validate `barcode` format if compliance requires it.** The handler stores whatever you send; uniqueness is enforced (409) but format isn't.
+
+### Performance
+- **Use `/api/drugs/browse` for catalog grids and search** — it returns the slim `DrugListItemDto` (image URL, primary stock, category colour). The full `/api/drugs/{id}` response includes regulatory + side effects + interaction notes and is meant for detail screens.
+- **`/api/drugs/{id}/detail` joins across every shop's inventory** to populate `shopInventorySummaries[]`. Cheap with two shops, expensive with hundreds — call only when the user opens a drug detail page.
+- **Cache categories aggressively client-side.** They change rarely; `GET /api/categories?activeOnly=true` is fine to fetch once at app start.
+- **Pagination is `page` + `limit`** (not `pageSize`). Cap `limit` in the client (e.g. ≤ 100); the API doesn't currently enforce a maximum.
+
+### Correctness
+- **Validate the packaging hierarchy yourself before submitting.** The handler is lenient — bad input persists silently. Hard rules:
+  - `levelNumber` must be sequential starting at 1.
+  - `baseUnitQuantity` of level N must equal `baseUnitQuantity[N-1] × quantityPerParent[N]`.
+  - Exactly one level should set `isDefault: true`.
+  - Level 1 should usually be `isSellable: false` for non-divisible drugs (you don't sell loose tablets out of a bottle).
+- **Set `barcode` per packaging level, not just at the drug level**, when each level has its own scannable code. Outer cartons usually have a different EAN to the inner box.
+- **Don't depend on `categoryName` updating after a category rename** — it's snapshotted onto every drug at create time. To "rename" propagates only via re-creating the drugs (or an out-of-band SQL update).
+- **Drugs are not deletable.** No `DELETE` endpoint, no `isActive` flag. Plan accordingly: use `ShopInventory` to control whether a shop sells a drug, not the catalog.
+
+### Clean code
+- **Send IDs explicitly in your client (not auto-generated).** If you control the `drugId` and `categoryId`, you can deduplicate cleanly across staging/prod and avoid orphan `DRG-…` collisions in fixtures.
+- **Prefer `categoryId` over `categoryName` everywhere in client code.** The API accepts both as filters but only the ID is stable.
+- **Treat `basePricing.suggestedRetailPrice` as a *hint*** — a vendor recommendation. Cashiers always see `ShopInventory.shopPricing.sellingPrice`. Don't display the catalog suggestion next to the till price; it confuses staff.
+
 ## Next
 
 → [04 — Suppliers & Purchase Orders](./04-suppliers-and-purchase-orders.md)

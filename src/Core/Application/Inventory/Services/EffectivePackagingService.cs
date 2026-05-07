@@ -40,7 +40,53 @@ public class EffectivePackagingService : IEffectivePackagingService
         var inventory = await _inventoryRepository.GetByShopAndDrugAsync(shopId, drugId, cancellationToken);
         var overrides = await _overrideRepository.GetByShopAndDrugAsync(shopId, drugId, cancellationToken);
 
-        _logger.LogDebug("Merging packaging for shop {ShopId} and drug {DrugId}. Found {GlobalCount} global levels and {OverrideCount} overrides.",
+        return BuildEffectivePackaging(shopId, drugId, drug, inventory, overrides);
+    }
+
+    public async Task<IReadOnlyDictionary<string, EffectivePackagingDto>> GetEffectivePackagingBatchAsync(
+        string shopId,
+        IReadOnlyCollection<string> drugIds,
+        CancellationToken cancellationToken = default)
+    {
+        if (drugIds == null || drugIds.Count == 0)
+        {
+            return new Dictionary<string, EffectivePackagingDto>();
+        }
+
+        // Three queries total — independent of drugIds.Count. Each runs sequentially
+        // on the shared DbContext to avoid the concurrency conflict that the per-drug
+        // Task.WhenAll fan-out used to cause.
+        var drugs = await _drugRepository.GetByIdsAsync(drugIds, cancellationToken);
+        var inventories = await _inventoryRepository.GetByShopAndDrugsAsync(shopId, drugIds, cancellationToken);
+        var overrides = await _overrideRepository.GetByShopAndDrugsAsync(shopId, drugIds, cancellationToken);
+
+        var inventoryByDrugId = inventories.ToDictionary(i => i.DrugId, StringComparer.OrdinalIgnoreCase);
+        var overridesByDrugId = overrides
+            .GroupBy(o => o.DrugId, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(g => g.Key, g => (IReadOnlyList<ShopPackagingOverride>)g.ToList(), StringComparer.OrdinalIgnoreCase);
+
+        var emptyOverrides = (IReadOnlyList<ShopPackagingOverride>)Array.Empty<ShopPackagingOverride>();
+        var result = new Dictionary<string, EffectivePackagingDto>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var drug in drugs)
+        {
+            var drugInventory = inventoryByDrugId.GetValueOrDefault(drug.DrugId);
+            var drugOverrides = overridesByDrugId.GetValueOrDefault(drug.DrugId, emptyOverrides);
+            result[drug.DrugId] = BuildEffectivePackaging(shopId, drug.DrugId, drug, drugInventory, drugOverrides);
+        }
+
+        return result;
+    }
+
+    private EffectivePackagingDto BuildEffectivePackaging(
+        string shopId,
+        string drugId,
+        Drug drug,
+        ShopInventory? inventory,
+        IReadOnlyList<ShopPackagingOverride> overrides)
+    {
+        _logger.LogDebug(
+            "Merging packaging for shop {ShopId} and drug {DrugId}. Found {GlobalCount} global levels and {OverrideCount} overrides.",
             shopId,
             drugId,
             drug.PackagingInfo?.PackagingLevels?.Count ?? 0,

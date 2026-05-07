@@ -22,6 +22,15 @@ public interface IInventoryRepository
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Batch-fetch inventory rows for a single shop and a set of drug IDs in one query.
+    /// Used to avoid N+1 patterns. Missing (shopId, drugId) pairs are silently skipped.
+    /// </summary>
+    Task<IReadOnlyList<ShopInventory>> GetByShopAndDrugsAsync(
+        string shopId,
+        IReadOnlyCollection<string> drugIds,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Get all inventory items for a shop with pagination
     /// </summary>
     Task<(IEnumerable<ShopInventory> Items, int TotalCount)> GetByShopAsync(
