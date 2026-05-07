@@ -1,0 +1,243 @@
+### Test PDF Receipt Generation
+### Base URL
+@baseUrl = http://localhost:5135
+@token = YOUR_JWT_TOKEN_HERE
+
+### 1. Generate Receipt PDF for existing order
+GET {{baseUrl}}/api/pdf/receipt/SO-20251105213131-5798
+Authorization: Bearer {{token}}
+
+### 2. Generate Receipt PDF for existing order (Arabic)
+GET {{baseUrl}}/api/pdf/receipt/SO-20251105213131-5798?language=ar
+Authorization: Bearer {{token}}
+
+### 2a. Generate Receipt PDF with A4 paper
+GET {{baseUrl}}/api/pdf/receipt/SO-20251105213131-5798?paperType=A4
+Authorization: Bearer {{token}}
+
+### 2b. Generate Receipt PDF with 80mm thermal printer
+GET {{baseUrl}}/api/pdf/receipt/SO-20251105213131-5798?paperType=Thermal80mm
+Authorization: Bearer {{token}}
+
+### 2c. Generate Receipt PDF with 58mm thermal printer (Arabic)
+GET {{baseUrl}}/api/pdf/receipt/SO-20251105213131-5798?language=ar&paperType=Thermal58mm
+Authorization: Bearer {{token}}
+
+### 3. Generate Custom Receipt PDF (for testing - matches the provided image)
+POST {{baseUrl}}/api/pdf/receipt/custom
+Content-Type: application/json
+
+{
+  "orderNumber": "SO-20251105213131-5798",
+  "shopName": "HK Pharmacy",
+  "shopAddress": "sulaimnai, sulaimnai",
+  "shopPhone": "+964 750 123 4567",
+  "shopEmail": "contact@hkpharmacy.com",
+  "vatRegistrationNumber": null,
+  "pharmacyLicenseNumber": "PH-2024-001",
+  "headerText": null,
+  "footerText": "Thank you for your purchase!",
+  "showLogo": true,
+  "showTaxBreakdown": false,
+  "showVatNumber": false,
+  "showPharmacyLicense": true,
+  "language": "en-US",
+  "paperType": "A5",
+  "orderDate": "2025-11-05T21:31:00Z",
+  "salespersonName": "halgurd kamal",
+  "paymentMethod": "Cash",
+  "items": [
+    {
+      "itemName": "Unknown Item",
+      "quantity": 4,
+      "unitPrice": 5000,
+      "total": 20000,
+      "requiresPrescription": false
+    }
+  ],
+  "subtotal": 20000,
+  "taxAmount": 0,
+  "taxRate": 0,
+  "total": 20000,
+  "amountPaid": 20000,
+  "change": 0,
+  "currency": "IQD"
+}
+
+### 3a. Generate Custom Receipt PDF (A4 Paper)
+POST {{baseUrl}}/api/pdf/receipt/custom
+Content-Type: application/json
+
+{
+  "orderNumber": "SO-20251105213131-5798",
+  "shopName": "HK Pharmacy",
+  "shopAddress": "sulaimnai, sulaimnai",
+  "shopPhone": "+964 750 123 4567",
+  "shopEmail": "contact@hkpharmacy.com",
+  "vatRegistrationNumber": null,
+  "pharmacyLicenseNumber": "PH-2024-001",
+  "headerText": null,
+  "footerText": "Thank you for your purchase!",
+  "showLogo": true,
+  "showTaxBreakdown": false,
+  "showVatNumber": false,
+  "showPharmacyLicense": true,
+  "language": "en-US",
+  "paperType": "A4",
+  "orderDate": "2025-11-05T21:31:00Z",
+  "salespersonName": "halgurd kamal",
+  "paymentMethod": "Cash",
+  "items": [
+    {
+      "itemName": "Unknown Item",
+      "quantity": 4,
+      "unitPrice": 5000,
+      "total": 20000,
+      "requiresPrescription": false
+    }
+  ],
+  "subtotal": 20000,
+  "taxAmount": 0,
+  "taxRate": 0,
+  "total": 20000,
+  "amountPaid": 20000,
+  "change": 0,
+  "currency": "IQD"
+}
+
+### 3b. Generate Custom Receipt PDF (80mm Thermal Printer)
+POST {{baseUrl}}/api/pdf/receipt/custom
+Content-Type: application/json
+
+{
+  "orderNumber": "SO-20251105213131-5798",
+  "shopName": "HK Pharmacy",
+  "shopAddress": "sulaimnai, sulaimnai",
+  "shopPhone": "+964 750 123 4567",
+  "shopEmail": "contact@hkpharmacy.com",
+  "vatRegistrationNumber": null,
+  "pharmacyLicenseNumber": "PH-2024-001",
+  "headerText": null,
+  "footerText": "Thank you for your purchase!",
+  "showLogo": true,
+  "showTaxBreakdown": false,
+  "showVatNumber": false,
+  "showPharmacyLicense": true,
+  "language": "en-US",
+  "paperType": "Thermal80mm",
+  "orderDate": "2025-11-05T21:31:00Z",
+  "salespersonName": "halgurd kamal",
+  "paymentMethod": "Cash",
+  "items": [
+    {
+      "itemName": "Unknown Item",
+      "quantity": 4,
+      "unitPrice": 5000,
+      "total": 20000,
+      "requiresPrescription": false
+    }
+  ],
+  "subtotal": 20000,
+  "taxAmount": 0,
+  "taxRate": 0,
+  "total": 20000,
+  "amountPaid": 20000,
+  "change": 0,
+  "currency": "IQD"
+}
+
+### 4. Generate Custom Receipt PDF (Arabic version)
+POST {{baseUrl}}/api/pdf/receipt/custom
+Content-Type: application/json
+
+{
+  "orderNumber": "SO-20251105213131-5798",
+  "shopName": "صيدلية HK",
+  "shopAddress": "سليمانية، سليمانية",
+  "shopPhone": "٠٧٥٠ ١٢٣ ٤٥٦٧",
+  "shopEmail": "contact@hkpharmacy.com",
+  "vatRegistrationNumber": null,
+  "pharmacyLicenseNumber": "PH-2024-001",
+  "headerText": "نحن في خدمتكم",
+  "footerText": "شكراً لزيارتكم!",
+  "showLogo": true,
+  "showTaxBreakdown": true,
+  "showVatNumber": false,
+  "showPharmacyLicense": true,
+  "language": "ar",
+  "paperType": "A5",
+  "orderDate": "2025-11-05T21:31:00Z",
+  "salespersonName": "هلگورد كمال",
+  "paymentMethod": "نقدي",
+  "items": [
+    {
+      "itemName": "منتج غير معروف",
+      "quantity": 4,
+      "unitPrice": 5000,
+      "total": 20000,
+      "requiresPrescription": false
+    }
+  ],
+  "subtotal": 20000,
+  "taxAmount": 0,
+  "taxRate": 0,
+  "total": 20000,
+  "amountPaid": 20000,
+  "change": 0,
+  "currency": "IQD"
+}
+
+### 5. Generate Receipt with Multiple Items and Tax
+POST {{baseUrl}}/api/pdf/receipt/custom
+Content-Type: application/json
+
+{
+  "orderNumber": "SO-TEST-12345",
+  "shopName": "City Pharmacy",
+  "shopAddress": "123 Main Street, Baghdad, Iraq",
+  "shopPhone": "+964 770 555 1234",
+  "shopEmail": "info@citypharmacy.com",
+  "vatRegistrationNumber": "VAT-123456789",
+  "pharmacyLicenseNumber": "PH-2024-999",
+  "headerText": "Your Health, Our Priority",
+  "footerText": "Thank you! Please keep your receipt for returns.",
+  "showLogo": true,
+  "showTaxBreakdown": true,
+  "showVatNumber": true,
+  "showPharmacyLicense": true,
+  "language": "en-US",
+  "paperType": "A5",
+  "orderDate": "2025-11-06T14:30:00Z",
+  "salespersonName": "Ahmad Hassan",
+  "paymentMethod": "Cash",
+  "items": [
+    {
+      "itemName": "Paracetamol 500mg (Box of 20)",
+      "quantity": 2,
+      "unitPrice": 3500,
+      "total": 7000,
+      "requiresPrescription": false
+    },
+    {
+      "itemName": "Amoxicillin 500mg (Box of 21)",
+      "quantity": 1,
+      "unitPrice": 12000,
+      "total": 12000,
+      "requiresPrescription": true
+    },
+    {
+      "itemName": "Vitamin D3 5000 IU (30 capsules)",
+      "quantity": 3,
+      "unitPrice": 8000,
+      "total": 24000,
+      "requiresPrescription": false
+    }
+  ],
+  "subtotal": 43000,
+  "taxAmount": 3655,
+  "taxRate": 8.5,
+  "total": 46655,
+  "amountPaid": 50000,
+  "change": 3345,
+  "currency": "IQD"
+}
