@@ -60,9 +60,8 @@ public class DrugRepository : IDrugRepository
 
     public async Task<Drug> CreateAsync(Drug drug, CancellationToken cancellationToken = default)
     {
-        drug.CreatedAt = DateTime.UtcNow;
-        drug.CreatedBy = "system";
-
+        // Audit fields (CreatedAt / CreatedBy) are set by the caller — the repository
+        // only persists what it's given.
         _context.Drugs.Add(drug);
         await _context.SaveChangesAsync(cancellationToken);
 

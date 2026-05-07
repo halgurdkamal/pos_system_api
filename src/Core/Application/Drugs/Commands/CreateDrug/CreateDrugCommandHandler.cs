@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using pos_system_api.Core.Application.Common.Exceptions;
 using pos_system_api.Core.Application.Common.Interfaces;
 using pos_system_api.Core.Application.Drugs.DTOs;
 using pos_system_api.Core.Domain.Drugs.Entities;
@@ -13,8 +11,8 @@ namespace pos_system_api.Core.Application.Drugs.Commands.CreateDrug;
 public class CreateDrugCommandHandler : IRequestHandler<CreateDrugCommand, DrugDto>
 {
     private readonly IDrugRepository _drugRepository;
-    private readonly ILogger<CreateDrugCommandHandler> _logger;
     private readonly ICategoryRepository _categoryRepository;
+    private readonly ILogger<CreateDrugCommandHandler> _logger;
 
     public CreateDrugCommandHandler(
         IDrugRepository drugRepository,
@@ -28,27 +26,10 @@ public class CreateDrugCommandHandler : IRequestHandler<CreateDrugCommand, DrugD
 
     public async Task<DrugDto> Handle(CreateDrugCommand request, CancellationToken cancellationToken)
     {
-        if (request.Payload == null)
-        {
-            throw new ArgumentNullException(nameof(request.Payload));
-        }
-
+        // Required-field checks live in CreateDrugCommandValidator and run via the
+        // ValidationBehavior pipeline before this handler executes. The remaining
+        // checks below need a database round-trip.
         var dto = request.Payload;
-
-        if (string.IsNullOrWhiteSpace(dto.BrandName))
-            throw new ArgumentException("BrandName is required.", nameof(dto.BrandName));
-
-        if (string.IsNullOrWhiteSpace(dto.GenericName))
-            throw new ArgumentException("GenericName is required.", nameof(dto.GenericName));
-
-        if (string.IsNullOrWhiteSpace(dto.CategoryId))
-            throw new ArgumentException("CategoryId is required.", nameof(dto.CategoryId));
-
-        if (dto.PackagingInfo == null)
-            throw new ArgumentException("PackagingInfo is required.", nameof(dto.PackagingInfo));
-
-        if (dto.PackagingInfo.PackagingLevels == null || dto.PackagingInfo.PackagingLevels.Count == 0)
-            throw new ArgumentException("PackagingLevels must contain at least one level.", nameof(dto.PackagingInfo.PackagingLevels));
 
         var desiredDrugId = dto.DrugId?.Trim();
         if (!string.IsNullOrWhiteSpace(desiredDrugId))
@@ -56,23 +37,24 @@ public class CreateDrugCommandHandler : IRequestHandler<CreateDrugCommand, DrugD
             var existingDrug = await _drugRepository.GetByIdAsync(desiredDrugId, cancellationToken);
             if (existingDrug != null)
             {
-                throw new InvalidOperationException($"Drug with ID '{desiredDrugId}' already exists.");
+                throw new ConflictException($"Drug with ID '{desiredDrugId}' already exists.");
             }
         }
 
         if (!string.IsNullOrWhiteSpace(dto.Barcode))
         {
-            var existingBarcode = await _drugRepository.GetByBarcodeAsync(dto.Barcode.Trim(), cancellationToken);
+            var trimmedBarcode = dto.Barcode.Trim();
+            var existingBarcode = await _drugRepository.GetByBarcodeAsync(trimmedBarcode, cancellationToken);
             if (existingBarcode != null)
             {
-                throw new InvalidOperationException($"Barcode '{dto.Barcode}' is already assigned to another drug.");
+                throw new ConflictException($"Barcode '{trimmedBarcode}' is already assigned to another drug.");
             }
         }
 
         var category = await _categoryRepository.GetByIdAsync(dto.CategoryId.Trim(), cancellationToken);
         if (category == null)
         {
-            throw new InvalidOperationException($"Category '{dto.CategoryId}' does not exist.");
+            throw new NotFoundException($"Category '{dto.CategoryId}' does not exist.");
         }
 
         var drug = new Drug
@@ -86,7 +68,10 @@ public class CreateDrugCommandHandler : IRequestHandler<CreateDrugCommand, DrugD
             OriginCountry = dto.OriginCountry?.Trim() ?? string.Empty,
             CategoryName = category.Name,
             CategoryId = category.CategoryId,
-            ImageUrls = dto.ImageUrls?.Where(url => !string.IsNullOrWhiteSpace(url)).Select(url => url.Trim()).ToList() ?? new List<string>(),
+            ImageUrls = dto.ImageUrls?
+                .Where(url => !string.IsNullOrWhiteSpace(url))
+                .Select(url => url.Trim())
+                .ToList() ?? new List<string>(),
             Description = dto.Description ?? string.Empty,
             SideEffects = dto.SideEffects ?? new List<string>(),
             InteractionNotes = dto.InteractionNotes ?? new List<string>(),
@@ -94,7 +79,9 @@ public class CreateDrugCommandHandler : IRequestHandler<CreateDrugCommand, DrugD
             RelatedDrugs = dto.RelatedDrugs ?? new List<string>(),
             Formulation = MapFormulation(dto.Formulation),
             BasePricing = MapBasePricing(dto.BasePricing),
-            Regulatory = MapRegulatory(dto.Regulatory)
+            Regulatory = MapRegulatory(dto.Regulatory),
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = string.IsNullOrWhiteSpace(request.CreatedBy) ? "system" : request.CreatedBy,
         };
 
         drug.PackagingInfo = BuildPackagingInfo(dto.PackagingInfo);
@@ -102,15 +89,14 @@ public class CreateDrugCommandHandler : IRequestHandler<CreateDrugCommand, DrugD
         var created = await _drugRepository.CreateAsync(drug, cancellationToken);
         created.Category = category;
 
-        _logger.LogInformation("Created drug {DrugId} with barcode {Barcode}.", created.DrugId, created.Barcode);
+        _logger.LogInformation(
+            "Created drug {DrugId} with barcode {Barcode}.", created.DrugId, created.Barcode);
 
         return MapToDto(created);
     }
 
-    private static string GenerateDrugId()
-    {
-        return $"DRG-{Guid.NewGuid():N}".Substring(0, 12).ToUpperInvariant();
-    }
+    private static string GenerateDrugId() =>
+        $"DRG-{Guid.NewGuid():N}".Substring(0, 12).ToUpperInvariant();
 
     private static Formulation MapFormulation(CreateFormulationDto? source)
     {
@@ -123,7 +109,7 @@ public class CreateDrugCommandHandler : IRequestHandler<CreateDrugCommand, DrugD
         {
             Form = source.Form?.Trim() ?? string.Empty,
             Strength = source.Strength?.Trim() ?? string.Empty,
-            RouteOfAdministration = source.RouteOfAdministration?.Trim() ?? string.Empty
+            RouteOfAdministration = source.RouteOfAdministration?.Trim() ?? string.Empty,
         };
     }
 
@@ -139,7 +125,7 @@ public class CreateDrugCommandHandler : IRequestHandler<CreateDrugCommand, DrugD
             SuggestedRetailPrice = source.SuggestedRetailPrice,
             Currency = string.IsNullOrWhiteSpace(source.Currency) ? "USD" : source.Currency.Trim(),
             SuggestedTaxRate = source.SuggestedTaxRate,
-            LastPriceUpdate = DateTime.UtcNow
+            LastPriceUpdate = DateTime.UtcNow,
         };
     }
 
@@ -156,7 +142,7 @@ public class CreateDrugCommandHandler : IRequestHandler<CreateDrugCommand, DrugD
             IsHighRisk = source.IsHighRisk,
             DrugAuthorityNumber = source.DrugAuthorityNumber?.Trim() ?? string.Empty,
             ApprovalDate = source.ApprovalDate == default ? DateTime.UtcNow : source.ApprovalDate,
-            ControlSchedule = source.ControlSchedule?.Trim() ?? string.Empty
+            ControlSchedule = source.ControlSchedule?.Trim() ?? string.Empty,
         };
     }
 
@@ -171,7 +157,9 @@ public class CreateDrugCommandHandler : IRequestHandler<CreateDrugCommand, DrugD
         foreach (var level in source.PackagingLevels.OrderBy(l => l.LevelNumber))
         {
             var packagingLevel = new PackagingLevel(
-                packagingLevelId: string.IsNullOrWhiteSpace(level.PackagingLevelId) ? null : level.PackagingLevelId.Trim(),
+                packagingLevelId: string.IsNullOrWhiteSpace(level.PackagingLevelId)
+                    ? null
+                    : level.PackagingLevelId.Trim(),
                 levelNumber: level.LevelNumber,
                 unitName: level.UnitName?.Trim() ?? string.Empty,
                 baseUnitQuantity: level.BaseUnitQuantity,
@@ -180,7 +168,9 @@ public class CreateDrugCommandHandler : IRequestHandler<CreateDrugCommand, DrugD
                 isBreakable: level.IsBreakable,
                 barcode: string.IsNullOrWhiteSpace(level.Barcode) ? null : level.Barcode.Trim(),
                 minimumSaleQuantity: level.MinimumSaleQuantity,
-                parentPackagingLevelId: string.IsNullOrWhiteSpace(level.ParentPackagingLevelId) ? null : level.ParentPackagingLevelId.Trim(),
+                parentPackagingLevelId: string.IsNullOrWhiteSpace(level.ParentPackagingLevelId)
+                    ? null
+                    : level.ParentPackagingLevelId.Trim(),
                 quantityPerParent: level.QuantityPerParent);
 
             packagingInfo.AddPackagingLevel(packagingLevel);
@@ -189,39 +179,37 @@ public class CreateDrugCommandHandler : IRequestHandler<CreateDrugCommand, DrugD
         var validation = packagingInfo.Validate();
         if (!validation.IsValid)
         {
-            throw new InvalidOperationException($"Invalid packaging configuration: {string.Join("; ", validation.Errors)}");
+            throw new ArgumentException(
+                $"Invalid packaging configuration: {string.Join("; ", validation.Errors)}");
         }
 
         return packagingInfo;
     }
 
-    private static DrugDto MapToDto(Drug drug)
+    private static DrugDto MapToDto(Drug drug) => new()
     {
-        return new DrugDto
-        {
-            DrugId = drug.DrugId,
-            Barcode = drug.Barcode,
-            BarcodeType = drug.BarcodeType,
-            BrandName = drug.BrandName,
-            GenericName = drug.GenericName,
-            Manufacturer = drug.Manufacturer,
-            OriginCountry = drug.OriginCountry,
-            CategoryId = drug.CategoryId,
-            Category = drug.Category?.Name ?? drug.CategoryName,
-            ImageUrls = drug.ImageUrls,
-            Description = drug.Description,
-            SideEffects = drug.SideEffects,
-            InteractionNotes = drug.InteractionNotes,
-            Tags = drug.Tags,
-            RelatedDrugs = drug.RelatedDrugs,
-            Formulation = drug.Formulation,
-            BasePricing = drug.BasePricing,
-            Regulatory = drug.Regulatory,
-            PackagingInfo = drug.PackagingInfo,
-            CreatedAt = drug.CreatedAt,
-            CreatedBy = drug.CreatedBy,
-            LastUpdated = drug.LastUpdated,
-            UpdatedBy = drug.UpdatedBy
-        };
-    }
+        DrugId = drug.DrugId,
+        Barcode = drug.Barcode,
+        BarcodeType = drug.BarcodeType,
+        BrandName = drug.BrandName,
+        GenericName = drug.GenericName,
+        Manufacturer = drug.Manufacturer,
+        OriginCountry = drug.OriginCountry,
+        CategoryId = drug.CategoryId,
+        Category = drug.Category?.Name ?? drug.CategoryName,
+        ImageUrls = drug.ImageUrls,
+        Description = drug.Description,
+        SideEffects = drug.SideEffects,
+        InteractionNotes = drug.InteractionNotes,
+        Tags = drug.Tags,
+        RelatedDrugs = drug.RelatedDrugs,
+        Formulation = drug.Formulation,
+        BasePricing = drug.BasePricing,
+        Regulatory = drug.Regulatory,
+        PackagingInfo = drug.PackagingInfo,
+        CreatedAt = drug.CreatedAt,
+        CreatedBy = drug.CreatedBy,
+        LastUpdated = drug.LastUpdated,
+        UpdatedBy = drug.UpdatedBy,
+    };
 }

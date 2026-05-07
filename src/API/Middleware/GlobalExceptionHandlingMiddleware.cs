@@ -41,6 +41,7 @@ public class GlobalExceptionHandlingMiddleware
         {
             ValidationException validationException => HandleValidationException(validationException),
             UnauthorizedAccessException unauthorizedException => HandleUnauthorizedException(unauthorizedException),
+            ConflictException conflictException => HandleConflictException(conflictException),
             InvalidOperationException invalidOperationException => HandleInvalidOperationException(invalidOperationException),
             ArgumentException argumentException => HandleArgumentException(argumentException),
             NotFoundException notFoundException => HandleNotFoundException(notFoundException),
@@ -88,6 +89,17 @@ public class GlobalExceptionHandlingMiddleware
             Type = "https://tools.ietf.org/html/rfc7235#section-3.1",
             Title = "Unauthorized",
             Status = (int)HttpStatusCode.Unauthorized,
+            Detail = exception.Message
+        };
+    }
+
+    private ProblemDetails HandleConflictException(ConflictException exception)
+    {
+        return new ProblemDetails
+        {
+            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.8",
+            Title = "Conflict",
+            Status = (int)HttpStatusCode.Conflict,
             Detail = exception.Message
         };
     }
