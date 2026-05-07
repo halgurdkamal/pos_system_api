@@ -11,13 +11,16 @@ public class ConfirmSalesOrderCommandHandler
     : IRequestHandler<ConfirmSalesOrderCommand, SalesOrderDto>
 {
     private readonly ISalesOrderRepository _repository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<ConfirmSalesOrderCommandHandler> _logger;
 
     public ConfirmSalesOrderCommandHandler(
         ISalesOrderRepository repository,
+        IUnitOfWork unitOfWork,
         ILogger<ConfirmSalesOrderCommandHandler> logger)
     {
         _repository = repository;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -35,6 +38,8 @@ public class ConfirmSalesOrderCommandHandler
         await _repository.UpdateAsync(salesOrder, cancellationToken);
 
         _logger.LogInformation("Sales order {OrderNumber} confirmed", salesOrder.OrderNumber);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return SalesOrderMappers.ToDto(salesOrder);
     }

@@ -95,7 +95,6 @@ public class ShopUserRepository : IShopUserRepository
         shopUser.JoinedDate = DateTime.UtcNow;
 
         _context.ShopUsers.Add(shopUser);
-        await _context.SaveChangesAsync(cancellationToken);
 
         return shopUser;
     }
@@ -105,7 +104,6 @@ public class ShopUserRepository : IShopUserRepository
         shopUser.LastUpdated = DateTime.UtcNow;
 
         _context.ShopUsers.Update(shopUser);
-        await _context.SaveChangesAsync(cancellationToken);
 
         return shopUser;
     }
@@ -116,7 +114,6 @@ public class ShopUserRepository : IShopUserRepository
         if (shopUser != null)
         {
             _context.ShopUsers.Remove(shopUser);
-            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 
@@ -127,7 +124,6 @@ public class ShopUserRepository : IShopUserRepository
         {
             shopUser.IsActive = false;
             shopUser.LastUpdated = DateTime.UtcNow;
-            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

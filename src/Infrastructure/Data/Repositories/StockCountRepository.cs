@@ -14,7 +14,6 @@ public class StockCountRepository : IStockCountRepository
     public async Task<StockCount> AddAsync(StockCount stockCount, CancellationToken cancellationToken = default)
     {
         await _context.StockCounts.AddAsync(stockCount, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
         return stockCount;
     }
 
@@ -24,7 +23,6 @@ public class StockCountRepository : IStockCountRepository
     public async Task<StockCount> UpdateAsync(StockCount stockCount, CancellationToken cancellationToken = default)
     {
         _context.StockCounts.Update(stockCount);
-        await _context.SaveChangesAsync(cancellationToken);
         return stockCount;
     }
 

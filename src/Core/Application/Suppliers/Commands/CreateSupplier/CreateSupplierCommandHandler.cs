@@ -12,10 +12,12 @@ namespace pos_system_api.Core.Application.Suppliers.Commands.CreateSupplier;
 public class CreateSupplierCommandHandler : IRequestHandler<CreateSupplierCommand, SupplierDto>
 {
     private readonly ISupplierRepository _supplierRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public CreateSupplierCommandHandler(ISupplierRepository supplierRepository)
+    public CreateSupplierCommandHandler(ISupplierRepository supplierRepository, IUnitOfWork unitOfWork)
     {
         _supplierRepository = supplierRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<SupplierDto> Handle(CreateSupplierCommand request, CancellationToken cancellationToken)
@@ -63,6 +65,8 @@ public class CreateSupplierCommandHandler : IRequestHandler<CreateSupplierComman
 
         // Save to repository
         var createdSupplier = await _supplierRepository.AddAsync(supplier, cancellationToken);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         // Map to DTO
         return SupplierMapper.MapToDto(createdSupplier);

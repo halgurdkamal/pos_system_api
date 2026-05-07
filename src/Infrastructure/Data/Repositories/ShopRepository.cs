@@ -70,14 +70,12 @@ public class ShopRepository : IShopRepository
     public async Task<Shop> AddAsync(Shop shop, CancellationToken cancellationToken = default)
     {
         await _context.Shops.AddAsync(shop, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
         return shop;
     }
 
     public async Task<Shop> UpdateAsync(Shop shop, CancellationToken cancellationToken = default)
     {
         _context.Shops.Update(shop);
-        await _context.SaveChangesAsync(cancellationToken);
         return shop;
     }
 
@@ -87,7 +85,6 @@ public class ShopRepository : IShopRepository
         if (shop != null)
         {
             _context.Shops.Remove(shop);
-            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 

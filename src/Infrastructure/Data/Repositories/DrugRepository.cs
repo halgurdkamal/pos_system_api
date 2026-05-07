@@ -80,7 +80,6 @@ public class DrugRepository : IDrugRepository
         // Audit fields (CreatedAt / CreatedBy) are set by the caller — the repository
         // only persists what it's given.
         _context.Drugs.Add(drug);
-        await _context.SaveChangesAsync(cancellationToken);
 
         return drug;
     }
@@ -114,8 +113,6 @@ public class DrugRepository : IDrugRepository
             existingDrug.Regulatory = drug.Regulatory;
             existingDrug.LastUpdated = DateTime.UtcNow;
             existingDrug.UpdatedBy = "system";
-
-            await _context.SaveChangesAsync(cancellationToken);
         }
 
         return existingDrug ?? drug;
@@ -134,7 +131,6 @@ public class DrugRepository : IDrugRepository
         if (drug != null)
         {
             _context.Drugs.Remove(drug);
-            await _context.SaveChangesAsync(cancellationToken);
             return true;
         }
 

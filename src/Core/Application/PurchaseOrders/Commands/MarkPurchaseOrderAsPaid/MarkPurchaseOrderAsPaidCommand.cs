@@ -12,13 +12,16 @@ public class MarkPurchaseOrderAsPaidCommandHandler
     : IRequestHandler<MarkPurchaseOrderAsPaidCommand, PurchaseOrderDto>
 {
     private readonly IPurchaseOrderRepository _repository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<MarkPurchaseOrderAsPaidCommandHandler> _logger;
 
     public MarkPurchaseOrderAsPaidCommandHandler(
         IPurchaseOrderRepository repository,
+        IUnitOfWork unitOfWork,
         ILogger<MarkPurchaseOrderAsPaidCommandHandler> logger)
     {
         _repository = repository;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -38,6 +41,8 @@ public class MarkPurchaseOrderAsPaidCommandHandler
         _logger.LogInformation(
             "Purchase order {OrderNumber} marked as paid",
             purchaseOrder.OrderNumber);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return PurchaseOrderMappers.ToDto(purchaseOrder);
     }

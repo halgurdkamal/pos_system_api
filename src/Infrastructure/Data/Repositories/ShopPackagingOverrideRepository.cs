@@ -61,7 +61,6 @@ public class ShopPackagingOverrideRepository : IShopPackagingOverrideRepository
     {
         overrideEntity.CreatedAt = DateTime.UtcNow;
         _context.ShopPackagingOverrides.Add(overrideEntity);
-        await _context.SaveChangesAsync(cancellationToken);
         return overrideEntity;
     }
 
@@ -71,7 +70,6 @@ public class ShopPackagingOverrideRepository : IShopPackagingOverrideRepository
     {
         overrideEntity.LastUpdated = DateTime.UtcNow;
         _context.ShopPackagingOverrides.Update(overrideEntity);
-        await _context.SaveChangesAsync(cancellationToken);
         return overrideEntity;
     }
 
@@ -83,7 +81,6 @@ public class ShopPackagingOverrideRepository : IShopPackagingOverrideRepository
         if (entity != null)
         {
             _context.ShopPackagingOverrides.Remove(entity);
-            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

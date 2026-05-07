@@ -43,10 +43,12 @@ public class CreateCategoryCommandValidator : AbstractValidator<CreateCategoryCo
 public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, CategoryDto>
 {
     private readonly ICategoryRepository _categoryRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public CreateCategoryCommandHandler(ICategoryRepository categoryRepository)
+    public CreateCategoryCommandHandler(ICategoryRepository categoryRepository, IUnitOfWork unitOfWork)
     {
         _categoryRepository = categoryRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<CategoryDto> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
@@ -66,6 +68,8 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
         };
 
         var created = await _categoryRepository.AddAsync(category, cancellationToken);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return new CategoryDto
         {

@@ -60,13 +60,12 @@ public class PurchaseOrderRepository : IPurchaseOrderRepository
     public async Task AddAsync(PurchaseOrder purchaseOrder, CancellationToken cancellationToken = default)
     {
         await _context.PurchaseOrders.AddAsync(purchaseOrder, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task UpdateAsync(PurchaseOrder purchaseOrder, CancellationToken cancellationToken = default)
     {
         _context.PurchaseOrders.Update(purchaseOrder);
-        await _context.SaveChangesAsync(cancellationToken);
+        await Task.CompletedTask;
     }
 
     public async Task DeleteAsync(string id, CancellationToken cancellationToken = default)
@@ -75,7 +74,6 @@ public class PurchaseOrderRepository : IPurchaseOrderRepository
         if (purchaseOrder != null)
         {
             _context.PurchaseOrders.Remove(purchaseOrder);
-            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 

@@ -11,10 +11,12 @@ namespace pos_system_api.Core.Application.Shops.Commands.UpdateShop;
 public class UpdateHardwareConfigCommandHandler : IRequestHandler<UpdateHardwareConfigCommand, ShopDto>
 {
     private readonly IShopRepository _shopRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateHardwareConfigCommandHandler(IShopRepository shopRepository)
+    public UpdateHardwareConfigCommandHandler(IShopRepository shopRepository, IUnitOfWork unitOfWork)
     {
         _shopRepository = shopRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<ShopDto> Handle(UpdateHardwareConfigCommand request, CancellationToken cancellationToken)
@@ -58,6 +60,8 @@ public class UpdateHardwareConfigCommandHandler : IRequestHandler<UpdateHardware
 
         // Save to database
         var updatedShop = await _shopRepository.UpdateAsync(shop, cancellationToken);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         // Map to DTO
         return ShopMapper.MapToDto(updatedShop);

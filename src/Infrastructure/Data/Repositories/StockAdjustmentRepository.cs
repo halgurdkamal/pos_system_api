@@ -17,7 +17,6 @@ public class StockAdjustmentRepository : IStockAdjustmentRepository
     public async Task<StockAdjustment> AddAsync(StockAdjustment adjustment, CancellationToken cancellationToken = default)
     {
         await _context.StockAdjustments.AddAsync(adjustment, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
         return adjustment;
     }
 

@@ -14,10 +14,12 @@ namespace pos_system_api.Core.Application.Shops.Commands.RegisterShop;
 public class RegisterShopCommandHandler : IRequestHandler<RegisterShopCommand, ShopDto>
 {
     private readonly IShopRepository _shopRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public RegisterShopCommandHandler(IShopRepository shopRepository)
+    public RegisterShopCommandHandler(IShopRepository shopRepository, IUnitOfWork unitOfWork)
     {
         _shopRepository = shopRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<ShopDto> Handle(RegisterShopCommand request, CancellationToken cancellationToken)
@@ -129,6 +131,8 @@ public class RegisterShopCommandHandler : IRequestHandler<RegisterShopCommand, S
 
         // Save to database
         var createdShop = await _shopRepository.AddAsync(shop, cancellationToken);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         // Map to DTO using shared mapper
         return ShopMapper.MapToDto(createdShop);

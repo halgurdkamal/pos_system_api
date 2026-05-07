@@ -11,10 +11,12 @@ namespace pos_system_api.Core.Application.Shops.Commands.UpdateShop;
 public class UpdateShopCommandHandler : IRequestHandler<UpdateShopCommand, ShopDto>
 {
     private readonly IShopRepository _shopRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateShopCommandHandler(IShopRepository shopRepository)
+    public UpdateShopCommandHandler(IShopRepository shopRepository, IUnitOfWork unitOfWork)
     {
         _shopRepository = shopRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<ShopDto> Handle(UpdateShopCommand request, CancellationToken cancellationToken)
@@ -70,6 +72,8 @@ public class UpdateShopCommandHandler : IRequestHandler<UpdateShopCommand, ShopD
 
         // Save to database
         var updatedShop = await _shopRepository.UpdateAsync(shop, cancellationToken);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         // Map to DTO
         return ShopMapper.MapToDto(updatedShop);

@@ -14,15 +14,18 @@ public class UpdatePackagingPricesFromBatchCommandHandler
 {
     private readonly IInventoryRepository _inventoryRepository;
     private readonly IPackagingPricingService _pricingService;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<UpdatePackagingPricesFromBatchCommandHandler> _logger;
 
     public UpdatePackagingPricesFromBatchCommandHandler(
         IInventoryRepository inventoryRepository,
         IPackagingPricingService pricingService,
+        IUnitOfWork unitOfWork,
         ILogger<UpdatePackagingPricesFromBatchCommandHandler> logger)
     {
         _inventoryRepository = inventoryRepository;
         _pricingService = pricingService;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -99,6 +102,8 @@ public class UpdatePackagingPricesFromBatchCommandHandler
                 request.ShopId,
                 request.DrugId);
         }
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return result;
     }

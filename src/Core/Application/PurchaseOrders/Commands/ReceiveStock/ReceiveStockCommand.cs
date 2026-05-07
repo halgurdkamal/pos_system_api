@@ -25,15 +25,18 @@ public class ReceiveStockCommandHandler : IRequestHandler<ReceiveStockCommand, P
 {
     private readonly IPurchaseOrderRepository _poRepository;
     private readonly IInventoryRepository _inventoryRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<ReceiveStockCommandHandler> _logger;
 
     public ReceiveStockCommandHandler(
         IPurchaseOrderRepository poRepository,
         IInventoryRepository inventoryRepository,
+        IUnitOfWork unitOfWork,
         ILogger<ReceiveStockCommandHandler> logger)
     {
         _poRepository = poRepository;
         _inventoryRepository = inventoryRepository;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -92,6 +95,8 @@ public class ReceiveStockCommandHandler : IRequestHandler<ReceiveStockCommand, P
         }
 
         await _poRepository.UpdateAsync(purchaseOrder, cancellationToken);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return MapToDto(purchaseOrder);
     }

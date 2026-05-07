@@ -12,15 +12,18 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, UserDto>
     private readonly IUserRepository _userRepository;
     private readonly IShopRepository _shopRepository;
     private readonly PasswordHasher _passwordHasher;
+    private readonly IUnitOfWork _unitOfWork;
 
     public RegisterCommandHandler(
         IUserRepository userRepository,
         IShopRepository shopRepository,
-        PasswordHasher passwordHasher)
+        PasswordHasher passwordHasher,
+        IUnitOfWork unitOfWork)
     {
         _userRepository = userRepository;
         _shopRepository = shopRepository;
         _passwordHasher = passwordHasher;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<UserDto> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -72,6 +75,8 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, UserDto>
 
         // Save to database
         var createdUser = await _userRepository.CreateAsync(user, cancellationToken);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return MapToUserDto(createdUser);
     }

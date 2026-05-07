@@ -11,10 +11,12 @@ namespace pos_system_api.Core.Application.Suppliers.Commands.UpdateSupplier;
 public class UpdateSupplierCommandHandler : IRequestHandler<UpdateSupplierCommand, SupplierDto>
 {
     private readonly ISupplierRepository _supplierRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateSupplierCommandHandler(ISupplierRepository supplierRepository)
+    public UpdateSupplierCommandHandler(ISupplierRepository supplierRepository, IUnitOfWork unitOfWork)
     {
         _supplierRepository = supplierRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<SupplierDto> Handle(UpdateSupplierCommand request, CancellationToken cancellationToken)
@@ -57,6 +59,8 @@ public class UpdateSupplierCommandHandler : IRequestHandler<UpdateSupplierComman
 
         // Save changes
         var updatedSupplier = await _supplierRepository.UpdateAsync(supplier, cancellationToken);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         // Map to DTO
         return SupplierMapper.MapToDto(updatedSupplier);

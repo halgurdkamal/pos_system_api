@@ -12,13 +12,16 @@ public class CancelPurchaseOrderCommandHandler
     : IRequestHandler<CancelPurchaseOrderCommand, PurchaseOrderDto>
 {
     private readonly IPurchaseOrderRepository _repository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<CancelPurchaseOrderCommandHandler> _logger;
 
     public CancelPurchaseOrderCommandHandler(
         IPurchaseOrderRepository repository,
+        IUnitOfWork unitOfWork,
         ILogger<CancelPurchaseOrderCommandHandler> logger)
     {
         _repository = repository;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -38,6 +41,8 @@ public class CancelPurchaseOrderCommandHandler
         _logger.LogInformation(
             "Purchase order {OrderNumber} cancelled by {CancelledBy}: {Reason}",
             purchaseOrder.OrderNumber, request.CancelledBy, request.Reason);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return PurchaseOrderMappers.ToDto(purchaseOrder);
     }

@@ -12,15 +12,18 @@ public class CreateDrugCommandHandler : IRequestHandler<CreateDrugCommand, DrugD
 {
     private readonly IDrugRepository _drugRepository;
     private readonly ICategoryRepository _categoryRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<CreateDrugCommandHandler> _logger;
 
     public CreateDrugCommandHandler(
         IDrugRepository drugRepository,
         ICategoryRepository categoryRepository,
+        IUnitOfWork unitOfWork,
         ILogger<CreateDrugCommandHandler> logger)
     {
         _drugRepository = drugRepository;
         _categoryRepository = categoryRepository;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -87,11 +90,15 @@ public class CreateDrugCommandHandler : IRequestHandler<CreateDrugCommand, DrugD
         drug.PackagingInfo = BuildPackagingInfo(dto.PackagingInfo);
 
         var created = await _drugRepository.CreateAsync(drug, cancellationToken);
-        created.Category = category;
 
         _logger.LogInformation(
             "Created drug {DrugId} with barcode {Barcode}.", created.DrugId, created.Barcode);
 
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        // MapToDto falls back to CategoryName when the navigation property is null,
+        // so we don't need to attach the Category entity (doing so causes a tracking
+        // conflict when the same Category is already tracked elsewhere in the scope).
         return MapToDto(created);
     }
 

@@ -17,7 +17,6 @@ public class StockTransferRepository : IStockTransferRepository
     public async Task<StockTransfer> AddAsync(StockTransfer transfer, CancellationToken cancellationToken = default)
     {
         await _context.StockTransfers.AddAsync(transfer, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
         return transfer;
     }
 
@@ -30,7 +29,6 @@ public class StockTransferRepository : IStockTransferRepository
     public async Task<StockTransfer> UpdateAsync(StockTransfer transfer, CancellationToken cancellationToken = default)
     {
         _context.StockTransfers.Update(transfer);
-        await _context.SaveChangesAsync(cancellationToken);
         return transfer;
     }
 

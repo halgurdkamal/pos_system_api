@@ -16,7 +16,7 @@ public class PurchaseOrderCommandHandlerTests
     {
         var po = SubmittedOrder();
         var repo = new FakePurchaseOrderRepository(po);
-        var handler = new ConfirmPurchaseOrderCommandHandler(repo, NullLogger<ConfirmPurchaseOrderCommandHandler>.Instance);
+        var handler = new ConfirmPurchaseOrderCommandHandler(repo, new FakeUnitOfWork(), NullLogger<ConfirmPurchaseOrderCommandHandler>.Instance);
 
         var result = await handler.Handle(
             new ConfirmPurchaseOrderCommand(po.Id, "user-1"),
@@ -32,7 +32,7 @@ public class PurchaseOrderCommandHandlerTests
     public async Task Confirm_OrderNotFound_ThrowsKeyNotFoundException()
     {
         var repo = new FakePurchaseOrderRepository();
-        var handler = new ConfirmPurchaseOrderCommandHandler(repo, NullLogger<ConfirmPurchaseOrderCommandHandler>.Instance);
+        var handler = new ConfirmPurchaseOrderCommandHandler(repo, new FakeUnitOfWork(), NullLogger<ConfirmPurchaseOrderCommandHandler>.Instance);
 
         var act = () => handler.Handle(
             new ConfirmPurchaseOrderCommand("missing", "user-1"),
@@ -48,7 +48,7 @@ public class PurchaseOrderCommandHandlerTests
     {
         var po = DraftOrder(); // never submitted
         var repo = new FakePurchaseOrderRepository(po);
-        var handler = new ConfirmPurchaseOrderCommandHandler(repo, NullLogger<ConfirmPurchaseOrderCommandHandler>.Instance);
+        var handler = new ConfirmPurchaseOrderCommandHandler(repo, new FakeUnitOfWork(), NullLogger<ConfirmPurchaseOrderCommandHandler>.Instance);
 
         var act = () => handler.Handle(
             new ConfirmPurchaseOrderCommand(po.Id, "user-1"),
@@ -65,7 +65,7 @@ public class PurchaseOrderCommandHandlerTests
     {
         var po = DraftOrder();
         var repo = new FakePurchaseOrderRepository(po);
-        var handler = new CancelPurchaseOrderCommandHandler(repo, NullLogger<CancelPurchaseOrderCommandHandler>.Instance);
+        var handler = new CancelPurchaseOrderCommandHandler(repo, new FakeUnitOfWork(), NullLogger<CancelPurchaseOrderCommandHandler>.Instance);
 
         var result = await handler.Handle(
             new CancelPurchaseOrderCommand(po.Id, "user-1", "Wrong supplier"),
@@ -82,7 +82,7 @@ public class PurchaseOrderCommandHandlerTests
     public async Task Cancel_OrderNotFound_Throws()
     {
         var repo = new FakePurchaseOrderRepository();
-        var handler = new CancelPurchaseOrderCommandHandler(repo, NullLogger<CancelPurchaseOrderCommandHandler>.Instance);
+        var handler = new CancelPurchaseOrderCommandHandler(repo, new FakeUnitOfWork(), NullLogger<CancelPurchaseOrderCommandHandler>.Instance);
 
         var act = () => handler.Handle(
             new CancelPurchaseOrderCommand("missing", "user-1", "n/a"),
@@ -98,7 +98,7 @@ public class PurchaseOrderCommandHandlerTests
     {
         var po = DraftOrder();
         var repo = new FakePurchaseOrderRepository(po);
-        var handler = new MarkPurchaseOrderAsPaidCommandHandler(repo, NullLogger<MarkPurchaseOrderAsPaidCommandHandler>.Instance);
+        var handler = new MarkPurchaseOrderAsPaidCommandHandler(repo, new FakeUnitOfWork(), NullLogger<MarkPurchaseOrderAsPaidCommandHandler>.Instance);
 
         var before = DateTime.UtcNow;
         var result = await handler.Handle(
@@ -118,7 +118,7 @@ public class PurchaseOrderCommandHandlerTests
     {
         var po = DraftOrder();
         var repo = new FakePurchaseOrderRepository(po);
-        var handler = new MarkPurchaseOrderAsPaidCommandHandler(repo, NullLogger<MarkPurchaseOrderAsPaidCommandHandler>.Instance);
+        var handler = new MarkPurchaseOrderAsPaidCommandHandler(repo, new FakeUnitOfWork(), NullLogger<MarkPurchaseOrderAsPaidCommandHandler>.Instance);
         var when = new DateTime(2026, 1, 15, 12, 0, 0, DateTimeKind.Utc);
 
         await handler.Handle(new MarkPurchaseOrderAsPaidCommand(po.Id, when), CancellationToken.None);
@@ -130,7 +130,7 @@ public class PurchaseOrderCommandHandlerTests
     public async Task MarkAsPaid_OrderNotFound_Throws()
     {
         var repo = new FakePurchaseOrderRepository();
-        var handler = new MarkPurchaseOrderAsPaidCommandHandler(repo, NullLogger<MarkPurchaseOrderAsPaidCommandHandler>.Instance);
+        var handler = new MarkPurchaseOrderAsPaidCommandHandler(repo, new FakeUnitOfWork(), NullLogger<MarkPurchaseOrderAsPaidCommandHandler>.Instance);
 
         var act = () => handler.Handle(
             new MarkPurchaseOrderAsPaidCommand("missing"),

@@ -14,17 +14,20 @@ public class UpdateShopUserCommandHandler : IRequestHandler<UpdateShopUserComman
     private readonly IShopUserRepository _shopUserRepository;
     private readonly IUserRepository _userRepository;
     private readonly IShopRepository _shopRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<UpdateShopUserCommandHandler> _logger;
 
     public UpdateShopUserCommandHandler(
         IShopUserRepository shopUserRepository,
         IUserRepository userRepository,
         IShopRepository shopRepository,
+        IUnitOfWork unitOfWork,
         ILogger<UpdateShopUserCommandHandler> logger)
     {
         _shopUserRepository = shopUserRepository;
         _userRepository = userRepository;
         _shopRepository = shopRepository;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -121,6 +124,8 @@ public class UpdateShopUserCommandHandler : IRequestHandler<UpdateShopUserComman
         _logger.LogInformation(
             "Updated permissions for user {UserId} in shop {ShopId}",
             request.UserId, request.ShopId);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         // Map to DTO
         return new ShopMemberDto

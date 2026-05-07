@@ -14,15 +14,18 @@ public class RefundSalesOrderCommandHandler
 {
     private readonly ISalesOrderRepository _repository;
     private readonly ISalesStockService _salesStockService;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<RefundSalesOrderCommandHandler> _logger;
 
     public RefundSalesOrderCommandHandler(
         ISalesOrderRepository repository,
         ISalesStockService salesStockService,
+        IUnitOfWork unitOfWork,
         ILogger<RefundSalesOrderCommandHandler> logger)
     {
         _repository = repository;
         _salesStockService = salesStockService;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -47,6 +50,8 @@ public class RefundSalesOrderCommandHandler
         _logger.LogInformation(
             "Sales order {OrderNumber} refunded by {RefundedBy}: {Reason}",
             salesOrder.OrderNumber, request.RefundedBy, request.Reason);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return SalesOrderMappers.ToDto(salesOrder);
     }

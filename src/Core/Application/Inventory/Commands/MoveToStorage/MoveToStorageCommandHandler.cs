@@ -8,13 +8,16 @@ namespace pos_system_api.Core.Application.Inventory.Commands.MoveToStorage;
 public class MoveToStorageCommandHandler : IRequestHandler<MoveToStorageCommand, InventoryDto>
 {
     private readonly IInventoryRepository _inventoryRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<MoveToStorageCommandHandler> _logger;
 
     public MoveToStorageCommandHandler(
         IInventoryRepository inventoryRepository,
+        IUnitOfWork unitOfWork,
         ILogger<MoveToStorageCommandHandler> logger)
     {
         _inventoryRepository = inventoryRepository;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -54,6 +57,8 @@ public class MoveToStorageCommandHandler : IRequestHandler<MoveToStorageCommand,
 
         _logger.LogInformation("Successfully moved {Quantity} units to storage. Shop floor stock: {ShopFloorStock}, Storage stock: {StorageStock}",
             request.Quantity, updatedInventory.GetShopFloorStock(), updatedInventory.GetStorageStock());
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return InventoryMapper.MapToDto(updatedInventory);
     }

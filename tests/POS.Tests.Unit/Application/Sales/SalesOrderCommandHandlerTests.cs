@@ -18,7 +18,7 @@ public class SalesOrderCommandHandlerTests
     {
         var so = DraftOrderWithItems();
         var repo = new FakeSalesOrderRepository(so);
-        var handler = new ConfirmSalesOrderCommandHandler(repo, NullLogger<ConfirmSalesOrderCommandHandler>.Instance);
+        var handler = new ConfirmSalesOrderCommandHandler(repo, new FakeUnitOfWork(), NullLogger<ConfirmSalesOrderCommandHandler>.Instance);
 
         var result = await handler.Handle(new ConfirmSalesOrderCommand(so.Id), CancellationToken.None);
 
@@ -31,7 +31,7 @@ public class SalesOrderCommandHandlerTests
     public async Task Confirm_OrderNotFound_ThrowsKeyNotFound()
     {
         var repo = new FakeSalesOrderRepository();
-        var handler = new ConfirmSalesOrderCommandHandler(repo, NullLogger<ConfirmSalesOrderCommandHandler>.Instance);
+        var handler = new ConfirmSalesOrderCommandHandler(repo, new FakeUnitOfWork(), NullLogger<ConfirmSalesOrderCommandHandler>.Instance);
 
         var act = () => handler.Handle(new ConfirmSalesOrderCommand("missing"), CancellationToken.None);
 
@@ -44,7 +44,7 @@ public class SalesOrderCommandHandlerTests
     {
         var so = new SalesOrder("shop-1", "cashier-1");
         var repo = new FakeSalesOrderRepository(so);
-        var handler = new ConfirmSalesOrderCommandHandler(repo, NullLogger<ConfirmSalesOrderCommandHandler>.Instance);
+        var handler = new ConfirmSalesOrderCommandHandler(repo, new FakeUnitOfWork(), NullLogger<ConfirmSalesOrderCommandHandler>.Instance);
 
         var act = () => handler.Handle(new ConfirmSalesOrderCommand(so.Id), CancellationToken.None);
 
@@ -59,7 +59,7 @@ public class SalesOrderCommandHandlerTests
     {
         var so = PaidOrder();
         var repo = new FakeSalesOrderRepository(so);
-        var handler = new CompleteSalesOrderCommandHandler(repo, NullLogger<CompleteSalesOrderCommandHandler>.Instance);
+        var handler = new CompleteSalesOrderCommandHandler(repo, new FakeUnitOfWork(), NullLogger<CompleteSalesOrderCommandHandler>.Instance);
 
         var result = await handler.Handle(new CompleteSalesOrderCommand(so.Id), CancellationToken.None);
 
@@ -74,7 +74,7 @@ public class SalesOrderCommandHandlerTests
     {
         var so = DraftOrderWithItems(); // Draft, not Paid
         var repo = new FakeSalesOrderRepository(so);
-        var handler = new CompleteSalesOrderCommandHandler(repo, NullLogger<CompleteSalesOrderCommandHandler>.Instance);
+        var handler = new CompleteSalesOrderCommandHandler(repo, new FakeUnitOfWork(), NullLogger<CompleteSalesOrderCommandHandler>.Instance);
 
         var act = () => handler.Handle(new CompleteSalesOrderCommand(so.Id), CancellationToken.None);
 
@@ -89,7 +89,7 @@ public class SalesOrderCommandHandlerTests
         var so = DraftOrderWithItems();
         var repo = new FakeSalesOrderRepository(so);
         var stock = new FakeSalesStockService();
-        var handler = new CancelSalesOrderCommandHandler(repo, stock, NullLogger<CancelSalesOrderCommandHandler>.Instance);
+        var handler = new CancelSalesOrderCommandHandler(repo, stock, new FakeUnitOfWork(), NullLogger<CancelSalesOrderCommandHandler>.Instance);
 
         var result = await handler.Handle(
             new CancelSalesOrderCommand(so.Id, "user-1", "Customer changed mind"),
@@ -107,7 +107,7 @@ public class SalesOrderCommandHandlerTests
     {
         var repo = new FakeSalesOrderRepository();
         var stock = new FakeSalesStockService();
-        var handler = new CancelSalesOrderCommandHandler(repo, stock, NullLogger<CancelSalesOrderCommandHandler>.Instance);
+        var handler = new CancelSalesOrderCommandHandler(repo, stock, new FakeUnitOfWork(), NullLogger<CancelSalesOrderCommandHandler>.Instance);
 
         var act = () => handler.Handle(
             new CancelSalesOrderCommand("missing", "user-1", "n/a"),
@@ -124,7 +124,7 @@ public class SalesOrderCommandHandlerTests
         var so = PaidOrder();
         var repo = new FakeSalesOrderRepository(so);
         var stock = new FakeSalesStockService();
-        var handler = new RefundSalesOrderCommandHandler(repo, stock, NullLogger<RefundSalesOrderCommandHandler>.Instance);
+        var handler = new RefundSalesOrderCommandHandler(repo, stock, new FakeUnitOfWork(), NullLogger<RefundSalesOrderCommandHandler>.Instance);
 
         var result = await handler.Handle(
             new RefundSalesOrderCommand(so.Id, "user-1", "Defective"),
@@ -142,7 +142,7 @@ public class SalesOrderCommandHandlerTests
         var so = DraftOrderWithItems(); // Draft, not Paid/Completed
         var repo = new FakeSalesOrderRepository(so);
         var stock = new FakeSalesStockService();
-        var handler = new RefundSalesOrderCommandHandler(repo, stock, NullLogger<RefundSalesOrderCommandHandler>.Instance);
+        var handler = new RefundSalesOrderCommandHandler(repo, stock, new FakeUnitOfWork(), NullLogger<RefundSalesOrderCommandHandler>.Instance);
 
         var act = () => handler.Handle(
             new RefundSalesOrderCommand(so.Id, "user-1", "n/a"),
@@ -156,7 +156,7 @@ public class SalesOrderCommandHandlerTests
     {
         var repo = new FakeSalesOrderRepository();
         var stock = new FakeSalesStockService();
-        var handler = new RefundSalesOrderCommandHandler(repo, stock, NullLogger<RefundSalesOrderCommandHandler>.Instance);
+        var handler = new RefundSalesOrderCommandHandler(repo, stock, new FakeUnitOfWork(), NullLogger<RefundSalesOrderCommandHandler>.Instance);
 
         var act = () => handler.Handle(
             new RefundSalesOrderCommand("missing", "user-1", "n/a"),
@@ -173,7 +173,7 @@ public class SalesOrderCommandHandlerTests
         var so = PaidOrder();
         var repo = new FakeSalesOrderRepository(so);
         var stock = new FakeSalesStockService();
-        var handler = new RefundSalesOrderCommandHandler(repo, stock, NullLogger<RefundSalesOrderCommandHandler>.Instance);
+        var handler = new RefundSalesOrderCommandHandler(repo, stock, new FakeUnitOfWork(), NullLogger<RefundSalesOrderCommandHandler>.Instance);
 
         await handler.Handle(
             new RefundSalesOrderCommand(so.Id, "user-1", "Defective"),
@@ -190,7 +190,7 @@ public class SalesOrderCommandHandlerTests
         var so = DraftOrderWithItems(); // never paid, no stock change
         var repo = new FakeSalesOrderRepository(so);
         var stock = new FakeSalesStockService();
-        var handler = new CancelSalesOrderCommandHandler(repo, stock, NullLogger<CancelSalesOrderCommandHandler>.Instance);
+        var handler = new CancelSalesOrderCommandHandler(repo, stock, new FakeUnitOfWork(), NullLogger<CancelSalesOrderCommandHandler>.Instance);
 
         await handler.Handle(
             new CancelSalesOrderCommand(so.Id, "user-1", "n/m"),
@@ -206,7 +206,7 @@ public class SalesOrderCommandHandlerTests
         var so = PaidOrder(); // status was Paid -> stock had been deducted
         var repo = new FakeSalesOrderRepository(so);
         var stock = new FakeSalesStockService();
-        var handler = new CancelSalesOrderCommandHandler(repo, stock, NullLogger<CancelSalesOrderCommandHandler>.Instance);
+        var handler = new CancelSalesOrderCommandHandler(repo, stock, new FakeUnitOfWork(), NullLogger<CancelSalesOrderCommandHandler>.Instance);
 
         await handler.Handle(
             new CancelSalesOrderCommand(so.Id, "user-1", "Customer changed mind"),

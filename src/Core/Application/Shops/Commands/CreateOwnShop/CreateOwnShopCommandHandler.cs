@@ -16,15 +16,18 @@ public class CreateOwnShopCommandHandler : IRequestHandler<CreateOwnShopCommand,
     private readonly IShopRepository _shopRepository;
     private readonly IShopUserRepository _shopUserRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public CreateOwnShopCommandHandler(
         IShopRepository shopRepository,
         IShopUserRepository shopUserRepository,
-        IUserRepository userRepository)
+        IUserRepository userRepository,
+        IUnitOfWork unitOfWork)
     {
         _shopRepository = shopRepository;
         _shopUserRepository = shopUserRepository;
         _userRepository = userRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<ShopDto> Handle(CreateOwnShopCommand request, CancellationToken cancellationToken)
@@ -145,6 +148,8 @@ public class CreateOwnShopCommandHandler : IRequestHandler<CreateOwnShopCommand,
 
             // Save shop user membership
             await _shopUserRepository.CreateAsync(shopUser, cancellationToken);
+
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             // Map to DTO
             return MapToDto(createdShop);

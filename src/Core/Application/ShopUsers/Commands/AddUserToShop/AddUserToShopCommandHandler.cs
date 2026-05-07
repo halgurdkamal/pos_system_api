@@ -15,17 +15,20 @@ public class AddUserToShopCommandHandler : IRequestHandler<AddUserToShopCommand,
     private readonly IShopUserRepository _shopUserRepository;
     private readonly IUserRepository _userRepository;
     private readonly IShopRepository _shopRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<AddUserToShopCommandHandler> _logger;
 
     public AddUserToShopCommandHandler(
         IShopUserRepository shopUserRepository,
         IUserRepository userRepository,
         IShopRepository shopRepository,
+        IUnitOfWork unitOfWork,
         ILogger<AddUserToShopCommandHandler> logger)
     {
         _shopUserRepository = shopUserRepository;
         _userRepository = userRepository;
         _shopRepository = shopRepository;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -105,6 +108,8 @@ public class AddUserToShopCommandHandler : IRequestHandler<AddUserToShopCommand,
         _logger.LogInformation(
             "User {UserId} ({Username}) added to shop {ShopId} ({ShopName}) with role {Role}",
             user.Id, user.Username, shop.Id, shop.ShopName, shopRole);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         // Map to DTO
         return new ShopMemberDto

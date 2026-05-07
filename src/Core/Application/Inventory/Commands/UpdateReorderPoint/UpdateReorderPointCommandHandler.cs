@@ -10,10 +10,12 @@ namespace pos_system_api.Core.Application.Inventory.Commands.UpdateReorderPoint;
 public class UpdateReorderPointCommandHandler : IRequestHandler<UpdateReorderPointCommand, InventoryDto>
 {
     private readonly IInventoryRepository _inventoryRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateReorderPointCommandHandler(IInventoryRepository inventoryRepository)
+    public UpdateReorderPointCommandHandler(IInventoryRepository inventoryRepository, IUnitOfWork unitOfWork)
     {
         _inventoryRepository = inventoryRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<InventoryDto> Handle(UpdateReorderPointCommand request, CancellationToken cancellationToken)
@@ -44,6 +46,8 @@ public class UpdateReorderPointCommandHandler : IRequestHandler<UpdateReorderPoi
 
         // Save changes
         var updatedInventory = await _inventoryRepository.UpdateAsync(inventory, cancellationToken);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         // Map to DTO
         return InventoryMapper.MapToDto(updatedInventory);

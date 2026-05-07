@@ -46,7 +46,6 @@ public class CategoryRepository : ICategoryRepository
     public async Task<Category> AddAsync(Category category, CancellationToken cancellationToken = default)
     {
         _context.Categories.Add(category);
-        await _context.SaveChangesAsync(cancellationToken);
         return category;
     }
 
@@ -54,7 +53,6 @@ public class CategoryRepository : ICategoryRepository
     {
         category.LastUpdated = DateTime.UtcNow;
         _context.Categories.Update(category);
-        await _context.SaveChangesAsync(cancellationToken);
         return category;
     }
 
@@ -67,7 +65,6 @@ public class CategoryRepository : ICategoryRepository
             return false;
 
         _context.Categories.Remove(category);
-        await _context.SaveChangesAsync(cancellationToken);
         return true;
     }
 

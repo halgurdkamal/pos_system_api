@@ -22,6 +22,7 @@ public class CreatePackagingOverrideCommandHandler : IRequestHandler<CreatePacka
     private readonly IInventoryRepository _inventoryRepository;
     private readonly IDrugRepository _drugRepository;
     private readonly IEffectivePackagingService _packagingService;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<CreatePackagingOverrideCommandHandler> _logger;
 
     public CreatePackagingOverrideCommandHandler(
@@ -29,12 +30,14 @@ public class CreatePackagingOverrideCommandHandler : IRequestHandler<CreatePacka
         IInventoryRepository inventoryRepository,
         IDrugRepository drugRepository,
         IEffectivePackagingService packagingService,
+        IUnitOfWork unitOfWork,
         ILogger<CreatePackagingOverrideCommandHandler> logger)
     {
         _overrideRepository = overrideRepository;
         _inventoryRepository = inventoryRepository;
         _drugRepository = drugRepository;
         _packagingService = packagingService;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -99,6 +102,8 @@ public class CreatePackagingOverrideCommandHandler : IRequestHandler<CreatePacka
 
         _logger.LogInformation("Created packaging override {OverrideId} for shop {ShopId} drug {DrugId}.",
             overrideEntity.Id, request.ShopId, request.DrugId);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return await _packagingService.GetEffectivePackagingAsync(request.ShopId, request.DrugId, cancellationToken);
     }

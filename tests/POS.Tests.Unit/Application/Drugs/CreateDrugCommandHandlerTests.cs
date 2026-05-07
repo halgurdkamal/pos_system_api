@@ -186,6 +186,10 @@ public class CreateDrugCommandHandlerTests
         new(
             new DrugRepository(db),
             new CategoryRepository(db),
+            // Real UnitOfWork against the test DbContext so SaveChangesAsync actually
+            // commits to the InMemory store. FakeUnitOfWork (no-op) is only suitable
+            // for tests that use fake repositories which don't persist anyway.
+            new UnitOfWork(db),
             NullLogger<CreateDrugCommandHandler>.Instance);
 
     private static async Task SeedCategoryAsync(

@@ -77,14 +77,12 @@ public class SupplierRepository : ISupplierRepository
     public async Task<Supplier> AddAsync(Supplier supplier, CancellationToken cancellationToken = default)
     {
         await _context.Suppliers.AddAsync(supplier, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
         return supplier;
     }
 
     public async Task<Supplier> UpdateAsync(Supplier supplier, CancellationToken cancellationToken = default)
     {
         _context.Suppliers.Update(supplier);
-        await _context.SaveChangesAsync(cancellationToken);
         return supplier;
     }
 
@@ -94,7 +92,6 @@ public class SupplierRepository : ISupplierRepository
         if (supplier != null)
         {
             _context.Suppliers.Remove(supplier);
-            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 

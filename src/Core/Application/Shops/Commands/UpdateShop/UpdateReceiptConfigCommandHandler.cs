@@ -11,10 +11,12 @@ namespace pos_system_api.Core.Application.Shops.Commands.UpdateShop;
 public class UpdateReceiptConfigCommandHandler : IRequestHandler<UpdateReceiptConfigCommand, ShopDto>
 {
     private readonly IShopRepository _shopRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateReceiptConfigCommandHandler(IShopRepository shopRepository)
+    public UpdateReceiptConfigCommandHandler(IShopRepository shopRepository, IUnitOfWork unitOfWork)
     {
         _shopRepository = shopRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<ShopDto> Handle(UpdateReceiptConfigCommand request, CancellationToken cancellationToken)
@@ -50,6 +52,8 @@ public class UpdateReceiptConfigCommandHandler : IRequestHandler<UpdateReceiptCo
 
         // Save to database
         var updatedShop = await _shopRepository.UpdateAsync(shop, cancellationToken);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         // Map to DTO
         return ShopMapper.MapToDto(updatedShop);

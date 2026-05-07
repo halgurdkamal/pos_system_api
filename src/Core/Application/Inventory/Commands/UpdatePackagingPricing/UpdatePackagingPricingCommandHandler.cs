@@ -9,13 +9,16 @@ namespace pos_system_api.Core.Application.Inventory.Commands.UpdatePackagingPric
 public class UpdatePackagingPricingCommandHandler : IRequestHandler<UpdatePackagingPricingCommand, InventoryDto>
 {
     private readonly IInventoryRepository _repository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<UpdatePackagingPricingCommandHandler> _logger;
 
     public UpdatePackagingPricingCommandHandler(
         IInventoryRepository repository,
+        IUnitOfWork unitOfWork,
         ILogger<UpdatePackagingPricingCommandHandler> logger)
     {
         _repository = repository;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -40,6 +43,8 @@ public class UpdatePackagingPricingCommandHandler : IRequestHandler<UpdatePackag
 
         _logger.LogInformation("Updated packaging-level pricing for drug {DrugId} in shop {ShopId}",
             request.DrugId, request.ShopId);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return MapToDto(inventory);
     }

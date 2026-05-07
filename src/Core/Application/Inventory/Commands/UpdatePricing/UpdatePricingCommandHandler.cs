@@ -11,10 +11,12 @@ namespace pos_system_api.Core.Application.Inventory.Commands.UpdatePricing;
 public class UpdatePricingCommandHandler : IRequestHandler<UpdatePricingCommand, InventoryDto>
 {
     private readonly IInventoryRepository _inventoryRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public UpdatePricingCommandHandler(IInventoryRepository inventoryRepository)
+    public UpdatePricingCommandHandler(IInventoryRepository inventoryRepository, IUnitOfWork unitOfWork)
     {
         _inventoryRepository = inventoryRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<InventoryDto> Handle(UpdatePricingCommand request, CancellationToken cancellationToken)
@@ -47,6 +49,8 @@ public class UpdatePricingCommandHandler : IRequestHandler<UpdatePricingCommand,
 
         // Save changes
         var updatedInventory = await _inventoryRepository.UpdateAsync(inventory, cancellationToken);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         // Map to DTO
         return InventoryMapper.MapToDto(updatedInventory);

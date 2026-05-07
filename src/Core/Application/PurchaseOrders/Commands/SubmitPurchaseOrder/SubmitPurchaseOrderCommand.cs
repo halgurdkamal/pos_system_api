@@ -14,13 +14,16 @@ public record SubmitPurchaseOrderCommand : IRequest<PurchaseOrderDto>
 public class SubmitPurchaseOrderCommandHandler : IRequestHandler<SubmitPurchaseOrderCommand, PurchaseOrderDto>
 {
     private readonly IPurchaseOrderRepository _repository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<SubmitPurchaseOrderCommandHandler> _logger;
 
     public SubmitPurchaseOrderCommandHandler(
         IPurchaseOrderRepository repository,
+        IUnitOfWork unitOfWork,
         ILogger<SubmitPurchaseOrderCommandHandler> logger)
     {
         _repository = repository;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -36,6 +39,8 @@ public class SubmitPurchaseOrderCommandHandler : IRequestHandler<SubmitPurchaseO
         await _repository.UpdateAsync(purchaseOrder, cancellationToken);
 
         _logger.LogInformation("Purchase order {OrderNumber} submitted successfully", purchaseOrder.OrderNumber);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return MapToDto(purchaseOrder);
     }

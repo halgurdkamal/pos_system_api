@@ -14,15 +14,18 @@ public class AddStockCommandHandler : IRequestHandler<AddStockCommand, Inventory
     private readonly IInventoryRepository _inventoryRepository;
     private readonly IDrugRepository _drugRepository;
     private readonly ISupplierRepository _supplierRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public AddStockCommandHandler(
         IInventoryRepository inventoryRepository,
         IDrugRepository drugRepository,
-        ISupplierRepository supplierRepository)
+        ISupplierRepository supplierRepository,
+        IUnitOfWork unitOfWork)
     {
         _inventoryRepository = inventoryRepository;
         _drugRepository = drugRepository;
         _supplierRepository = supplierRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<InventoryDto> Handle(AddStockCommand request, CancellationToken cancellationToken)
@@ -122,6 +125,8 @@ public class AddStockCommandHandler : IRequestHandler<AddStockCommand, Inventory
 
             inventory = await _inventoryRepository.UpdateAsync(existingInventory, cancellationToken);
         }
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         // Map to DTO
         return InventoryMapper.MapToDto(inventory);

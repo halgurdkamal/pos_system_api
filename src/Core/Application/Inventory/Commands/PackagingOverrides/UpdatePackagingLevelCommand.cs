@@ -23,6 +23,7 @@ public class UpdatePackagingLevelCommandHandler : IRequestHandler<UpdatePackagin
     private readonly IInventoryRepository _inventoryRepository;
     private readonly IDrugRepository _drugRepository;
     private readonly IEffectivePackagingService _packagingService;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<UpdatePackagingLevelCommandHandler> _logger;
 
     public UpdatePackagingLevelCommandHandler(
@@ -30,12 +31,14 @@ public class UpdatePackagingLevelCommandHandler : IRequestHandler<UpdatePackagin
         IInventoryRepository inventoryRepository,
         IDrugRepository drugRepository,
         IEffectivePackagingService packagingService,
+        IUnitOfWork unitOfWork,
         ILogger<UpdatePackagingLevelCommandHandler> logger)
     {
         _overrideRepository = overrideRepository;
         _inventoryRepository = inventoryRepository;
         _drugRepository = drugRepository;
         _packagingService = packagingService;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -148,6 +151,8 @@ public class UpdatePackagingLevelCommandHandler : IRequestHandler<UpdatePackagin
 
         _logger.LogInformation("Updated packaging override {Target} for shop {ShopId} drug {DrugId}.",
             request.TargetLevelId, request.ShopId, request.DrugId);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return await _packagingService.GetEffectivePackagingAsync(request.ShopId, request.DrugId, cancellationToken);
     }

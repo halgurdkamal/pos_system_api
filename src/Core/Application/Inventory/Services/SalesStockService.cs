@@ -7,13 +7,16 @@ namespace pos_system_api.Core.Application.Inventory.Services;
 public class SalesStockService : ISalesStockService
 {
     private readonly IInventoryRepository _inventoryRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<SalesStockService> _logger;
 
     public SalesStockService(
         IInventoryRepository inventoryRepository,
+        IUnitOfWork unitOfWork,
         ILogger<SalesStockService> logger)
     {
         _inventoryRepository = inventoryRepository;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -47,6 +50,8 @@ public class SalesStockService : ISalesStockService
                 "Deducted {Quantity} of {DrugId} for order {OrderNumber} (shop {ShopId}); remaining stock {Remaining}",
                 item.Quantity, item.DrugId, order.OrderNumber, order.ShopId, inventory.TotalStock);
         }
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     public async Task RestoreForReversalAsync(SalesOrder order, CancellationToken cancellationToken = default)
@@ -75,6 +80,8 @@ public class SalesStockService : ISalesStockService
                 "Restored {Quantity} of {DrugId} for reversal of order {OrderNumber} (shop {ShopId}); new stock {Stock}",
                 item.Quantity, item.DrugId, order.OrderNumber, order.ShopId, inventory.TotalStock);
         }
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task<IDictionary<string, Core.Domain.Inventory.Entities.ShopInventory>> LoadInventoriesAsync(

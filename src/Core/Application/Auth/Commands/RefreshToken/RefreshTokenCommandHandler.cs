@@ -12,15 +12,18 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, T
     private readonly IUserRepository _userRepository;
     private readonly JwtTokenService _jwtTokenService;
     private readonly IConfiguration _configuration;
+    private readonly IUnitOfWork _unitOfWork;
 
     public RefreshTokenCommandHandler(
         IUserRepository userRepository,
         JwtTokenService jwtTokenService,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        IUnitOfWork unitOfWork)
     {
         _userRepository = userRepository;
         _jwtTokenService = jwtTokenService;
         _configuration = configuration;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<TokenResponseDto> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
@@ -81,6 +84,8 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, T
         // Get access token expiry from config
         var accessTokenExpiryMinutes = int.Parse(_configuration["Jwt:AccessTokenExpirationMinutes"] ?? "60");
         var accessTokenExpiry = DateTime.UtcNow.AddMinutes(accessTokenExpiryMinutes);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return new TokenResponseDto
         {

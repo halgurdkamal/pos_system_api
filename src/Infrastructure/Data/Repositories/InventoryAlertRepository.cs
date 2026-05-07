@@ -13,7 +13,6 @@ public class InventoryAlertRepository : IInventoryAlertRepository
     public async Task<InventoryAlert> AddAsync(InventoryAlert alert, CancellationToken cancellationToken = default)
     {
         await _context.InventoryAlerts.AddAsync(alert, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
         return alert;
     }
 
@@ -27,7 +26,7 @@ public class InventoryAlertRepository : IInventoryAlertRepository
     public async Task UpdateAsync(InventoryAlert alert, CancellationToken cancellationToken = default)
     {
         _context.InventoryAlerts.Update(alert);
-        await _context.SaveChangesAsync(cancellationToken);
+        await Task.CompletedTask;
     }
 
     public async Task<IEnumerable<InventoryAlert>> GetActiveAlertsAsync(

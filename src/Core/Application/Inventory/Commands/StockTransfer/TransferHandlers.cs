@@ -12,17 +12,20 @@ public class CreateTransferCommandHandler : IRequestHandler<CreateTransferComman
     private readonly IStockTransferRepository _transferRepository;
     private readonly IInventoryRepository _inventoryRepository;
     private readonly IStockAdjustmentRepository _adjustmentRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<CreateTransferCommandHandler> _logger;
 
     public CreateTransferCommandHandler(
         IStockTransferRepository transferRepository,
         IInventoryRepository inventoryRepository,
         IStockAdjustmentRepository adjustmentRepository,
+        IUnitOfWork unitOfWork,
         ILogger<CreateTransferCommandHandler> logger)
     {
         _transferRepository = transferRepository;
         _inventoryRepository = inventoryRepository;
         _adjustmentRepository = adjustmentRepository;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -61,6 +64,8 @@ public class CreateTransferCommandHandler : IRequestHandler<CreateTransferComman
             $"Transfer ID: {savedTransfer.Id}", savedTransfer.Id, "StockTransfer");
         await _adjustmentRepository.AddAsync(adjustment, cancellationToken);
 
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
         return MapToDto(savedTransfer);
     }
 
@@ -90,13 +95,16 @@ public class CreateTransferCommandHandler : IRequestHandler<CreateTransferComman
 public class ApproveTransferCommandHandler : IRequestHandler<ApproveTransferCommand, StockTransferDto>
 {
     private readonly IStockTransferRepository _repository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<ApproveTransferCommandHandler> _logger;
 
     public ApproveTransferCommandHandler(
         IStockTransferRepository repository,
+        IUnitOfWork unitOfWork,
         ILogger<ApproveTransferCommandHandler> logger)
     {
         _repository = repository;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -111,6 +119,8 @@ public class ApproveTransferCommandHandler : IRequestHandler<ApproveTransferComm
         await _repository.UpdateAsync(transfer, cancellationToken);
 
         _logger.LogInformation("Transfer {Id} approved and marked in transit", transfer.Id);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return MapToDto(transfer);
     }
@@ -143,17 +153,20 @@ public class ReceiveTransferCommandHandler : IRequestHandler<ReceiveTransferComm
     private readonly IStockTransferRepository _transferRepository;
     private readonly IInventoryRepository _inventoryRepository;
     private readonly IStockAdjustmentRepository _adjustmentRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<ReceiveTransferCommandHandler> _logger;
 
     public ReceiveTransferCommandHandler(
         IStockTransferRepository transferRepository,
         IInventoryRepository inventoryRepository,
         IStockAdjustmentRepository adjustmentRepository,
+        IUnitOfWork unitOfWork,
         ILogger<ReceiveTransferCommandHandler> logger)
     {
         _transferRepository = transferRepository;
         _inventoryRepository = inventoryRepository;
         _adjustmentRepository = adjustmentRepository;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -188,6 +201,8 @@ public class ReceiveTransferCommandHandler : IRequestHandler<ReceiveTransferComm
 
         _logger.LogInformation("Transfer {Id} completed and received", transfer.Id);
 
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
         return MapToDto(transfer);
     }
 
@@ -219,17 +234,20 @@ public class CancelTransferCommandHandler : IRequestHandler<CancelTransferComman
     private readonly IStockTransferRepository _transferRepository;
     private readonly IInventoryRepository _inventoryRepository;
     private readonly IStockAdjustmentRepository _adjustmentRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<CancelTransferCommandHandler> _logger;
 
     public CancelTransferCommandHandler(
         IStockTransferRepository transferRepository,
         IInventoryRepository inventoryRepository,
         IStockAdjustmentRepository adjustmentRepository,
+        IUnitOfWork unitOfWork,
         ILogger<CancelTransferCommandHandler> logger)
     {
         _transferRepository = transferRepository;
         _inventoryRepository = inventoryRepository;
         _adjustmentRepository = adjustmentRepository;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -262,6 +280,8 @@ public class CancelTransferCommandHandler : IRequestHandler<CancelTransferComman
         }
 
         _logger.LogInformation("Transfer {Id} cancelled", transfer.Id);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return MapToDto(transfer);
     }

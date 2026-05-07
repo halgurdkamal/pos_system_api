@@ -58,13 +58,12 @@ public class SalesOrderRepository : ISalesOrderRepository
     public async Task AddAsync(SalesOrder salesOrder, CancellationToken cancellationToken = default)
     {
         await _context.SalesOrders.AddAsync(salesOrder, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task UpdateAsync(SalesOrder salesOrder, CancellationToken cancellationToken = default)
     {
         _context.SalesOrders.Update(salesOrder);
-        await _context.SaveChangesAsync(cancellationToken);
+        await Task.CompletedTask;
     }
 
     public async Task DeleteAsync(string id, CancellationToken cancellationToken = default)
@@ -73,7 +72,6 @@ public class SalesOrderRepository : ISalesOrderRepository
         if (salesOrder != null)
         {
             _context.SalesOrders.Remove(salesOrder);
-            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 

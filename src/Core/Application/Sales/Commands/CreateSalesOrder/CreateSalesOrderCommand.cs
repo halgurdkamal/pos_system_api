@@ -36,17 +36,20 @@ public class CreateSalesOrderCommandHandler : IRequestHandler<CreateSalesOrderCo
     private readonly ISalesOrderRepository _repository;
     private readonly IDrugRepository _drugRepository;
     private readonly IInventoryRepository _inventoryRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<CreateSalesOrderCommandHandler> _logger;
 
     public CreateSalesOrderCommandHandler(
         ISalesOrderRepository repository,
         IDrugRepository drugRepository,
         IInventoryRepository inventoryRepository,
+        IUnitOfWork unitOfWork,
         ILogger<CreateSalesOrderCommandHandler> logger)
     {
         _repository = repository;
         _drugRepository = drugRepository;
         _inventoryRepository = inventoryRepository;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -99,6 +102,8 @@ public class CreateSalesOrderCommandHandler : IRequestHandler<CreateSalesOrderCo
         await _repository.AddAsync(salesOrder, cancellationToken);
 
         _logger.LogInformation("Sales order {OrderNumber} created successfully", salesOrder.OrderNumber);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return MapToDto(salesOrder);
     }

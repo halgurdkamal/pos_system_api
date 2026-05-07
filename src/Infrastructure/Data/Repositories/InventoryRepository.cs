@@ -157,14 +157,12 @@ public class InventoryRepository : IInventoryRepository
     public async Task<ShopInventory> AddAsync(ShopInventory inventory, CancellationToken cancellationToken = default)
     {
         await _context.ShopInventory.AddAsync(inventory, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
         return inventory;
     }
 
     public async Task<ShopInventory> UpdateAsync(ShopInventory inventory, CancellationToken cancellationToken = default)
     {
         _context.ShopInventory.Update(inventory);
-        await _context.SaveChangesAsync(cancellationToken);
         return inventory;
     }
 
@@ -174,7 +172,6 @@ public class InventoryRepository : IInventoryRepository
         if (inventory != null)
         {
             _context.ShopInventory.Remove(inventory);
-            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 

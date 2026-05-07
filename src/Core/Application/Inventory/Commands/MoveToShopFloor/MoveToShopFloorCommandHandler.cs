@@ -8,13 +8,16 @@ namespace pos_system_api.Core.Application.Inventory.Commands.MoveToShopFloor;
 public class MoveToShopFloorCommandHandler : IRequestHandler<MoveToShopFloorCommand, InventoryDto>
 {
     private readonly IInventoryRepository _inventoryRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<MoveToShopFloorCommandHandler> _logger;
 
     public MoveToShopFloorCommandHandler(
         IInventoryRepository inventoryRepository,
+        IUnitOfWork unitOfWork,
         ILogger<MoveToShopFloorCommandHandler> logger)
     {
         _inventoryRepository = inventoryRepository;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -54,6 +57,8 @@ public class MoveToShopFloorCommandHandler : IRequestHandler<MoveToShopFloorComm
 
         _logger.LogInformation("Successfully moved {Quantity} units to shop floor. Shop floor stock: {ShopFloorStock}, Storage stock: {StorageStock}",
             request.Quantity, updatedInventory.GetShopFloorStock(), updatedInventory.GetStorageStock());
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return InventoryMapper.MapToDto(updatedInventory);
     }

@@ -12,17 +12,20 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, TokenResponseDt
     private readonly PasswordHasher _passwordHasher;
     private readonly JwtTokenService _jwtTokenService;
     private readonly IConfiguration _configuration;
+    private readonly IUnitOfWork _unitOfWork;
 
     public LoginCommandHandler(
         IUserRepository userRepository,
         PasswordHasher passwordHasher,
         JwtTokenService jwtTokenService,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        IUnitOfWork unitOfWork)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;
         _jwtTokenService = jwtTokenService;
         _configuration = configuration;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<TokenResponseDto> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -50,9 +53,11 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, TokenResponseDt
         // Verify password
         if (!_passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
         {
-            // Record failed login attempt
+            // Record failed login attempt — must commit before throwing, otherwise the
+            // increment is lost when the exception unwinds and we lose lockout state.
             user.RecordFailedLogin();
             await _userRepository.UpdateAsync(user, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             throw new UnauthorizedAccessException("Invalid credentials");
         }
@@ -75,6 +80,8 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, TokenResponseDt
         // Get access token expiry from config
         var accessTokenExpiryMinutes = int.Parse(_configuration["Jwt:AccessTokenExpirationMinutes"] ?? "60");
         var accessTokenExpiry = DateTime.UtcNow.AddMinutes(accessTokenExpiryMinutes);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return new TokenResponseDto
         {

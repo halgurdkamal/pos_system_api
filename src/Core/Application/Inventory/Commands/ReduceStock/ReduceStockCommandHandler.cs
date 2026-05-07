@@ -17,17 +17,20 @@ public class ReduceStockCommandHandler : IRequestHandler<ReduceStockCommand, Inv
     private readonly IInventoryRepository _inventoryRepository;
     private readonly IStockAdjustmentRepository _adjustmentRepository;
     private readonly IPackagingPricingService _pricingService;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<ReduceStockCommandHandler> _logger;
 
     public ReduceStockCommandHandler(
         IInventoryRepository inventoryRepository,
         IStockAdjustmentRepository adjustmentRepository,
         IPackagingPricingService pricingService,
+        IUnitOfWork unitOfWork,
         ILogger<ReduceStockCommandHandler> logger)
     {
         _inventoryRepository = inventoryRepository;
         _adjustmentRepository = adjustmentRepository;
         _pricingService = pricingService;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -169,6 +172,8 @@ public class ReduceStockCommandHandler : IRequestHandler<ReduceStockCommand, Inv
             _logger.LogError(ex, "Failed to create stock adjustment record for reduction");
             // Don't fail the operation if audit trail fails
         }
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         // Map to DTO
         return InventoryMapper.MapToDto(updatedInventory);

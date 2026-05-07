@@ -12,13 +12,16 @@ public class ConfirmPurchaseOrderCommandHandler
     : IRequestHandler<ConfirmPurchaseOrderCommand, PurchaseOrderDto>
 {
     private readonly IPurchaseOrderRepository _repository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<ConfirmPurchaseOrderCommandHandler> _logger;
 
     public ConfirmPurchaseOrderCommandHandler(
         IPurchaseOrderRepository repository,
+        IUnitOfWork unitOfWork,
         ILogger<ConfirmPurchaseOrderCommandHandler> logger)
     {
         _repository = repository;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -38,6 +41,8 @@ public class ConfirmPurchaseOrderCommandHandler
         _logger.LogInformation(
             "Purchase order {OrderNumber} confirmed by {ConfirmedBy}",
             purchaseOrder.OrderNumber, request.ConfirmedBy);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return PurchaseOrderMappers.ToDto(purchaseOrder);
     }

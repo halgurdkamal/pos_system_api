@@ -19,15 +19,18 @@ public class ProcessPaymentCommandHandler : IRequestHandler<ProcessPaymentComman
 {
     private readonly ISalesOrderRepository _repository;
     private readonly ISalesStockService _salesStockService;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<ProcessPaymentCommandHandler> _logger;
 
     public ProcessPaymentCommandHandler(
         ISalesOrderRepository repository,
         ISalesStockService salesStockService,
+        IUnitOfWork unitOfWork,
         ILogger<ProcessPaymentCommandHandler> logger)
     {
         _repository = repository;
         _salesStockService = salesStockService;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -56,6 +59,8 @@ public class ProcessPaymentCommandHandler : IRequestHandler<ProcessPaymentComman
 
         _logger.LogInformation("Payment processed for order {OrderNumber}: {PaymentMethod} - {AmountPaid:C}",
             salesOrder.OrderNumber, paymentMethod, request.AmountPaid);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return MapToDto(salesOrder);
     }

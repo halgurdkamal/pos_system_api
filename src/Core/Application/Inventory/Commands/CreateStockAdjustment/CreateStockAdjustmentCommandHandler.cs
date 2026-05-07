@@ -10,15 +10,18 @@ public class CreateStockAdjustmentCommandHandler : IRequestHandler<CreateStockAd
 {
     private readonly IStockAdjustmentRepository _adjustmentRepository;
     private readonly IInventoryRepository _inventoryRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<CreateStockAdjustmentCommandHandler> _logger;
 
     public CreateStockAdjustmentCommandHandler(
         IStockAdjustmentRepository adjustmentRepository,
         IInventoryRepository inventoryRepository,
+        IUnitOfWork unitOfWork,
         ILogger<CreateStockAdjustmentCommandHandler> logger)
     {
         _adjustmentRepository = adjustmentRepository;
         _inventoryRepository = inventoryRepository;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -69,6 +72,8 @@ public class CreateStockAdjustmentCommandHandler : IRequestHandler<CreateStockAd
 
         _logger.LogInformation("Stock adjustment created: {Id}. Before: {Before}, Changed: {Changed}, After: {After}",
             savedAdjustment.Id, quantityBefore, request.QuantityChanged, savedAdjustment.QuantityAfter);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         // Map to DTO
         return new StockAdjustmentDto

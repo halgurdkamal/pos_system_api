@@ -15,15 +15,18 @@ public class CancelSalesOrderCommandHandler
 {
     private readonly ISalesOrderRepository _repository;
     private readonly ISalesStockService _salesStockService;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<CancelSalesOrderCommandHandler> _logger;
 
     public CancelSalesOrderCommandHandler(
         ISalesOrderRepository repository,
         ISalesStockService salesStockService,
+        IUnitOfWork unitOfWork,
         ILogger<CancelSalesOrderCommandHandler> logger)
     {
         _repository = repository;
         _salesStockService = salesStockService;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -53,6 +56,8 @@ public class CancelSalesOrderCommandHandler
         _logger.LogInformation(
             "Sales order {OrderNumber} cancelled by {CancelledBy}: {Reason} (stock restored: {StockRestored})",
             salesOrder.OrderNumber, request.CancelledBy, request.Reason, previouslyDeducted);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return SalesOrderMappers.ToDto(salesOrder);
     }

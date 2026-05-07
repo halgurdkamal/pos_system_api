@@ -52,6 +52,12 @@ public static class ServiceCollectionExtensions
         // Register the interceptor so it can be resolved from DI when configuring the context
         services.AddScoped<pos_system_api.Infrastructure.Data.PrettyDbLoggerInterceptor>();
 
+        // Single point of persistence: handlers call _uow.SaveChangesAsync exactly
+        // once at the end of their work; repositories only stage changes via the
+        // change tracker. EF Core wraps the single SaveChangesAsync in a transaction.
+        services.AddScoped<pos_system_api.Core.Application.Common.Interfaces.IUnitOfWork,
+            pos_system_api.Infrastructure.Data.UnitOfWork>();
+
         services.AddDbContext<ApplicationDbContext>(
             (serviceProvider, options) =>
                 options

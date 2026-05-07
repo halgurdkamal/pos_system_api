@@ -10,13 +10,16 @@ namespace pos_system_api.Core.Application.ShopUsers.Commands.RemoveUserFromShop;
 public class RemoveUserFromShopCommandHandler : IRequestHandler<RemoveUserFromShopCommand, bool>
 {
     private readonly IShopUserRepository _shopUserRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<RemoveUserFromShopCommandHandler> _logger;
 
     public RemoveUserFromShopCommandHandler(
         IShopUserRepository shopUserRepository,
+        IUnitOfWork unitOfWork,
         ILogger<RemoveUserFromShopCommandHandler> logger)
     {
         _shopUserRepository = shopUserRepository;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -49,6 +52,8 @@ public class RemoveUserFromShopCommandHandler : IRequestHandler<RemoveUserFromSh
         _logger.LogInformation(
             "User {UserId} removed from shop {ShopId}",
             request.UserId, request.ShopId);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return true;
     }
