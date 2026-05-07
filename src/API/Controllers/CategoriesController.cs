@@ -1,9 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using pos_system_api.Core.Application.Categories.Commands.CreateCategory;
 using pos_system_api.Core.Application.Categories.DTOs;
 using pos_system_api.Core.Application.Categories.Queries.GetAllCategories;
-using pos_system_api.Core.Application.Categories.Commands.CreateCategory;
 
 namespace pos_system_api.API.Controllers;
 
@@ -28,7 +28,9 @@ public class CategoriesController : BaseApiController
     /// <returns>List of categories with logos</returns>
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<CategoryDto>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<CategoryDto>>> GetAll([FromQuery] bool activeOnly = true)
+    public async Task<ActionResult<IEnumerable<CategoryDto>>> GetAll(
+        [FromQuery] bool activeOnly = true
+    )
     {
         var query = new GetAllCategoriesQuery(activeOnly);
         var result = await _mediator.Send(query);

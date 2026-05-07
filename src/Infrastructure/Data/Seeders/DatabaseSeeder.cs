@@ -46,23 +46,23 @@ public class DatabaseSeeder
         await _context.SaveChangesAsync();
         Console.WriteLine($"✓ Seeded {categories.Count} categories");
 
-        // 2. Seed Drugs
-        var drugs = GenerateSampleDrugs(categories);
+        // 2. Seed Suppliers
+        var suppliers = SupplierSeedData.GetSuppliers();
+        await _context.Suppliers.AddRangeAsync(suppliers);
+        await _context.SaveChangesAsync();
+        Console.WriteLine($"✓ Seeded {suppliers.Count} suppliers");
+
+        // 3. Seed Drugs
+        var drugs = DrugSeedData.GetDrugs();
         await _context.Drugs.AddRangeAsync(drugs);
         await _context.SaveChangesAsync();
         Console.WriteLine($"✓ Seeded {drugs.Count} drugs");
 
-        // 3. Seed Shops
+        // 4. Seed Shops
         var shops = ShopSeeder.GetSeedData();
         await _context.Shops.AddRangeAsync(shops);
         await _context.SaveChangesAsync();
         Console.WriteLine($"✓ Seeded {shops.Count} shops");
-
-        // 4. Seed Suppliers
-        var suppliers = SupplierSeeder.GetSeedData();
-        await _context.Suppliers.AddRangeAsync(suppliers);
-        await _context.SaveChangesAsync();
-        Console.WriteLine($"✓ Seeded {suppliers.Count} suppliers");
 
         // 5. Seed Inventory for active shops
         var activeShops = shops.Where(s => s.Status == Core.Domain.Shops.Entities.ShopStatus.Active).ToList();
