@@ -1,13 +1,13 @@
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using pos_system_api.Infrastructure.Data;
+using pos_system_api.Core.Application.Admin.Queries.GetDatabaseStats;
 using pos_system_api.Infrastructure.Data.Seeders;
-using pos_system_api.Infrastructure.Auth;
 
 namespace pos_system_api.API.Controllers;
 
 /// <summary>
-/// Admin controller for database management operations
+/// Admin endpoints for database management and diagnostics.
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
@@ -15,96 +15,54 @@ namespace pos_system_api.API.Controllers;
 [Authorize(Policy = "AdminOnly")]
 public class AdminController : BaseApiController
 {
-    private readonly ApplicationDbContext _context;
+    private readonly IMediator _mediator;
+    private readonly DatabaseSeeder _databaseSeeder;
+    private readonly UserSeeder _userSeeder;
 
-    public AdminController(ApplicationDbContext context)
+    public AdminController(
+        IMediator mediator,
+        DatabaseSeeder databaseSeeder,
+        UserSeeder userSeeder)
     {
-        _context = context;
+        _mediator = mediator;
+        _databaseSeeder = databaseSeeder;
+        _userSeeder = userSeeder;
     }
 
-    /// <summary>
-    /// Seed database with sample data
-    /// </summary>
-    /// <returns>Seeding result</returns>
+    /// <summary>Seed database with sample data.</summary>
     [HttpPost("seed")]
     [AllowAnonymous] // Temporarily allow anonymous for seeding during development
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> SeedDatabase()
     {
-        try
-        {
-            var seeder = new DatabaseSeeder(_context);
-            await seeder.SeedAllAsync();
-            return Ok(new { message = "Database seeded successfully" });
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { error = "Seeding failed", details = ex.Message });
-        }
+        await _databaseSeeder.SeedAllAsync();
+        return Ok(new { message = "Database seeded successfully" });
     }
 
-    /// <summary>
-    /// Clear all seeded data from database
-    /// </summary>
-    /// <returns>Clear result</returns>
+    /// <summary>Clear all seeded data from the database.</summary>
     [HttpDelete("clear")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> ClearDatabase()
     {
-        try
-        {
-            var seeder = new DatabaseSeeder(_context);
-            await seeder.ClearAllAsync();
-            return Ok(new { message = "Database cleared successfully" });
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { error = "Clear failed", details = ex.Message });
-        }
+        await _databaseSeeder.ClearAllAsync();
+        return Ok(new { message = "Database cleared successfully" });
     }
 
-    /// <summary>
-    /// Seed user accounts for testing
-    /// </summary>
-    /// <returns>Seeding result</returns>
+    /// <summary>Seed initial user accounts (dev/test only).</summary>
     [HttpPost("seed-users")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> SeedUsers()
     {
-        try
-        {
-            var passwordHasher = new PasswordHasher();
-            var userSeeder = new UserSeeder(_context, passwordHasher);
-            await userSeeder.SeedAsync();
-            return Ok(new { message = "Users seeded successfully. Check console output for login credentials." });
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { error = "User seeding failed", details = ex.Message });
-        }
+        await _userSeeder.SeedAsync();
+        return Ok(new { message = "Users seeded successfully. Check console output for login credentials." });
     }
 
-    /// <summary>
-    /// Get database statistics
-    /// </summary>
-    /// <returns>Count of entities in database</returns>
+    /// <summary>Get row counts for major tables.</summary>
     [HttpGet("stats")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> GetDatabaseStats()
+    [ProducesResponseType(typeof(DatabaseStatsDto), StatusCodes.Status200OK)]
+    public async Task<ActionResult<DatabaseStatsDto>> GetDatabaseStats()
     {
-        var stats = new
-        {
-            drugs = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.CountAsync(_context.Drugs),
-            shops = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.CountAsync(_context.Shops),
-            suppliers = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.CountAsync(_context.Suppliers),
-            inventory = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.CountAsync(_context.ShopInventory),
-            users = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.CountAsync(_context.Users),
-            timestamp = DateTime.UtcNow
-        };
-
+        var stats = await _mediator.Send(new GetDatabaseStatsQuery());
         return Ok(stats);
     }
 }

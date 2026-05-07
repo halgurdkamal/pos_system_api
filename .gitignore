@@ -83,3 +83,10 @@ appsettings.Local.json
 **/wwwroot/uploads/
 **/Logs/
 **/Snapshots/
+
+# Test outputs
+TestResults/
+**/TestResults/
+*.trx
+coverage.*.xml
+coverage.*.json

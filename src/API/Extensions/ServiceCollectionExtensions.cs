@@ -64,6 +64,13 @@ public static class ServiceCollectionExtensions
                     )
         );
 
+        // Health checks. The "ready" tag distinguishes readiness probes (which require
+        // dependencies like the DB to be reachable) from plain liveness probes.
+        services.AddHealthChecks()
+            .AddDbContextCheck<ApplicationDbContext>(
+                name: "database",
+                tags: new[] { "ready" });
+
         // Register repositories
         services.AddScoped<
             pos_system_api.Core.Application.Common.Interfaces.IDrugRepository,
@@ -118,6 +125,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<JwtTokenService>();
         services.AddScoped<PasswordHasher>();
 
+        // Register database seeders
+        services.AddScoped<pos_system_api.Infrastructure.Data.Seeders.DatabaseSeeder>();
+        services.AddScoped<pos_system_api.Infrastructure.Data.Seeders.UserSeeder>();
+
         // Register inventory alert service
         services.AddScoped<
             pos_system_api.Core.Application.Common.Interfaces.IInventoryAlertService,
@@ -140,6 +151,12 @@ public static class ServiceCollectionExtensions
         services.AddScoped<
             pos_system_api.Core.Application.Common.Interfaces.ISalesOrderRepository,
             pos_system_api.Infrastructure.Data.Repositories.SalesOrderRepository
+        >();
+
+        // Register PDF service
+        services.AddScoped<
+            pos_system_api.Core.Application.Common.Interfaces.IPdfService,
+            pos_system_api.Infrastructure.Services.Pdf.PdfService
         >();
 
         return services;

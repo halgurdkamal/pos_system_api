@@ -1,10 +1,22 @@
+using System.Text.Json;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using pos_system_api.API.Extensions;
 using pos_system_api.API.Middleware;
 using Serilog;
 using Serilog.Events;
 
-// Configure Serilog before building the app
-Log.Logger = new LoggerConfiguration()
+// Bootstrap configuration so the logger can read sink settings (e.g. Seq URL) before
+// the WebApplication builder runs. Logger creation deliberately happens before the
+// builder so that any startup errors are still captured.
+var bootstrapEnv = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+var bootstrapConfig = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
+    .AddJsonFile($"appsettings.{bootstrapEnv}.json", optional: true, reloadOnChange: false)
+    .AddEnvironmentVariables()
+    .Build();
+
+var loggerConfig = new LoggerConfiguration()
     .MinimumLevel.Information()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
     .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
@@ -19,14 +31,30 @@ Log.Logger = new LoggerConfiguration()
         rollingInterval: RollingInterval.Day,
         outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext}] {Message:lj} {Properties:j}{NewLine}{Exception}",
         retainedFileCountLimit: 30,
-        fileSizeLimitBytes: 10485760) // 10MB
-    .CreateLogger();
+        fileSizeLimitBytes: 10485760); // 10MB
+
+// Optional structured-log shipping to Seq. Only enabled when configured.
+// Local dev: docker run -d --name seq -p 5341:5341 -e ACCEPT_EULA=Y datalust/seq
+// Then set Serilog:Seq:ServerUrl=http://localhost:5341 in appsettings.Development.json.
+var seqUrl = bootstrapConfig["Serilog:Seq:ServerUrl"];
+if (!string.IsNullOrWhiteSpace(seqUrl))
+{
+    var seqApiKey = bootstrapConfig["Serilog:Seq:ApiKey"];
+    loggerConfig.WriteTo.Seq(seqUrl, apiKey: string.IsNullOrWhiteSpace(seqApiKey) ? null : seqApiKey);
+}
+
+Log.Logger = loggerConfig.CreateLogger();
 
 try
 {
     Log.Information("Starting POS System API...");
 
     var builder = WebApplication.CreateBuilder(args);
+
+    // Fail fast if required secrets are missing or weak.
+    // Set them via environment variables (Jwt__SecretKey, ConnectionStrings__DefaultConnection)
+    // or appsettings.Development.json (gitignored). Never commit real secrets.
+    ValidateRequiredSecrets(builder.Configuration);
 
     // Use Serilog for logging
     builder.Host.UseSerilog();
@@ -47,20 +75,17 @@ try
     // Seed database on startup (Development only)
     if (app.Environment.IsDevelopment())
     {
-        using (var scope = app.Services.CreateScope())
+        using var scope = app.Services.CreateScope();
+        var services = scope.ServiceProvider;
+        try
         {
-            var services = scope.ServiceProvider;
-            try
-            {
-                var context = services.GetRequiredService<pos_system_api.Infrastructure.Data.ApplicationDbContext>();
-                var seeder = new pos_system_api.Infrastructure.Data.Seeders.DatabaseSeeder(context);
-                await seeder.SeedAllAsync();
-            }
-            catch (Exception ex)
-            {
-                var logger = services.GetRequiredService<ILogger<Program>>();
-                logger.LogError(ex, "An error occurred while seeding the database.");
-            }
+            var seeder = services.GetRequiredService<pos_system_api.Infrastructure.Data.Seeders.DatabaseSeeder>();
+            await seeder.SeedAllAsync();
+        }
+        catch (Exception ex)
+        {
+            var logger = services.GetRequiredService<ILogger<Program>>();
+            logger.LogError(ex, "An error occurred while seeding the database.");
         }
     }
 
@@ -104,12 +129,24 @@ try
     // Map controllers (Clean Architecture endpoints)
     app.MapControllers();
 
-    // Health check endpoint
-    app.MapGet("/health", () => Results.Ok(new
+    // Health check endpoints.
+    //   /health/live  — process is up; never checks dependencies. Used by orchestrators
+    //                   to decide whether to restart the container.
+    //   /health/ready — dependencies (DB) are reachable; load balancers should send traffic.
+    //   /health       — alias for liveness, for back-compat with existing callers.
+    var liveOptions = new HealthCheckOptions
     {
-        status = "Healthy",
-        timestamp = DateTime.UtcNow
-    }));
+        Predicate = _ => false, // run no checks; just confirm process is responding
+        ResponseWriter = WriteHealthResponse,
+    };
+    var readyOptions = new HealthCheckOptions
+    {
+        Predicate = check => check.Tags.Contains("ready"),
+        ResponseWriter = WriteHealthResponse,
+    };
+    app.MapHealthChecks("/health", liveOptions).AllowAnonymous();
+    app.MapHealthChecks("/health/live", liveOptions).AllowAnonymous();
+    app.MapHealthChecks("/health/ready", readyOptions).AllowAnonymous();
 
     app.MapGet("/", () => "Welcome to the POS System API! Visit /swagger for API documentation.");
 
@@ -124,4 +161,59 @@ finally
 {
     Log.Information("Shutting down POS System API...");
     Log.CloseAndFlush();
+}
+
+static Task WriteHealthResponse(HttpContext context, Microsoft.Extensions.Diagnostics.HealthChecks.HealthReport report)
+{
+    context.Response.ContentType = "application/json";
+    var payload = new
+    {
+        status = report.Status.ToString(),
+        timestamp = DateTime.UtcNow,
+        totalDuration = report.TotalDuration.TotalMilliseconds,
+        checks = report.Entries.Select(e => new
+        {
+            name = e.Key,
+            status = e.Value.Status.ToString(),
+            duration = e.Value.Duration.TotalMilliseconds,
+            description = e.Value.Description,
+            error = e.Value.Exception?.Message,
+        }),
+    };
+    return context.Response.WriteAsync(JsonSerializer.Serialize(payload));
+}
+
+static void ValidateRequiredSecrets(IConfiguration configuration)
+{
+    var errors = new List<string>();
+
+    var connectionString = configuration.GetConnectionString("DefaultConnection");
+    if (string.IsNullOrWhiteSpace(connectionString))
+    {
+        errors.Add("ConnectionStrings:DefaultConnection is not set. Set it via the env var ConnectionStrings__DefaultConnection or appsettings.Development.json.");
+    }
+
+    var jwtSecret = configuration["Jwt:SecretKey"];
+    if (string.IsNullOrWhiteSpace(jwtSecret))
+    {
+        errors.Add("Jwt:SecretKey is not set. Set it via the env var Jwt__SecretKey or appsettings.Development.json.");
+    }
+    else if (jwtSecret.Length < 32)
+    {
+        errors.Add($"Jwt:SecretKey is too short ({jwtSecret.Length} chars). Use at least 32 characters of random data; 64+ is recommended.");
+    }
+    else if (jwtSecret.Contains("YourSuperSecret", StringComparison.OrdinalIgnoreCase)
+             || jwtSecret.Contains("REPLACE_WITH", StringComparison.OrdinalIgnoreCase)
+             || jwtSecret.Contains("CHANGE_ME", StringComparison.OrdinalIgnoreCase))
+    {
+        errors.Add("Jwt:SecretKey appears to be a placeholder. Generate a real random secret (e.g. `openssl rand -base64 64`).");
+    }
+
+    if (errors.Count > 0)
+    {
+        var message = "Application cannot start due to missing or invalid configuration:\n  - "
+                      + string.Join("\n  - ", errors)
+                      + "\nSee SECURITY_SETUP.md for details.";
+        throw new InvalidOperationException(message);
+    }
 }

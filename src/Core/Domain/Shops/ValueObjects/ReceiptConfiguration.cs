@@ -23,6 +23,7 @@ public class ReceiptConfiguration
     // Receipt Format
     public int ReceiptWidth { get; set; } = 80; // 80mm thermal paper (standard)
     public string ReceiptLanguage { get; set; } = "en-US";
+    public string PaperType { get; set; } = "A5"; // A4, A5, Thermal80mm, Thermal58mm
     public bool PrintDuplicateReceipt { get; set; } = false; // Auto-print duplicate
 
     // Regulatory Compliance
