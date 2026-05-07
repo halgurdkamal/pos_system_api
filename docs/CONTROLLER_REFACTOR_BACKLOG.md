@@ -17,10 +17,11 @@ Each refactor follows the same template (see `PdfController` and `AdminControlle
 - ✅ `PdfController` — extracted `GenerateReceiptPdfQuery` (Phase 2 step 1)
 - ✅ `AdminController` — extracted `GetDatabaseStatsQuery`, injected seeders via DI, removed try/catch (Phase 2 step 3, partial)
 - ✅ `AuthController` — extracted `GetCurrentUserQuery`, removed redundant try/catch blocks (global middleware already handles `UnauthorizedAccessException` / `InvalidOperationException` / `ArgumentException`) (Phase 3 step 1)
+- ✅ `PurchaseOrdersController` — extracted Confirm/Cancel/MarkAsPaid commands and 4 list/analytics queries (paged, pending, overdue payments, supplier performance); removed direct `IPurchaseOrderRepository` injection; introduced `PurchaseOrderMappers` shared helper (Phase 3 step 2)
 
 ## Top remaining candidates (worst first)
 
-### 0. ~~AuthController~~ — done
+### 0. ~~AuthController, PurchaseOrdersController~~ — done
 
 ### 1. DrugsController (633 LOC, **very leaky**)
 
@@ -38,19 +39,7 @@ Biggest offender. ~180 LOC of business logic in the controller.
 3. Extract `CreateDrugInternalAsync` → `CreateDrugCommand` handler (write path, needs validator + tests)
 4. Replace `_context` injection with `IDrugRepository` (already exists)
 
-### 2. PurchaseOrdersController (351 LOC, **leaky**)
-
-Three load-mutate-save actions bypass MediatR:
-
-- `ConfirmPurchaseOrder` (lines 141-154)
-- `CancelPurchaseOrder` (lines 184-200)
-- `MarkAsPaid` (lines 207-222)
-
-All follow: load via repository → call domain method → save. This sequence belongs in command handlers.
-
-**Approach**: Three small command handlers (`ConfirmPurchaseOrderCommand`, `CancelPurchaseOrderCommand`, `MarkPurchaseOrderAsPaidCommand`). Plus extract `MapToSummaryDto` (lines 307-324). Maybe 2-3 hours of work.
-
-### 3. SalesOrdersController (411 LOC, **leaky**)
+### 2. SalesOrdersController (411 LOC, **leaky**)
 
 Same pattern as PurchaseOrders, slightly worse:
 
@@ -59,7 +48,7 @@ Same pattern as PurchaseOrders, slightly worse:
 
 **Approach**: Four command handlers + extract `GetCashierPerformanceQuery`. Similar effort to PurchaseOrders.
 
-### 4. InventoryController (661 LOC, **moderate**)
+### 3. InventoryController (661 LOC, **moderate**)
 
 Architectural smell rather than business-logic leak:
 
@@ -74,7 +63,6 @@ The remaining controllers (Barcodes, Categories, InventoryAlerts, InventoryRepor
 
 ## Order of attack (recommended)
 
-1. **PurchaseOrdersController** — three small command handlers, very repetitive (good template)
-2. **SalesOrdersController** — apply the PurchaseOrders template
-3. **InventoryController** — fix DI smell first, extract pricing query second
-4. **DrugsController** — saved for last because it's the biggest. Tackle in 3-4 sub-sessions, not one go.
+1. **SalesOrdersController** — apply the PurchaseOrders template (already proven)
+2. **InventoryController** — fix DI smell first, extract pricing query second
+3. **DrugsController** — saved for last because it's the biggest. Tackle in 3-4 sub-sessions, not one go.
