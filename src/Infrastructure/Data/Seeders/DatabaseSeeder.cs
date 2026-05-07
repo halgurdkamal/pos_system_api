@@ -66,7 +66,10 @@ public class DatabaseSeeder
 
         // 5. Seed Inventory for active shops
         var activeShops = shops.Where(s => s.Status == Core.Domain.Shops.Entities.ShopStatus.Active).ToList();
-        var drugIds = drugs.Select(d => d.Id).ToList();
+        // FK_ShopInventory_Drugs_DrugId references Drugs.DrugId (natural key
+        // like "DRG-1001"), not the internal GUID Id — see migration
+        // 20251031144647_FixShopInventoryDrugForeignKey.
+        var drugIds = drugs.Select(d => d.DrugId).ToList();
         var supplierIds = suppliers.Where(s => s.IsActive).Select(s => s.Id).ToList();
 
         var inventories = InventorySeeder.GetSeedDataForAllShops(
