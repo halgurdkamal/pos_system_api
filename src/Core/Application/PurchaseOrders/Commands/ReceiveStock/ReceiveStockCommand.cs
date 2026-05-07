@@ -2,6 +2,8 @@ using MediatR;
 using pos_system_api.Core.Application.PurchaseOrders.DTOs;
 using pos_system_api.Core.Application.Common.Interfaces;
 using pos_system_api.Core.Domain.Inventory.Entities;
+using pos_system_api.Core.Domain.Inventory.ValueObjects;
+using pos_system_api.Core.Domain.PurchaseOrders.Entities;
 using Microsoft.Extensions.Logging;
 
 namespace pos_system_api.Core.Application.PurchaseOrders.Commands.ReceiveStock;
@@ -59,21 +61,20 @@ public class ReceiveStockCommandHandler : IRequestHandler<ReceiveStockCommand, P
                 continue;
             }
 
-            // Record receipt
+            // Record receipt on the PO line.
             orderItem.ReceiveQuantity(
                 receiptDto.Quantity,
                 receiptDto.BatchNumber,
                 receiptDto.ExpiryDate,
                 request.ReceivedBy);
 
-            // Update inventory
+            // Push the matching batch into ShopInventory so stock counts reflect
+            // what we actually have on hand. Symmetric partner to the deduction
+            // that happens on Sales /payment (see SalesStockService).
             await UpdateInventoryAsync(
-                purchaseOrder.ShopId,
-                orderItem.DrugId,
-                receiptDto.Quantity,
-                receiptDto.BatchNumber,
-                receiptDto.ExpiryDate,
-                request.ReceivedBy,
+                purchaseOrder,
+                orderItem,
+                receiptDto,
                 cancellationToken);
 
             _logger.LogInformation("Received {Quantity} units of drug {DrugId} for order {OrderNumber}",
@@ -102,32 +103,58 @@ public class ReceiveStockCommandHandler : IRequestHandler<ReceiveStockCommand, P
     }
 
     private async Task UpdateInventoryAsync(
-        string shopId,
-        string drugId,
-        int quantity,
-        string batchNumber,
-        DateTime expiryDate,
-        string receivedBy,
+        pos_system_api.Core.Domain.PurchaseOrders.Entities.PurchaseOrder purchaseOrder,
+        PurchaseOrderItem orderItem,
+        ReceiveStockItemDto receipt,
         CancellationToken cancellationToken)
     {
-        // Get existing inventory
+        var shopId = purchaseOrder.ShopId;
+        var drugId = orderItem.DrugId;
+
         var inventory = await _inventoryRepository.GetByShopAndDrugAsync(shopId, drugId, cancellationToken);
 
+        // First time receiving this drug into this shop — create a starter
+        // inventory row so the batch has somewhere to live. The shop can fine-tune
+        // pricing / reorder point / location later via the existing inventory
+        // management endpoints.
         if (inventory == null)
         {
-            _logger.LogWarning("Inventory not found for shop {ShopId} and drug {DrugId}. " +
-                "Please create inventory record first.", shopId, drugId);
-            return;
+            inventory = new ShopInventory(
+                shopId: shopId,
+                drugId: drugId,
+                reorderPoint: 50,
+                storageLocation: "Receiving",
+                shopPricing: new ShopPricing(
+                    costPrice: orderItem.UnitPrice,
+                    sellingPrice: orderItem.UnitPrice, // safe default; shop can override
+                    discount: 0m,
+                    currency: "USD",
+                    taxRate: 0m));
+            await _inventoryRepository.AddAsync(inventory, cancellationToken);
+
+            _logger.LogInformation(
+                "Auto-created ShopInventory for first receipt of drug {DrugId} in shop {ShopId}",
+                drugId, shopId);
         }
 
-        // Log the receipt - actual inventory batch management
-        // should be done through dedicated StockAdjustment commands
-        _logger.LogInformation("Received stock for drug {DrugId} in shop {ShopId}: " +
-            "{Quantity} units in batch {BatchNumber}, expiry {ExpiryDate:yyyy-MM-dd}",
-            drugId, shopId, quantity, batchNumber, expiryDate);
+        var batch = new Batch(
+            batchNumber: receipt.BatchNumber,
+            supplierId: purchaseOrder.SupplierId,
+            quantityOnHand: receipt.Quantity,
+            receivedDate: DateTime.UtcNow,
+            expiryDate: receipt.ExpiryDate,
+            purchasePrice: orderItem.UnitPrice,
+            sellingPrice: inventory.ShopPricing?.SellingPrice ?? orderItem.UnitPrice,
+            location: BatchLocation.Storage,
+            storageLocation: inventory.StorageLocation);
 
-        // TODO: Integrate with StockAdjustment system to properly track
-        // batches, expiry dates, and update inventory totals
+        inventory.AddBatch(batch);
+        await _inventoryRepository.UpdateAsync(inventory, cancellationToken);
+
+        _logger.LogInformation(
+            "Added batch {BatchNumber} ({Quantity} units of {DrugId}, expires {ExpiryDate:yyyy-MM-dd}) " +
+            "to shop {ShopId}; inventory total is now {TotalStock}",
+            receipt.BatchNumber, receipt.Quantity, drugId, receipt.ExpiryDate, shopId, inventory.TotalStock);
     }
 
     private static PurchaseOrderDto MapToDto(pos_system_api.Core.Domain.PurchaseOrders.Entities.PurchaseOrder po)
