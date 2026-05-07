@@ -25,13 +25,15 @@ var loggerConfig = new LoggerConfiguration()
     .Enrich.WithMachineName()
     .Enrich.WithEnvironmentName()
     .WriteTo.Console(
-        outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}")
+        outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}"
+    )
     .WriteTo.File(
         path: "logs/pos-system-.log",
         rollingInterval: RollingInterval.Day,
         outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext}] {Message:lj} {Properties:j}{NewLine}{Exception}",
         retainedFileCountLimit: 30,
-        fileSizeLimitBytes: 10485760); // 10MB
+        fileSizeLimitBytes: 10485760
+    ); // 10MB
 
 // Optional structured-log shipping to Seq. Only enabled when configured.
 // Local dev: docker run -d --name seq -p 5341:5341 -e ACCEPT_EULA=Y datalust/seq
@@ -40,7 +42,10 @@ var seqUrl = bootstrapConfig["Serilog:Seq:ServerUrl"];
 if (!string.IsNullOrWhiteSpace(seqUrl))
 {
     var seqApiKey = bootstrapConfig["Serilog:Seq:ApiKey"];
-    loggerConfig.WriteTo.Seq(seqUrl, apiKey: string.IsNullOrWhiteSpace(seqApiKey) ? null : seqApiKey);
+    loggerConfig.WriteTo.Seq(
+        seqUrl,
+        apiKey: string.IsNullOrWhiteSpace(seqApiKey) ? null : seqApiKey
+    );
 }
 
 Log.Logger = loggerConfig.CreateLogger();
@@ -79,7 +84,8 @@ try
         var services = scope.ServiceProvider;
         try
         {
-            var seeder = services.GetRequiredService<pos_system_api.Infrastructure.Data.Seeders.DatabaseSeeder>();
+            var seeder =
+                services.GetRequiredService<pos_system_api.Infrastructure.Data.Seeders.DatabaseSeeder>();
             await seeder.SeedAllAsync();
         }
         catch (Exception ex)
@@ -100,18 +106,27 @@ try
     // Use Serilog request logging
     app.UseSerilogRequestLogging(options =>
     {
-        options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000}ms";
+        options.MessageTemplate =
+            "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000}ms";
         options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
         {
             diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value);
             diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
-            diagnosticContext.Set("UserAgent", httpContext.Request.Headers["User-Agent"].ToString());
+            diagnosticContext.Set(
+                "UserAgent",
+                httpContext.Request.Headers["User-Agent"].ToString()
+            );
 
             // Add user info if authenticated
             if (httpContext.User.Identity?.IsAuthenticated == true)
             {
                 diagnosticContext.Set("UserName", httpContext.User.Identity.Name);
-                diagnosticContext.Set("UserId", httpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value);
+                diagnosticContext.Set(
+                    "UserId",
+                    httpContext
+                        .User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)
+                        ?.Value
+                );
             }
         };
     });
@@ -163,7 +178,10 @@ finally
     Log.CloseAndFlush();
 }
 
-static Task WriteHealthResponse(HttpContext context, Microsoft.Extensions.Diagnostics.HealthChecks.HealthReport report)
+static Task WriteHealthResponse(
+    HttpContext context,
+    Microsoft.Extensions.Diagnostics.HealthChecks.HealthReport report
+)
 {
     context.Response.ContentType = "application/json";
     var payload = new
@@ -190,30 +208,41 @@ static void ValidateRequiredSecrets(IConfiguration configuration)
     var connectionString = configuration.GetConnectionString("DefaultConnection");
     if (string.IsNullOrWhiteSpace(connectionString))
     {
-        errors.Add("ConnectionStrings:DefaultConnection is not set. Set it via the env var ConnectionStrings__DefaultConnection or appsettings.Development.json.");
+        errors.Add(
+            "ConnectionStrings:DefaultConnection is not set. Set it via the env var ConnectionStrings__DefaultConnection or appsettings.Development.json."
+        );
     }
 
     var jwtSecret = configuration["Jwt:SecretKey"];
     if (string.IsNullOrWhiteSpace(jwtSecret))
     {
-        errors.Add("Jwt:SecretKey is not set. Set it via the env var Jwt__SecretKey or appsettings.Development.json.");
+        errors.Add(
+            "Jwt:SecretKey is not set. Set it via the env var Jwt__SecretKey or appsettings.Development.json."
+        );
     }
     else if (jwtSecret.Length < 32)
     {
-        errors.Add($"Jwt:SecretKey is too short ({jwtSecret.Length} chars). Use at least 32 characters of random data; 64+ is recommended.");
+        errors.Add(
+            $"Jwt:SecretKey is too short ({jwtSecret.Length} chars). Use at least 32 characters of random data; 64+ is recommended."
+        );
     }
-    else if (jwtSecret.Contains("YourSuperSecret", StringComparison.OrdinalIgnoreCase)
-             || jwtSecret.Contains("REPLACE_WITH", StringComparison.OrdinalIgnoreCase)
-             || jwtSecret.Contains("CHANGE_ME", StringComparison.OrdinalIgnoreCase))
+    else if (
+        jwtSecret.Contains("YourSuperSecret", StringComparison.OrdinalIgnoreCase)
+        || jwtSecret.Contains("REPLACE_WITH", StringComparison.OrdinalIgnoreCase)
+        || jwtSecret.Contains("CHANGE_ME", StringComparison.OrdinalIgnoreCase)
+    )
     {
-        errors.Add("Jwt:SecretKey appears to be a placeholder. Generate a real random secret (e.g. `openssl rand -base64 64`).");
+        errors.Add(
+            "Jwt:SecretKey appears to be a placeholder. Generate a real random secret (e.g. `openssl rand -base64 64`)."
+        );
     }
 
     if (errors.Count > 0)
     {
-        var message = "Application cannot start due to missing or invalid configuration:\n  - "
-                      + string.Join("\n  - ", errors)
-                      + "\nSee SECURITY_SETUP.md for details.";
+        var message =
+            "Application cannot start due to missing or invalid configuration:\n  - "
+            + string.Join("\n  - ", errors)
+            + "\nSee SECURITY_SETUP.md for details.";
         throw new InvalidOperationException(message);
     }
 }

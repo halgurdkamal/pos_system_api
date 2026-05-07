@@ -38,14 +38,14 @@ public static class DrugSeedData
                 SuggestedRetailPrice = 25.50m,
                 Currency = "USD",
                 SuggestedTaxRate = 8.25m,
-                LastPriceUpdate = DateTime.Parse("2024-01-15T00:00:00Z")
+                LastPriceUpdate = DateTime.Parse("2024-01-15T00:00:00Z").ToUniversalTime()
             },
             Regulatory = new Regulatory
             {
                 IsPrescriptionRequired = true,
                 IsHighRisk = false,
                 DrugAuthorityNumber = "NDA020702",
-                ApprovalDate = DateTime.Parse("1996-12-17T00:00:00Z"),
+                ApprovalDate = DateTime.Parse("1996-12-17T00:00:00Z").ToUniversalTime(),
                 ControlSchedule = "Not Controlled"
             },
             PackagingInfo = new PackagingInfo(
@@ -54,7 +54,7 @@ public static class DrugSeedData
                 "Tablet",
                 isSubdivisible: true
             ),
-            CreatedAt = DateTime.Parse("2024-01-15T09:30:00Z"),
+            CreatedAt = DateTime.Parse("2024-01-15T09:30:00Z").ToUniversalTime(),
             CreatedBy = "system"
         };
         drugs.Add(lipitor);
@@ -88,14 +88,14 @@ public static class DrugSeedData
                 SuggestedRetailPrice = 8.99m,
                 Currency = "USD",
                 SuggestedTaxRate = 8.25m,
-                LastPriceUpdate = DateTime.Parse("2024-01-15T00:00:00Z")
+                LastPriceUpdate = DateTime.Parse("2024-01-15T00:00:00Z").ToUniversalTime()
             },
             Regulatory = new Regulatory
             {
                 IsPrescriptionRequired = false,
                 IsHighRisk = false,
                 DrugAuthorityNumber = "NDA020429",
-                ApprovalDate = DateTime.Parse("1974-01-01T00:00:00Z"),
+                ApprovalDate = DateTime.Parse("1974-01-01T00:00:00Z").ToUniversalTime(),
                 ControlSchedule = "Not Controlled"
             },
             PackagingInfo = new PackagingInfo(
@@ -104,7 +104,7 @@ public static class DrugSeedData
                 "Tablet",
                 isSubdivisible: true
             ),
-            CreatedAt = DateTime.Parse("2024-01-15T09:30:00Z"),
+            CreatedAt = DateTime.Parse("2024-01-15T09:30:00Z").ToUniversalTime(),
             CreatedBy = "system"
         };
         drugs.Add(ibuprofen);
@@ -138,14 +138,14 @@ public static class DrugSeedData
                 SuggestedRetailPrice = 45.00m,
                 Currency = "USD",
                 SuggestedTaxRate = 8.25m,
-                LastPriceUpdate = DateTime.Parse("2024-01-15T00:00:00Z")
+                LastPriceUpdate = DateTime.Parse("2024-01-15T00:00:00Z").ToUniversalTime()
             },
             Regulatory = new Regulatory
             {
                 IsPrescriptionRequired = true,
                 IsHighRisk = false,
                 DrugAuthorityNumber = "NDA020983",
-                ApprovalDate = DateTime.Parse("1981-01-01T00:00:00Z"),
+                ApprovalDate = DateTime.Parse("1981-01-01T00:00:00Z").ToUniversalTime(),
                 ControlSchedule = "Not Controlled"
             },
             PackagingInfo = new PackagingInfo(
@@ -154,7 +154,7 @@ public static class DrugSeedData
                 "Inhaler",
                 isSubdivisible: false
             ),
-            CreatedAt = DateTime.Parse("2024-01-15T09:30:00Z"),
+            CreatedAt = DateTime.Parse("2024-01-15T09:30:00Z").ToUniversalTime(),
             CreatedBy = "system"
         };
         drugs.Add(albuterol);
@@ -188,14 +188,14 @@ public static class DrugSeedData
                 SuggestedRetailPrice = 12.50m,
                 Currency = "USD",
                 SuggestedTaxRate = 8.25m,
-                LastPriceUpdate = DateTime.Parse("2024-01-15T00:00:00Z")
+                LastPriceUpdate = DateTime.Parse("2024-01-15T00:00:00Z").ToUniversalTime()
             },
             Regulatory = new Regulatory
             {
                 IsPrescriptionRequired = true,
                 IsHighRisk = false,
                 DrugAuthorityNumber = "NDA021202",
-                ApprovalDate = DateTime.Parse("1995-01-01T00:00:00Z"),
+                ApprovalDate = DateTime.Parse("1995-01-01T00:00:00Z").ToUniversalTime(),
                 ControlSchedule = "Not Controlled"
             },
             PackagingInfo = new PackagingInfo(
@@ -204,7 +204,7 @@ public static class DrugSeedData
                 "Tablet",
                 isSubdivisible: true
             ),
-            CreatedAt = DateTime.Parse("2024-01-15T09:30:00Z"),
+            CreatedAt = DateTime.Parse("2024-01-15T09:30:00Z").ToUniversalTime(),
             CreatedBy = "system"
         };
         drugs.Add(metformin);

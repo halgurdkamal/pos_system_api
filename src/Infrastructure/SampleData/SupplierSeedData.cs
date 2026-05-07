@@ -38,7 +38,7 @@ public static class SupplierSeedData
             Website = "https://globalpharma.com",
             TaxId = "TAX-MA-001",
             LicenseNumber = "MFG-2024-001",
-            CreatedAt = DateTime.Parse("2025-10-29T17:31:48.299341Z"),
+            CreatedAt = DateTime.Parse("2025-10-29T17:31:48.299341Z").ToUniversalTime(),
             CreatedBy = "system"
         };
         SetSupplierId(supplier1, "SUP-3F4F4A55");
@@ -65,7 +65,7 @@ public static class SupplierSeedData
             Website = "https://meddistro.com",
             TaxId = "TAX-GA-002",
             LicenseNumber = "DIST-2024-002",
-            CreatedAt = DateTime.Parse("2025-10-29T17:31:48.299425Z"),
+            CreatedAt = DateTime.Parse("2025-10-29T17:31:48.299425Z").ToUniversalTime(),
             CreatedBy = "system"
         };
         SetSupplierId(supplier2, "SUP-2507C9E8");
@@ -92,7 +92,7 @@ public static class SupplierSeedData
             Website = null,
             TaxId = null,
             LicenseNumber = null,
-            CreatedAt = DateTime.Parse("2025-10-29T17:31:48.299433Z"),
+            CreatedAt = DateTime.Parse("2025-10-29T17:31:48.299433Z").ToUniversalTime(),
             CreatedBy = "system"
         };
         SetSupplierId(supplier3, "SUP-ACCFB43C");
@@ -119,7 +119,7 @@ public static class SupplierSeedData
             Website = "https://pharmalink.com",
             TaxId = "TAX-FL-004",
             LicenseNumber = null,
-            CreatedAt = DateTime.Parse("2025-10-29T17:31:48.299427Z"),
+            CreatedAt = DateTime.Parse("2025-10-29T17:31:48.299427Z").ToUniversalTime(),
             CreatedBy = "system"
         };
         SetSupplierId(supplier4, "SUP-32380A98");
@@ -146,7 +146,7 @@ public static class SupplierSeedData
             Website = "https://quickmed.com",
             TaxId = "TAX-TX-003",
             LicenseNumber = "WHSL-2024-003",
-            CreatedAt = DateTime.Parse("2025-10-29T17:31:48.299426Z"),
+            CreatedAt = DateTime.Parse("2025-10-29T17:31:48.299426Z").ToUniversalTime(),
             CreatedBy = "system"
         };
         SetSupplierId(supplier5, "SUP-C24100F0");

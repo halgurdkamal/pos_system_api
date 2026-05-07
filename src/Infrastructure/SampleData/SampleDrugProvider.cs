@@ -78,13 +78,13 @@ public static class SampleDrugProvider
                 IsPrescriptionRequired = true,
                 IsHighRisk = false,
                 DrugAuthorityNumber = "NDA018274",
-                ApprovalDate = DateTime.Parse("1981-09-30T00:00:00Z"),
+                ApprovalDate = DateTime.Parse("1981-09-30T00:00:00Z").ToUniversalTime(),
                 ControlSchedule = "Schedule IV"
             },
             // NOTE: Inventory, pricing, and supplier info are now managed per-shop in ShopInventory
-            CreatedAt = DateTime.Parse("2024-01-15T09:30:00Z"),
+            CreatedAt = DateTime.Parse("2024-01-15T09:30:00Z").ToUniversalTime(),
             CreatedBy = "admin_user",
-            LastUpdated = DateTime.Parse("2025-07-12T14:45:10Z"),
+            LastUpdated = DateTime.Parse("2025-07-12T14:45:10Z").ToUniversalTime(),
             UpdatedBy = "inventory_manager"
         };
     }

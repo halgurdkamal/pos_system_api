@@ -16,7 +16,7 @@ public static class CategorySeedData
                 ColorCode = "#FF6B6B",
                 DisplayOrder = 1,
                 IsActive = true,
-                CreatedAt = DateTime.Parse("2025-10-29T21:14:16.945946Z"),
+                CreatedAt = DateTime.Parse("2025-10-29T21:14:16.945946Z").ToUniversalTime(),
                 CreatedBy = "system"
             },
             new Category("Pain Relief",
@@ -27,7 +27,7 @@ public static class CategorySeedData
                 ColorCode = "#4ECDC4",
                 DisplayOrder = 2,
                 IsActive = true,
-                CreatedAt = DateTime.Parse("2025-10-29T21:16:59.762209Z"),
+                CreatedAt = DateTime.Parse("2025-10-29T21:16:59.762209Z").ToUniversalTime(),
                 CreatedBy = "system"
             },
             new Category("Respiratory",
@@ -38,7 +38,7 @@ public static class CategorySeedData
                 ColorCode = "#45B7D1",
                 DisplayOrder = 3,
                 IsActive = true,
-                CreatedAt = DateTime.Parse("2025-10-29T21:18:17.264338Z"),
+                CreatedAt = DateTime.Parse("2025-10-29T21:18:17.264338Z").ToUniversalTime(),
                 CreatedBy = "system"
             },
             new Category("Diabetes",
@@ -49,7 +49,7 @@ public static class CategorySeedData
                 ColorCode = "#FFEAA7",
                 DisplayOrder = 5,
                 IsActive = true,
-                CreatedAt = DateTime.Parse("2025-10-29T21:19:50.388372Z"),
+                CreatedAt = DateTime.Parse("2025-10-29T21:19:50.388372Z").ToUniversalTime(),
                 CreatedBy = "system"
             }
         };
