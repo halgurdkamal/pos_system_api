@@ -189,6 +189,7 @@ public class ShopsController : BaseApiController
     /// <param name="dto">Updated receipt configuration</param>
     /// <returns>Updated shop details</returns>
     [HttpPut("{id}/receipt-config")]
+    [Authorize(Policy = "ShopOwnerOrAdmin")]
     [ProducesResponseType(typeof(ShopDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ShopDto>> UpdateReceiptConfig(string id, [FromBody] UpdateReceiptConfigDto dto)
@@ -212,6 +213,7 @@ public class ShopsController : BaseApiController
     /// <param name="dto">Updated hardware configuration</param>
     /// <returns>Updated shop details</returns>
     [HttpPut("{id}/hardware-config")]
+    [Authorize(Policy = "ShopOwnerOrAdmin")]
     [ProducesResponseType(typeof(ShopDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ShopDto>> UpdateHardwareConfig(string id, [FromBody] UpdateHardwareConfigDto dto)
