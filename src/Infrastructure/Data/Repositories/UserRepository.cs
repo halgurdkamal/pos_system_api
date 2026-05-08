@@ -79,6 +79,22 @@ public class UserRepository : IUserRepository
         return user;
     }
 
+    public Task UpdateLoginInfoAsync(User user, CancellationToken cancellationToken = default)
+    {
+        // Attach as Unchanged then mark only the login columns Modified, so EF
+        // doesn't re-attach the ShopMemberships/Shop graph (which was loaded
+        // AsNoTracking) and accidentally try to save those too.
+        _context.Users.Attach(user);
+        var entry = _context.Entry(user);
+        entry.Property(u => u.LastLoginAt).IsModified = true;
+        entry.Property(u => u.FailedLoginAttempts).IsModified = true;
+        entry.Property(u => u.LockedUntil).IsModified = true;
+        entry.Property(u => u.LastUpdated).IsModified = true;
+        entry.Property(u => u.RefreshToken).IsModified = true;
+        entry.Property(u => u.RefreshTokenExpiryTime).IsModified = true;
+        return Task.CompletedTask;
+    }
+
     public async Task<bool> ExistsAsync(string username, string email, CancellationToken cancellationToken = default)
     {
         return await _context.Users

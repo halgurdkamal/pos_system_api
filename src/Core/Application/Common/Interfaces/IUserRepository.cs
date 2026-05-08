@@ -14,5 +14,14 @@ public interface IUserRepository
     Task<User?> GetByIdentifierAsync(string identifier, CancellationToken cancellationToken = default);
     Task<User> CreateAsync(User user, CancellationToken cancellationToken = default);
     Task<User> UpdateAsync(User user, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Persist only the User's login-related columns (LastLoginAt,
+    /// FailedLoginAttempts, LockedUntil, LastUpdated, RefreshToken,
+    /// RefreshTokenExpiryTime). Avoids re-attaching the ShopMemberships
+    /// graph that was loaded with AsNoTracking.
+    /// </summary>
+    Task UpdateLoginInfoAsync(User user, CancellationToken cancellationToken = default);
+
     Task<bool> ExistsAsync(string username, string email, CancellationToken cancellationToken = default);
 }

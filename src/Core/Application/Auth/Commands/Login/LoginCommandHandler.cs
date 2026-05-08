@@ -73,9 +73,11 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, TokenResponseDt
         var refreshTokenExpiryDays = int.Parse(_configuration["Jwt:RefreshTokenExpirationDays"] ?? "7");
         var refreshTokenExpiry = DateTime.UtcNow.AddDays(refreshTokenExpiryDays);
 
-        // Update user with refresh token
+        // Persist only the login-related columns. Calling the generic UpdateAsync
+        // here re-attached the entire ShopMemberships graph (loaded AsNoTracking)
+        // and SaveChanges did not consistently flush LastLoginAt — see Q-12.
         user.UpdateRefreshToken(refreshToken, refreshTokenExpiry);
-        await _userRepository.UpdateAsync(user, cancellationToken);
+        await _userRepository.UpdateLoginInfoAsync(user, cancellationToken);
 
         // Get access token expiry from config
         var accessTokenExpiryMinutes = int.Parse(_configuration["Jwt:AccessTokenExpirationMinutes"] ?? "60");
