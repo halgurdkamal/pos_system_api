@@ -29,13 +29,16 @@ public class GenerateReceiptPdfQueryHandler
         GenerateReceiptPdfQuery request,
         CancellationToken cancellationToken)
     {
+        var identifier = request.OrderIdentifier;
         var order = await _context.SalesOrders
             .Include(o => o.Items)
-            .FirstOrDefaultAsync(o => o.OrderNumber == request.OrderNumber, cancellationToken);
+            .FirstOrDefaultAsync(
+                o => o.Id == identifier || o.OrderNumber == identifier,
+                cancellationToken);
 
         if (order == null)
         {
-            _logger.LogInformation("Receipt requested for unknown order {OrderNumber}", request.OrderNumber);
+            _logger.LogInformation("Receipt requested for unknown order {OrderIdentifier}", identifier);
             return null;
         }
 
@@ -46,7 +49,7 @@ public class GenerateReceiptPdfQueryHandler
         {
             _logger.LogWarning(
                 "Order {OrderNumber} references shop {ShopId} which no longer exists",
-                request.OrderNumber, order.ShopId);
+                order.OrderNumber, order.ShopId);
             return null;
         }
 
@@ -95,7 +98,7 @@ public class GenerateReceiptPdfQueryHandler
         };
 
         var pdfBytes = await _pdfService.GenerateReceiptPdfAsync(receiptDto);
-        var fileName = $"Receipt_{request.OrderNumber}_{DateTime.UtcNow:yyyyMMddHHmmss}.pdf";
+        var fileName = $"Receipt_{order.OrderNumber}_{DateTime.UtcNow:yyyyMMddHHmmss}.pdf";
 
         return new GenerateReceiptPdfResult(pdfBytes, fileName);
     }

@@ -27,7 +27,7 @@ public class PdfController : BaseApiController
     /// <summary>
     /// Generate receipt PDF for an order
     /// </summary>
-    /// <param name="orderId">Order number (e.g., SO-20251105213131-5798)</param>
+    /// <param name="orderId">Order identifier - either the order Id (GUID) or OrderNumber (e.g., SO-20251105213131-5798)</param>
     /// <param name="language">Language code: en-US or ar (default: shop config or en-US)</param>
     /// <param name="paperType">Paper type: A4, A5, Thermal80mm, Thermal58mm (default: shop config or A5)</param>
     /// <returns>PDF file</returns>
