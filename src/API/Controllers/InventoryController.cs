@@ -101,7 +101,8 @@ public class InventoryController : BaseApiController
             dto.ExpiryDate,
             dto.PurchasePrice,
             dto.SellingPrice,
-            dto.StorageLocation), cancellationToken);
+            dto.StorageLocation,
+            dto.ReorderPoint), cancellationToken);
 
         return CreatedAtAction(nameof(GetShopInventory), new { shopId = result.ShopId }, result);
     }

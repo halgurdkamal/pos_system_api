@@ -13,4 +13,5 @@ public class AddStockDto
     public decimal PurchasePrice { get; set; }
     public decimal SellingPrice { get; set; }
     public string StorageLocation { get; set; } = string.Empty;
+    public int? ReorderPoint { get; set; }
 }
