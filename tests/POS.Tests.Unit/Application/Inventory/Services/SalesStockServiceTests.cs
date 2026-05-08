@@ -66,6 +66,29 @@ public class SalesStockServiceTests
     }
 
     [Fact]
+    public async Task DeductForSale_Throws_WhenStockIsInsufficient()
+    {
+        // F-8: refuse the payment when the requested quantity exceeds what's on
+        // hand. ShopInventory.ReduceStock silently caps at zero, so without this
+        // guard the customer would be charged for goods we don't have.
+        var inv = InventoryWith(batchQuantity: 2);
+        var repo = new FakeInventoryRepository(inv);
+        var service = new SalesStockService(repo, NullLogger<SalesStockService>.Instance);
+
+        var order = new SalesOrder(ShopId, "cashier-1");
+        order.AddItem(DrugId, quantity: 1, unitPrice: 12m, packagingLevelSold: "Pack", baseUnitsConsumed: 5);
+
+        var act = async () => await service.DeductForSaleAsync(order);
+
+        await act.Should().ThrowAsync<InvalidOperationException>()
+            .WithMessage($"*available 2*requested 5*");
+
+        // No partial deduction must have leaked through to the repo.
+        repo.UpdateCount.Should().Be(0);
+        inv.TotalStock.Should().Be(2, "the throw must abort before any batch is touched");
+    }
+
+    [Fact]
     public async Task DeductForSale_LogsAndContinues_WhenInventoryMissing()
     {
         // Cashier sells a drug that hasn't been onboarded into ShopInventory yet:

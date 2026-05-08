@@ -47,6 +47,19 @@ public class SalesStockService : ISalesStockService
             }
 
             var unitsToDeduct = ResolveBaseUnits(item);
+
+            // F-8: refuse the payment outright when stock is insufficient. The
+            // domain ReduceStock silently caps at zero, which used to mean a
+            // payment succeeded with the customer charged for goods that didn't
+            // exist. The surrounding Q-6 transaction rolls back the order status
+            // flip on this throw, so the order stays Confirmed.
+            if (inventory.TotalStock < unitsToDeduct)
+            {
+                throw new InvalidOperationException(
+                    $"Insufficient stock for drug {item.DrugId} in shop {order.ShopId}: " +
+                    $"available {inventory.TotalStock}, requested {unitsToDeduct}.");
+            }
+
             var perBatch = inventory.ReduceStock(unitsToDeduct);
             item.RecordBatchDeductions(perBatch.Select(d =>
                 new SalesOrderItemBatchDeduction(d.BatchNumber, d.Quantity)));
