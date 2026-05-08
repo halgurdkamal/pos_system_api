@@ -39,6 +39,28 @@ public class GetCashierItemByBarcodeQueryHandlerTests
     }
 
     [Fact]
+    public async Task Handle_FallsBackToRawGuid_WhenInventoryWasKeyedByDrugIdGuid()
+    {
+        // F-7 regression: PO /receive paths used to write ShopInventory.DrugId =
+        // drug.Id (the GUID PK) instead of drug.DrugId (the prefixed friendly id).
+        // The handler must try both forms or stocked drugs 404 at the till.
+        var drug = NewDrug();
+        var inventoryKeyedByGuid = NewInventory(drugId: drug.Id, batchQty: 25);
+
+        var inventoryRepo = new FakeInventoryRepository(inventoryKeyedByGuid);
+        var handler = new GetCashierItemByBarcodeQueryHandler(
+            inventoryRepo,
+            new FakeDrugRepository(drug),
+            new FakeCategoryRepository(new Category("Antibiotics", categoryId: "CAT-1")));
+
+        var result = await handler.Handle(new GetCashierItemByBarcodeQuery(ShopId, Barcode), CancellationToken.None);
+
+        result.Should().NotBeNull();
+        result!.AvailableStock.Should().Be(25);
+        inventoryRepo.LastDrugIdQueried.Should().Be(drug.Id, "the fallback path queries by raw GUID");
+    }
+
+    [Fact]
     public async Task Handle_DrugNotFound_ReturnsNull()
     {
         var inventoryRepo = new FakeInventoryRepository();

@@ -51,7 +51,7 @@ Cashier scans a barcode; UI calls:
 GET /api/inventory/shops/SHOP-AB12CD34/pos-items/by-barcode/8901234567890
 ```
 
-> ⚠ This endpoint currently 404s for stocked drugs whose only batches are still in `Storage` (i.e. before any `move-to-floor`). See [`99-known-gaps.md#f-7`](./99-known-gaps.md#f-7-get-apiinventoryshopsshopidpos-itemsby-barcodebarcode-404s-for-stocked-drugs). If your scan flow returns 404 unexpectedly, fall back to `GET /api/barcodes/search?barcode=…` to resolve the drug, then `GET /api/inventory/shops/{shopId}` to read price + stock.
+The handler resolves the inventory join against either `drug.DrugId` (the prefixed friendly id, written by AddStock and CreateDrug) or `drug.Id` (the raw GUID PK, written by some PO `/receive` paths) — F-7 closed in this session.
 
 Returns a slim DTO with what the till needs:
 

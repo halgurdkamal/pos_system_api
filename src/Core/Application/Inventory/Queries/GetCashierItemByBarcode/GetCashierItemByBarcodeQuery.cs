@@ -34,13 +34,22 @@ public class GetCashierItemByBarcodeQueryHandler : IRequestHandler<GetCashierIte
             return null;
         }
 
-        // Get inventory for this drug in the shop. ShopInventory.DrugId stores the
-        // user-facing prefixed ID ("DRG-XXXXXXXX") that AddStock and CreateDrug both
-        // populate; drug.Id is the raw GUID primary key, which never matches.
+        // ShopInventory.DrugId stores either the prefixed friendly id
+        // ("DRG-XXXXXXXX", from AddStock/CreateDrug) or the raw GUID primary key
+        // (from PO /receive paths). Try both, matching the listing endpoint's
+        // dual-key behaviour (see GetCashierItemsQuery.BuildDrugDictionary).
         var shopInventory = await _inventoryRepository.GetByShopAndDrugAsync(
             request.ShopId,
             drug.DrugId,
             cancellationToken);
+
+        if (shopInventory == null && !string.Equals(drug.Id, drug.DrugId, StringComparison.Ordinal))
+        {
+            shopInventory = await _inventoryRepository.GetByShopAndDrugAsync(
+                request.ShopId,
+                drug.Id,
+                cancellationToken);
+        }
 
         if (shopInventory == null || shopInventory.TotalStock <= 0)
         {

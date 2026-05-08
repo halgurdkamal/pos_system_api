@@ -32,6 +32,7 @@ These were live gaps in earlier revisions of this guide. The fixes have landed o
 | **Q-12** | Successful login now persists `LastLoginAt` via a focused `UpdateLoginInfoAsync` that doesn't re-attach the `ShopMemberships` graph. `GET /api/auth/me` reflects the timestamp on the very next call. | `a0414ec` |
 | **Q-14** | `POST /api/shops/create-own` returns `role: "Owner"` (not `"Custom"`). The fix removes an EF Core `HasDefaultValue(ShopRole.Custom)` collision with `Owner = 0` (CLR default for `int`) and routes role assignment through `SetRole(ShopRole.Owner)` for canonical permissions. | `ce2c1d5` |
 | **Q-15** | `POST /api/inventory/shops/{shopId}/stock` accepts `reorderPoint` on the wire (it was missing from `AddStockDto`). The first-create path honours the supplied value. | `ba3e4d7` |
+| **F-7** | `GET /api/inventory/shops/{shopId}/pos-items/by-barcode/{barcode}` now resolves the inventory join against either `drug.DrugId` (prefixed, from AddStock/CreateDrug) or `drug.Id` (raw GUID PK, from PO `/receive` paths) — matching the listing endpoint's dual-key behaviour. | (this session) |
 
 ---
 
@@ -60,20 +61,6 @@ These were live gaps in earlier revisions of this guide. The fixes have landed o
 **Status**: `RefundSalesOrderCommandHandler` calls `ISalesStockService.RestoreForReversalAsync(...)` after flipping status to `Refunded`. The cancel handler does the inverse for paid orders. The historical "refund leaves stock decremented" gap is closed.
 
 **Edge**: same single-transaction caveat as F-2 — order status flips before the stock restore. A transient failure in between leaves the two out of sync. No workaround needed under normal conditions; fix in lockstep with F-2.
-
-### F-7. `GET /api/inventory/shops/{shopId}/pos-items/by-barcode/{barcode}` 404s for stocked drugs
-
-**Affected**: `GET /api/inventory/shops/{shopId}/pos-items/by-barcode/{barcode}`.
-
-**Symptom (observed)**: a drug with a stored barcode and an active stock batch in the target shop returns `404 Item with barcode '…' not found or out of stock in this shop` from this endpoint, even though the barcode **does** match the drug and the inventory listing endpoint shows positive stock for the same `(shopId, drugId)`.
-
-**Impact**: the till's barcode-scan flow described in [06 — Cashier](./06-cashier-pos-checkout.md) Step 0 cannot resolve scans. Cashiers must look the drug up by name or `drugId` instead.
-
-**Workaround**: combine `GET /api/barcodes/search?barcode=…` (resolves barcode → drug) with `GET /api/inventory/shops/{shopId}` (filter to that drug for stock + price) until the handler is corrected.
-
-**Fix when ready**: investigate the join — likely either case-/whitespace-sensitive barcode comparison or a filter that excludes batches whose `Location` is `Storage` (i.e. before any `move-to-floor`).
-
----
 
 ## Behavioural quirks
 
@@ -160,7 +147,6 @@ If you're building a client:
 
 If you're maintaining the API:
 - **Wrap payment / refund / cancel + stock writes in a single UoW transaction** (closes the F-2 / F-3 transaction edge).
-- **F-7 (barcode lookup 404)** still needs investigation — likely a join filter on `Location == Storage` or barcode normalisation.
 - **Q-6 (`/reduce` row lock)** is a real correctness bug despite the "quirk" classification — concurrent last-unit sales can drive stock negative.
 - **The behavioural quirks are *documented behaviour* now.** Fixing them is a breaking change — coordinate with API consumers.
 
