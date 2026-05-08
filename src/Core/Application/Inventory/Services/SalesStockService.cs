@@ -8,19 +8,21 @@ namespace pos_system_api.Core.Application.Inventory.Services;
 public class SalesStockService : ISalesStockService
 {
     private readonly IInventoryRepository _inventoryRepository;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<SalesStockService> _logger;
 
     public SalesStockService(
         IInventoryRepository inventoryRepository,
-        IUnitOfWork unitOfWork,
         ILogger<SalesStockService> logger)
     {
         _inventoryRepository = inventoryRepository;
-        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
+    // F-2/F-3: this service only stages changes via IInventoryRepository.UpdateAsync;
+    // the calling command handler commits with a single SaveChangesAsync, so the
+    // order status flip and the per-batch inventory mutations land in one EF-managed
+    // transaction. Do NOT call SaveChangesAsync from here — a second commit would
+    // either be a no-op or, worse, split the writes if a handler rearranged its calls.
     public async Task DeductForSaleAsync(SalesOrder order, CancellationToken cancellationToken = default)
     {
         if (order.Items.Count == 0)
@@ -54,8 +56,6 @@ public class SalesStockService : ISalesStockService
                 "Deducted {BaseUnits} base units of {DrugId} for order {OrderNumber} (shop {ShopId}) across {BatchCount} batch(es); remaining stock {Remaining}",
                 unitsToDeduct, item.DrugId, order.OrderNumber, order.ShopId, perBatch.Count, inventory.TotalStock);
         }
-
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     public async Task RestoreForReversalAsync(SalesOrder order, CancellationToken cancellationToken = default)
@@ -100,8 +100,6 @@ public class SalesStockService : ISalesStockService
                 "Restored {BaseUnits} base units of {DrugId} for reversal of order {OrderNumber} (shop {ShopId}); new stock {Stock}",
                 unitsToRestore, item.DrugId, order.OrderNumber, order.ShopId, inventory.TotalStock);
         }
-
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     // BaseUnitsConsumed is the authoritative deduction unit (a sale of "1 Box" of 100

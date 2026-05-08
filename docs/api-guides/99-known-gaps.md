@@ -33,6 +33,7 @@ These were live gaps in earlier revisions of this guide. The fixes have landed o
 | **Q-14** | `POST /api/shops/create-own` returns `role: "Owner"` (not `"Custom"`). The fix removes an EF Core `HasDefaultValue(ShopRole.Custom)` collision with `Owner = 0` (CLR default for `int`) and routes role assignment through `SetRole(ShopRole.Owner)` for canonical permissions. | `ce2c1d5` |
 | **Q-15** | `POST /api/inventory/shops/{shopId}/stock` accepts `reorderPoint` on the wire (it was missing from `AddStockDto`). The first-create path honours the supplied value. | `ba3e4d7` |
 | **F-7** | `GET /api/inventory/shops/{shopId}/pos-items/by-barcode/{barcode}` now resolves the inventory join against either `drug.DrugId` (prefixed, from AddStock/CreateDrug) or `drug.Id` (raw GUID PK, from PO `/receive` paths) — matching the listing endpoint's dual-key behaviour. | (this session) |
+| **F-2 / F-3** | Sales `/payment`, `/refund`, and `/cancel` now make their order-status flip and the per-batch inventory writes atomic. `SalesStockService` no longer calls `SaveChangesAsync`; the handler commits once at the end and EF wraps it in a single transaction. The misleading "transactional outbox" comment in `ProcessPaymentCommandHandler` was stale and is gone. | (this session) |
 
 ---
 
@@ -44,23 +45,7 @@ These were live gaps in earlier revisions of this guide. The fixes have landed o
 
 ## Functional TODOs
 
-### F-2. Sales `/payment` deduction is not transactional with the status flip
-
-**Affected**: `POST /api/salesorders/{id}/payment`.
-
-**Status**: deduction is wired up — `ProcessPaymentCommandHandler` calls `ISalesStockService.DeductForSaleAsync(...)` immediately after flipping status `Confirmed → Paid`. The historical "complete doesn't deduct" gap is closed.
-
-**Edge**: if `/payment` succeeds in flipping the order's status but the subsequent inventory call fails (e.g. transient DB error), the order is `Paid` while inventory still reads the old level. The two writes are not yet wrapped in a single DB transaction. Until they are, surface payment failures explicitly in the till and add a reconciliation script.
-
-**Fix when ready**: wrap status flip + `DeductForSaleAsync` in a UoW transaction (`IUnitOfWork` already exists per commit `35bc6a8`).
-
-### F-3. Refund / cancel restoration shares F-2's transaction edge
-
-**Affected**: `POST /api/salesorders/{id}/refund`, `POST /api/salesorders/{id}/cancel` (when cancelling a `Paid` order).
-
-**Status**: `RefundSalesOrderCommandHandler` calls `ISalesStockService.RestoreForReversalAsync(...)` after flipping status to `Refunded`. The cancel handler does the inverse for paid orders. The historical "refund leaves stock decremented" gap is closed.
-
-**Edge**: same single-transaction caveat as F-2 — order status flips before the stock restore. A transient failure in between leaves the two out of sync. No workaround needed under normal conditions; fix in lockstep with F-2.
+*(none open at the moment — see the **Recently closed** table above)*
 
 ## Behavioural quirks
 
@@ -146,7 +131,6 @@ If you're building a client:
 - **Plan around the missing features** above — they may need separate tickets.
 
 If you're maintaining the API:
-- **Wrap payment / refund / cancel + stock writes in a single UoW transaction** (closes the F-2 / F-3 transaction edge).
 - **Q-6 (`/reduce` row lock)** is a real correctness bug despite the "quirk" classification — concurrent last-unit sales can drive stock negative.
 - **The behavioural quirks are *documented behaviour* now.** Fixing them is a breaking change — coordinate with API consumers.
 

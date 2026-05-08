@@ -51,10 +51,9 @@ public class ProcessPaymentCommandHandler : IRequestHandler<ProcessPaymentComman
 
         await _repository.UpdateAsync(salesOrder, cancellationToken);
 
-        // Deduct from ShopInventory in the same logical transaction.
-        // (No explicit DB transaction yet; if this fails after the order save, the
-        // order is Paid but inventory wasn't decremented. Wrap in a unit-of-work
-        // when transactional outboxes are added.)
+        // Stage the inventory deductions; the service does NOT commit. The single
+        // SaveChangesAsync below persists the order status flip and every per-batch
+        // inventory write together inside EF's implicit transaction — F-2 closed.
         await _salesStockService.DeductForSaleAsync(salesOrder, cancellationToken);
 
         _logger.LogInformation("Payment processed for order {OrderNumber}: {PaymentMethod} - {AmountPaid:C}",

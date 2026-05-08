@@ -19,8 +19,7 @@ public class SalesStockServiceTests
         // implementation deducted 1; we want 100.
         var inv = InventoryWith(batchQuantity: 150);
         var repo = new FakeInventoryRepository(inv);
-        var uow = new FakeUnitOfWork();
-        var service = new SalesStockService(repo, uow, NullLogger<SalesStockService>.Instance);
+        var service = new SalesStockService(repo, NullLogger<SalesStockService>.Instance);
 
         var order = new SalesOrder(ShopId, "cashier-1");
         order.AddItem(DrugId, quantity: 1, unitPrice: 12m, packagingLevelSold: "Box", baseUnitsConsumed: 100);
@@ -29,7 +28,6 @@ public class SalesStockServiceTests
 
         inv.TotalStock.Should().Be(50);
         repo.UpdateCount.Should().Be(1);
-        uow.SaveChangesCount.Should().Be(1);
     }
 
     [Fact]
@@ -39,7 +37,7 @@ public class SalesStockServiceTests
         // Falling back to Quantity preserves what those orders were paid against.
         var inv = InventoryWith(batchQuantity: 50);
         var repo = new FakeInventoryRepository(inv);
-        var service = new SalesStockService(repo, new FakeUnitOfWork(), NullLogger<SalesStockService>.Instance);
+        var service = new SalesStockService(repo, NullLogger<SalesStockService>.Instance);
 
         var order = new SalesOrder(ShopId, "cashier-1");
         order.AddItem(DrugId, quantity: 3, unitPrice: 5m, baseUnitsConsumed: 0);
@@ -57,7 +55,7 @@ public class SalesStockServiceTests
         // belt-and-braces guard for legacy data or direct domain construction.
         var inv = InventoryWith(batchQuantity: 200);
         var repo = new FakeInventoryRepository(inv);
-        var service = new SalesStockService(repo, new FakeUnitOfWork(), NullLogger<SalesStockService>.Instance);
+        var service = new SalesStockService(repo, NullLogger<SalesStockService>.Instance);
 
         var order = new SalesOrder(ShopId, "cashier-1");
         order.AddItem(DrugId, quantity: 1, unitPrice: 10m, baseUnitsConsumed: 100.5m);
@@ -74,8 +72,7 @@ public class SalesStockServiceTests
         // payment must still succeed (we don't block at the till) but stock isn't
         // adjusted and a warning is logged.
         var repo = new FakeInventoryRepository(); // empty
-        var uow = new FakeUnitOfWork();
-        var service = new SalesStockService(repo, uow, NullLogger<SalesStockService>.Instance);
+        var service = new SalesStockService(repo, NullLogger<SalesStockService>.Instance);
 
         var order = new SalesOrder(ShopId, "cashier-1");
         order.AddItem(DrugId, quantity: 1, unitPrice: 5m, baseUnitsConsumed: 10);
@@ -83,21 +80,21 @@ public class SalesStockServiceTests
         await service.DeductForSaleAsync(order);
 
         repo.UpdateCount.Should().Be(0);
-        uow.SaveChangesCount.Should().Be(1); // SaveChanges still called even when nothing was updated
     }
 
     [Fact]
-    public async Task DeductForSale_NoItems_ShortCircuits_NoSaveChanges()
+    public async Task DeductForSale_NoItems_ShortCircuits_DoesNotTouchRepo()
     {
+        // F-2/F-3: the service stages changes only; the calling handler commits.
+        // With an empty order, nothing is staged.
         var repo = new FakeInventoryRepository();
-        var uow = new FakeUnitOfWork();
-        var service = new SalesStockService(repo, uow, NullLogger<SalesStockService>.Instance);
+        var service = new SalesStockService(repo, NullLogger<SalesStockService>.Instance);
 
         var order = new SalesOrder(ShopId, "cashier-1");
 
         await service.DeductForSaleAsync(order);
 
-        uow.SaveChangesCount.Should().Be(0);
+        repo.UpdateCount.Should().Be(0);
     }
 
     [Fact]
@@ -107,7 +104,7 @@ public class SalesStockServiceTests
         // not 1.
         var inv = InventoryWith(batchQuantity: 50);
         var repo = new FakeInventoryRepository(inv);
-        var service = new SalesStockService(repo, new FakeUnitOfWork(), NullLogger<SalesStockService>.Instance);
+        var service = new SalesStockService(repo, NullLogger<SalesStockService>.Instance);
 
         var order = new SalesOrder(ShopId, "cashier-1");
         order.AddItem(DrugId, quantity: 1, unitPrice: 12m, batchNumber: "B1", packagingLevelSold: "Box", baseUnitsConsumed: 100);
@@ -122,7 +119,7 @@ public class SalesStockServiceTests
     {
         var inv = InventoryWith(batchQuantity: 10);
         var repo = new FakeInventoryRepository(inv);
-        var service = new SalesStockService(repo, new FakeUnitOfWork(), NullLogger<SalesStockService>.Instance);
+        var service = new SalesStockService(repo, NullLogger<SalesStockService>.Instance);
 
         var order = new SalesOrder(ShopId, "cashier-1");
         order.AddItem(DrugId, quantity: 4, unitPrice: 5m, batchNumber: "B1", baseUnitsConsumed: 0);
@@ -139,7 +136,7 @@ public class SalesStockServiceTests
         // /refund or /cancel can credit the same batch back.
         var inv = NewInventoryWithBatches(("B-OLD", 30, -30), ("B-NEW", 100, -1));
         var repo = new FakeInventoryRepository(inv);
-        var service = new SalesStockService(repo, new FakeUnitOfWork(), NullLogger<SalesStockService>.Instance);
+        var service = new SalesStockService(repo, NullLogger<SalesStockService>.Instance);
 
         var order = new SalesOrder(ShopId, "cashier-1");
         order.AddItem(DrugId, quantity: 1, unitPrice: 12m, packagingLevelSold: "Pack", baseUnitsConsumed: 50);
@@ -163,7 +160,7 @@ public class SalesStockServiceTests
         // BatchNumber field is null/different.
         var inv = NewInventoryWithBatches(("B-OLD", 28, -30), ("B-NEW", 100, -1));
         var repo = new FakeInventoryRepository(inv);
-        var service = new SalesStockService(repo, new FakeUnitOfWork(), NullLogger<SalesStockService>.Instance);
+        var service = new SalesStockService(repo, NullLogger<SalesStockService>.Instance);
 
         var order = new SalesOrder(ShopId, "cashier-1");
         order.AddItem(DrugId, quantity: 1, unitPrice: 12m, batchNumber: null, packagingLevelSold: "Pack", baseUnitsConsumed: 2);
