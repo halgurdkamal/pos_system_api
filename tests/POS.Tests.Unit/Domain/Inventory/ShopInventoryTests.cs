@@ -65,12 +65,29 @@ public class ShopInventoryTests
         inv.AddBatch(older);
         inv.AddBatch(newer);
 
-        inv.ReduceStock(20);
+        var deductions = inv.ReduceStock(20);
 
         // Oldest batch consumed first; older had 30, lose 20, leaves 10. Newer untouched.
         older.QuantityOnHand.Should().Be(10);
         newer.QuantityOnHand.Should().Be(100);
         inv.TotalStock.Should().Be(110);
+        deductions.Should().ContainSingle().Which.Should().Be(("B-OLD", 20));
+    }
+
+    [Fact]
+    public void ReduceStock_ReturnsBreakdown_WhenSpanningBatches()
+    {
+        var inv = NewInventory();
+        var older = ActiveBatch("B-OLD", 30, receivedDate: DateTime.UtcNow.AddDays(-30));
+        var newer = ActiveBatch("B-NEW", 100, receivedDate: DateTime.UtcNow.AddDays(-1));
+        inv.AddBatch(older);
+        inv.AddBatch(newer);
+
+        var deductions = inv.ReduceStock(50);
+
+        deductions.Should().HaveCount(2);
+        deductions[0].Should().Be(("B-OLD", 30));
+        deductions[1].Should().Be(("B-NEW", 20));
     }
 
     [Fact]
@@ -209,6 +226,54 @@ public class ShopInventoryTests
         inv.TotalStock.Should().Be(4);
         inv.Batches.Should().ContainSingle()
             .Which.BatchNumber.Should().StartWith("RET-");
+    }
+
+    [Fact]
+    public void RestoreStockToBatches_CreditsEachChunkBackToItsSourceBatch()
+    {
+        // The bug this fixes: a sale that FIFO-deducted from B-OLD must be reversed
+        // back to B-OLD (not the most-recent batch like RestoreStock does).
+        var inv = NewInventory();
+        var older = ActiveBatch("B-OLD", 28, receivedDate: DateTime.UtcNow.AddDays(-30));
+        var newer = ActiveBatch("B-NEW", 100, receivedDate: DateTime.UtcNow.AddDays(-1));
+        inv.AddBatch(older);
+        inv.AddBatch(newer);
+
+        // Simulate a refund of a 2-unit sale that came from B-OLD originally.
+        inv.RestoreStockToBatches(new[] { ("B-OLD", 2) });
+
+        older.QuantityOnHand.Should().Be(30, "the chunk must go back to B-OLD, not the LIFO/most-recent batch");
+        newer.QuantityOnHand.Should().Be(100, "B-NEW should be untouched");
+        inv.TotalStock.Should().Be(130);
+    }
+
+    [Fact]
+    public void RestoreStockToBatches_FallsBackToLifo_WhenSourceBatchNoLongerActive()
+    {
+        var inv = NewInventory();
+        var expired = ActiveBatch("B-EXPIRED", 50, receivedDate: DateTime.UtcNow.AddDays(-60));
+        expired.Status = BatchStatus.Expired;
+        var active = ActiveBatch("B-ACTIVE", 20, receivedDate: DateTime.UtcNow.AddDays(-1));
+        inv.AddBatch(expired);
+        inv.AddBatch(active);
+
+        inv.RestoreStockToBatches(new[] { ("B-EXPIRED", 5) });
+
+        expired.QuantityOnHand.Should().Be(50, "expired batches must not receive fresh stock");
+        active.QuantityOnHand.Should().Be(25, "fallback restores onto the most recent active batch");
+        inv.TotalStock.Should().Be(25);
+    }
+
+    [Fact]
+    public void RestoreStockToBatches_IgnoresZeroOrEmptyEntries()
+    {
+        var inv = NewInventory();
+        var batch = ActiveBatch("B1", 10);
+        inv.AddBatch(batch);
+
+        inv.RestoreStockToBatches(new[] { ("B1", 0), ("", 5), ("B1", 3) });
+
+        batch.QuantityOnHand.Should().Be(13, "only the (B1, 3) entry is meaningful");
     }
 
     [Fact]

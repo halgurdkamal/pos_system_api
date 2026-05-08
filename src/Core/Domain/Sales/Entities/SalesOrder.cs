@@ -1,4 +1,5 @@
 using pos_system_api.Core.Domain.Common;
+using pos_system_api.Core.Domain.Sales.ValueObjects;
 
 namespace pos_system_api.Core.Domain.Sales.Entities;
 
@@ -282,6 +283,11 @@ public class SalesOrderItem
     // Batch tracking
     public string? BatchNumber { get; private set; }
 
+    // Per-batch deductions captured at /payment time. Lets /refund and /cancel restore
+    // each chunk to the exact batch it came from (preserving expiry/recall lineage).
+    // Empty for orders paid before this column shipped — those fall back to legacy restore.
+    public List<SalesOrderItemBatchDeduction> BatchDeductions { get; private set; } = new();
+
     private SalesOrderItem() { } // EF Core
 
     public SalesOrderItem(
@@ -321,5 +327,16 @@ public class SalesOrderItem
         var subtotal = Quantity * UnitPrice;
         DiscountAmount = subtotal * (DiscountPercentage / 100);
         TotalPrice = subtotal - DiscountAmount;
+    }
+
+    public void RecordBatchDeductions(IEnumerable<SalesOrderItemBatchDeduction> deductions)
+    {
+        // Replace the list reference (don't Clear/Add) so EF's default reference-
+        // equality change tracker notices the JSONB column was modified. Mutating
+        // the existing list in place keeps the same reference and the property
+        // wouldn't be persisted on SaveChanges.
+        BatchDeductions = deductions
+            .Where(d => d.Quantity > 0 && !string.IsNullOrEmpty(d.BatchNumber))
+            .ToList();
     }
 }

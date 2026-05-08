@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using pos_system_api.Core.Application.Common.Interfaces;
 using pos_system_api.Core.Domain.Sales.Entities;
+using pos_system_api.Core.Domain.Sales.ValueObjects;
 
 namespace pos_system_api.Core.Application.Inventory.Services;
 
@@ -44,12 +45,14 @@ public class SalesStockService : ISalesStockService
             }
 
             var unitsToDeduct = ResolveBaseUnits(item);
-            inventory.ReduceStock(unitsToDeduct);
+            var perBatch = inventory.ReduceStock(unitsToDeduct);
+            item.RecordBatchDeductions(perBatch.Select(d =>
+                new SalesOrderItemBatchDeduction(d.BatchNumber, d.Quantity)));
             await _inventoryRepository.UpdateAsync(inventory, cancellationToken);
 
             _logger.LogInformation(
-                "Deducted {BaseUnits} base units of {DrugId} for order {OrderNumber} (shop {ShopId}); remaining stock {Remaining}",
-                unitsToDeduct, item.DrugId, order.OrderNumber, order.ShopId, inventory.TotalStock);
+                "Deducted {BaseUnits} base units of {DrugId} for order {OrderNumber} (shop {ShopId}) across {BatchCount} batch(es); remaining stock {Remaining}",
+                unitsToDeduct, item.DrugId, order.OrderNumber, order.ShopId, perBatch.Count, inventory.TotalStock);
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -74,8 +77,23 @@ public class SalesStockService : ISalesStockService
                 continue;
             }
 
-            var unitsToRestore = ResolveBaseUnits(item);
-            inventory.RestoreStock(unitsToRestore, item.BatchNumber);
+            int unitsToRestore;
+            if (item.BatchDeductions.Count > 0)
+            {
+                // Precise restore: credit each FIFO chunk back to its source batch.
+                inventory.RestoreStockToBatches(
+                    item.BatchDeductions.Select(d => (d.BatchNumber, d.Quantity)));
+                unitsToRestore = item.BatchDeductions.Sum(d => d.Quantity);
+            }
+            else
+            {
+                // Legacy fallback: orders paid before per-batch tracking shipped.
+                // Best-effort restore using the line's recorded BatchNumber (often
+                // null) — this is the path that historically dropped restored units
+                // onto the most recently received batch.
+                unitsToRestore = ResolveBaseUnits(item);
+                inventory.RestoreStock(unitsToRestore, item.BatchNumber);
+            }
             await _inventoryRepository.UpdateAsync(inventory, cancellationToken);
 
             _logger.LogInformation(

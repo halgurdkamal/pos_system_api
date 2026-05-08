@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using pos_system_api.Core.Domain.Sales.Entities;
+using pos_system_api.Core.Domain.Sales.ValueObjects;
 
 namespace pos_system_api.Infrastructure.Data.Configurations;
 
@@ -133,6 +134,17 @@ public class SalesOrderItemConfiguration : IEntityTypeConfiguration<SalesOrderIt
 
         builder.Property(i => i.BaseUnitsConsumed)
             .HasColumnType("decimal(18,2)");
+
+        // Per-batch FIFO breakdown captured at /payment time. Stored as JSONB so
+        // refunds/cancels can credit the same batches back instead of dumping the
+        // restored quantity onto the most recently received batch.
+        builder.Property(i => i.BatchDeductions)
+            .HasColumnName("BatchDeductions")
+            .HasColumnType("jsonb")
+            .HasConversion(
+                v => System.Text.Json.JsonSerializer.Serialize(v, (System.Text.Json.JsonSerializerOptions?)null),
+                v => System.Text.Json.JsonSerializer.Deserialize<List<SalesOrderItemBatchDeduction>>(v, (System.Text.Json.JsonSerializerOptions?)null) ?? new List<SalesOrderItemBatchDeduction>()
+            );
 
         // Indexes
         builder.HasIndex(i => i.SalesOrderId);

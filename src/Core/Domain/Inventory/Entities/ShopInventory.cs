@@ -82,10 +82,14 @@ public class ShopInventory : BaseEntity
     }
 
     /// <summary>
-    /// Remove quantity from oldest active batch (FIFO)
+    /// Remove quantity from oldest active batch (FIFO). Returns the per-batch breakdown
+    /// of what was actually taken — callers (notably the sales pipeline) record this so
+    /// a later refund/cancel can credit the same batches back. Each tuple is
+    /// (BatchNumber, units taken from that batch row, in the order they were drained).
     /// </summary>
-    public void ReduceStock(int quantity)
+    public IReadOnlyList<(string BatchNumber, int Quantity)> ReduceStock(int quantity)
     {
+        var deductions = new List<(string BatchNumber, int Quantity)>();
         var remainingQuantity = quantity;
 
         // Sort batches by received date (FIFO)
@@ -98,20 +102,26 @@ public class ShopInventory : BaseEntity
         {
             if (remainingQuantity <= 0) break;
 
+            int taken;
             if (batch.QuantityOnHand >= remainingQuantity)
             {
+                taken = remainingQuantity;
                 batch.QuantityOnHand -= remainingQuantity;
                 remainingQuantity = 0;
             }
             else
             {
+                taken = batch.QuantityOnHand;
                 remainingQuantity -= batch.QuantityOnHand;
                 batch.QuantityOnHand = 0;
             }
+
+            deductions.Add((batch.BatchNumber, taken));
         }
 
         RecalculateTotalStock();
         LastUpdated = DateTime.UtcNow;
+        return deductions;
     }
 
     /// <summary>
@@ -168,6 +178,42 @@ public class ShopInventory : BaseEntity
             location: BatchLocation.Storage,
             storageLocation: StorageLocation);
         Batches.Add(returnedBatch);
+        RecalculateTotalStock();
+        LastUpdated = DateTime.UtcNow;
+    }
+
+    /// <summary>
+    /// Restore stock by reversing a recorded set of FIFO deductions back to their
+    /// source batches. Used by /refund and /cancel so the same batch numbers that
+    /// gave up units get them back — preserving expiry/recall traceability instead
+    /// of dumping everything onto the most recent batch (the LIFO behaviour of
+    /// <see cref="RestoreStock"/>). Falls back to <see cref="RestoreStock"/> for any
+    /// batch that's no longer active (e.g., expired since the sale).
+    /// </summary>
+    public void RestoreStockToBatches(IEnumerable<(string BatchNumber, int Quantity)> deductions)
+    {
+        foreach (var (batchNumber, quantity) in deductions)
+        {
+            if (quantity <= 0 || string.IsNullOrEmpty(batchNumber))
+            {
+                continue;
+            }
+
+            var target = Batches.FirstOrDefault(b =>
+                b.BatchNumber == batchNumber && b.Status == BatchStatus.Active);
+
+            if (target != null)
+            {
+                target.QuantityOnHand += quantity;
+            }
+            else
+            {
+                // Source batch is gone or inactive — fall back to LIFO/synthesise
+                // path. Don't drop the units.
+                RestoreStock(quantity, batchNumber);
+            }
+        }
+
         RecalculateTotalStock();
         LastUpdated = DateTime.UtcNow;
     }

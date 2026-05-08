@@ -132,6 +132,56 @@ public class SalesStockServiceTests
         inv.TotalStock.Should().Be(14);
     }
 
+    [Fact]
+    public async Task DeductForSale_RecordsBatchDeductions_OnTheItem()
+    {
+        // After /payment we want each line to carry the FIFO breakdown so a later
+        // /refund or /cancel can credit the same batch back.
+        var inv = NewInventoryWithBatches(("B-OLD", 30, -30), ("B-NEW", 100, -1));
+        var repo = new FakeInventoryRepository(inv);
+        var service = new SalesStockService(repo, new FakeUnitOfWork(), NullLogger<SalesStockService>.Instance);
+
+        var order = new SalesOrder(ShopId, "cashier-1");
+        order.AddItem(DrugId, quantity: 1, unitPrice: 12m, packagingLevelSold: "Pack", baseUnitsConsumed: 50);
+
+        await service.DeductForSaleAsync(order);
+
+        var item = order.Items.Single();
+        item.BatchDeductions.Should().HaveCount(2);
+        item.BatchDeductions[0].BatchNumber.Should().Be("B-OLD");
+        item.BatchDeductions[0].Quantity.Should().Be(30);
+        item.BatchDeductions[1].BatchNumber.Should().Be("B-NEW");
+        item.BatchDeductions[1].Quantity.Should().Be(20);
+    }
+
+    [Fact]
+    public async Task RestoreForReversal_PrefersRecordedDeductions_OverItemBatchNumber()
+    {
+        // Reproduces the original bug: a sale FIFO-deducted from B-OLD but the
+        // refund used to drop the units onto B-NEW (the most recent batch). With
+        // recorded deductions, the units must go back to B-OLD even when the item's
+        // BatchNumber field is null/different.
+        var inv = NewInventoryWithBatches(("B-OLD", 28, -30), ("B-NEW", 100, -1));
+        var repo = new FakeInventoryRepository(inv);
+        var service = new SalesStockService(repo, new FakeUnitOfWork(), NullLogger<SalesStockService>.Instance);
+
+        var order = new SalesOrder(ShopId, "cashier-1");
+        order.AddItem(DrugId, quantity: 1, unitPrice: 12m, batchNumber: null, packagingLevelSold: "Pack", baseUnitsConsumed: 2);
+
+        // Simulate the deduct step having recorded the breakdown.
+        order.Items.Single().RecordBatchDeductions(new[]
+        {
+            new pos_system_api.Core.Domain.Sales.ValueObjects.SalesOrderItemBatchDeduction("B-OLD", 2),
+        });
+
+        await service.RestoreForReversalAsync(order);
+
+        var bOld = inv.Batches.Single(b => b.BatchNumber == "B-OLD");
+        var bNew = inv.Batches.Single(b => b.BatchNumber == "B-NEW");
+        bOld.QuantityOnHand.Should().Be(30, "restore must credit the source batch, not the most recent one");
+        bNew.QuantityOnHand.Should().Be(100);
+    }
+
     private static ShopInventory InventoryWith(int batchQuantity)
     {
         var inv = new ShopInventory(ShopId, DrugId, reorderPoint: 50, storageLocation: "Shelf A-1", new ShopPricing());
@@ -145,6 +195,25 @@ public class SalesStockServiceTests
             sellingPrice: 2.00m,
             location: BatchLocation.ShopFloor,
             storageLocation: "Shelf A-1"));
+        return inv;
+    }
+
+    private static ShopInventory NewInventoryWithBatches(params (string batchNumber, int qty, int receivedDaysAgo)[] batches)
+    {
+        var inv = new ShopInventory(ShopId, DrugId, reorderPoint: 50, storageLocation: "Shelf A-1", new ShopPricing());
+        foreach (var (batchNumber, qty, days) in batches)
+        {
+            inv.AddBatch(new Batch(
+                batchNumber: batchNumber,
+                supplierId: "sup-1",
+                quantityOnHand: qty,
+                receivedDate: DateTime.UtcNow.AddDays(days),
+                expiryDate: DateTime.UtcNow.AddYears(1),
+                purchasePrice: 1.00m,
+                sellingPrice: 2.00m,
+                location: BatchLocation.ShopFloor,
+                storageLocation: "Shelf A-1"));
+        }
         return inv;
     }
 
