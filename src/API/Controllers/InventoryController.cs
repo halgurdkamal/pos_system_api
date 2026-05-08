@@ -30,6 +30,7 @@ namespace pos_system_api.API.Controllers;
 [ApiController]
 [Route("api/inventory")]
 [Produces("application/json")]
+[Authorize(Policy = "ShopAccess")]
 public class InventoryController : BaseApiController
 {
     private readonly IMediator _mediator;
