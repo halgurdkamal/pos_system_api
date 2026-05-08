@@ -236,14 +236,14 @@ public class InventoryController : BaseApiController
         return Ok(result);
     }
 
-    /// <summary>Get total stock value for a shop.</summary>
+    /// <summary>Get total stock value for a shop, denominated in the shop's currency.</summary>
     [HttpGet("shops/{shopId}/value")]
-    [ProducesResponseType(typeof(decimal), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
     public async Task<ActionResult<object>> GetTotalStockValue(
         string shopId, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new GetTotalStockValueQuery(shopId), cancellationToken);
-        return Ok(new { shopId, totalValue = result, currency = "USD" });
+        return Ok(new { shopId, totalValue = result.TotalValue, currency = result.Currency });
     }
 
     /// <summary>Move stock from storage to shop floor (for display/customer access).</summary>

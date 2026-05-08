@@ -3,6 +3,8 @@ using MediatR;
 namespace pos_system_api.Core.Application.Inventory.Queries.GetTotalStockValue;
 
 /// <summary>
-/// Query to get total stock value for a shop
+/// Query to get total stock value for a shop, denominated in the shop's currency.
 /// </summary>
-public record GetTotalStockValueQuery(string ShopId) : IRequest<decimal>;
+public record GetTotalStockValueQuery(string ShopId) : IRequest<TotalStockValueResult>;
+
+public record TotalStockValueResult(decimal TotalValue, string Currency);
