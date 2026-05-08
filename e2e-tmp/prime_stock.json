@@ -1,0 +1,11 @@
+{
+  "drugId": "DRG-D37E6E4B",
+  "supplierId": "SUP-871E50A4",
+  "batchNumber": "BATCH-E2E-PRIME",
+  "quantity": 200,
+  "expiryDate": "2028-05-01T00:00:00Z",
+  "purchasePrice": 4.00,
+  "sellingPrice": 12.00,
+  "storageLocation": "Shelf A-1",
+  "reorderPoint": 50
+}

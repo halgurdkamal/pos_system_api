@@ -1,0 +1,19 @@
+{
+  "shopId": "SHOP-FF87CB61",
+  "customerName": "Multi-batch test",
+  "customerPhone": "+1555000222",
+  "isPrescriptionRequired": false,
+  "notes": "FIFO multi-batch verification",
+  "taxAmount": 0,
+  "discountAmount": 0,
+  "items": [
+    {
+      "drugId": "DRG-D37E6E4B",
+      "quantity": 200,
+      "unitPrice": 12.00,
+      "packagingLevel": "Tablet",
+      "discountPercentage": 0,
+      "batchNumber": null
+    }
+  ]
+}

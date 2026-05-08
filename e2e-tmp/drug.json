@@ -1,0 +1,69 @@
+{
+  "brandName": "E2E Amoxil 500",
+  "genericName": "Amoxicillin",
+  "manufacturer": "E2E Pharma",
+  "originCountry": "UK",
+  "categoryId": "CAT-5A8C1170",
+  "barcode": "8901234567890",
+  "barcodeType": "EAN-13",
+  "imageUrls": [],
+  "description": "E2E test drug",
+  "sideEffects": ["Nausea"],
+  "interactionNotes": [],
+  "tags": ["oral", "antibiotic"],
+  "relatedDrugs": [],
+  "formulation": {
+    "form": "Capsule",
+    "strength": "500mg",
+    "routeOfAdministration": "Oral"
+  },
+  "basePricing": {
+    "suggestedRetailPrice": 5.99,
+    "currency": "USD",
+    "suggestedTaxRate": 0.10
+  },
+  "regulatory": {
+    "isPrescriptionRequired": false,
+    "isHighRisk": false,
+    "drugAuthorityNumber": "FDA-E2E-1",
+    "approvalDate": "2020-01-15T00:00:00Z",
+    "controlSchedule": "None"
+  },
+  "packagingInfo": {
+    "unitType": "Count",
+    "baseUnit": "tablet",
+    "baseUnitDisplayName": "Tablet",
+    "isSubdivisible": true,
+    "packagingLevels": [
+      {
+        "levelNumber": 1,
+        "unitName": "Tablet",
+        "baseUnitQuantity": 1,
+        "isSellable": false,
+        "isDefault": false,
+        "isBreakable": true
+      },
+      {
+        "levelNumber": 2,
+        "unitName": "Strip",
+        "baseUnitQuantity": 10,
+        "quantityPerParent": 10,
+        "isSellable": true,
+        "isDefault": false,
+        "isBreakable": true,
+        "barcode": "8901234567891"
+      },
+      {
+        "levelNumber": 3,
+        "unitName": "Box",
+        "baseUnitQuantity": 100,
+        "quantityPerParent": 10,
+        "isSellable": true,
+        "isDefault": true,
+        "isBreakable": false,
+        "barcode": "8901234567890",
+        "minimumSaleQuantity": 1
+      }
+    ]
+  }
+}

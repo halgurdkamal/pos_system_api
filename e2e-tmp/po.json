@@ -1,0 +1,22 @@
+{
+  "shopId": "SHOP-FF87CB61",
+  "supplierId": "SUP-871E50A4",
+  "priority": "Normal",
+  "expectedDeliveryDate": "2026-05-15T00:00:00Z",
+  "paymentTerms": "Net30",
+  "customPaymentTerms": null,
+  "deliveryAddress": "Main warehouse",
+  "referenceNumber": "REQ-E2E-1",
+  "notes": "E2E test PO",
+  "shippingCost": 10,
+  "taxAmount": 5,
+  "discountAmount": 0,
+  "items": [
+    {
+      "drugId": "DRG-D37E6E4B",
+      "quantity": 100,
+      "unitPrice": 4.00,
+      "discountPercentage": 0
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "name": "E2E Test Antibiotics",
+  "logoUrl": "https://example.com/cat.png",
+  "description": "End-to-end test category",
+  "colorCode": "#A1B2C3",
+  "displayOrder": 99
+}

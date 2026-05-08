@@ -1,0 +1,21 @@
+{
+  "shopId": "SHOP-FF87CB61",
+  "customerId": null,
+  "customerName": "E2E Walk-in",
+  "customerPhone": "+1555000111",
+  "isPrescriptionRequired": false,
+  "prescriptionNumber": null,
+  "notes": "E2E sale",
+  "taxAmount": 0,
+  "discountAmount": 0,
+  "items": [
+    {
+      "drugId": "DRG-D37E6E4B",
+      "quantity": 2,
+      "unitPrice": 12.00,
+      "packagingLevel": "Tablet",
+      "discountPercentage": 0,
+      "batchNumber": null
+    }
+  ]
+}

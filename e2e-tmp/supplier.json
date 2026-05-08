@@ -1,0 +1,18 @@
+{
+  "supplierName": "E2E Alpha Pharmaceuticals",
+  "supplierType": "Distributor",
+  "contactNumber": "+9647901234567",
+  "email": "e2e-sales@alpha.test",
+  "address": {
+    "street": "123 Medical St",
+    "city": "Baghdad",
+    "state": "Baghdad",
+    "zipCode": "10001",
+    "country": "Iraq"
+  },
+  "paymentTerms": "Net 30",
+  "deliveryLeadTime": 7,
+  "minimumOrderValue": 500,
+  "taxId": "IRQ-E2E-1",
+  "licenseNumber": "DIST-E2E-1"
+}
