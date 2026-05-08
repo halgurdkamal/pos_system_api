@@ -106,8 +106,10 @@ This endpoint **only decodes**. It doesn't resolve the barcode to a drug. To mat
 
 | Method | Route | Auth | Purpose |
 |--------|-------|------|---------|
-| GET  | `/api/pdf/receipt/{orderId}?language=&paperType=` | bearer | Receipt for a real sales order |
+| GET  | `/api/pdf/receipt/{orderNumber}?language=&paperType=` | bearer | Receipt for a real sales order |
 | POST | `/api/pdf/receipt/custom` | public (`AllowAnonymous`) | Render a receipt from a payload (e.g. previews) |
+
+> ⚠ The route's path parameter is named `{orderId}` in the controller, but the handler resolves it against `SalesOrder.OrderNumber` (e.g. `SO-20260508063819-7292`), **not** the order's GUID `id`. Passing the GUID returns 404. See **F-6** in [`99-known-gaps.md`](./99-known-gaps.md#f-6-get-apipdfreceiptorderid-only-matches-ordernumber-not-the-orders-id).
 
 Defaults baked into `ReceiptDto`:
 - `paperType` defaults to **`A5`** (not Thermal80mm). Pass `?paperType=Thermal80mm` if your printer needs it.
@@ -117,9 +119,11 @@ Defaults baked into `ReceiptDto`:
 ### Generate a receipt for a completed order
 
 ```http
-GET /api/pdf/receipt/SO-uuid?language=en-US&paperType=Thermal80mm
+GET /api/pdf/receipt/SO-20260508063819-7292?language=en-US&paperType=Thermal80mm
 Authorization: Bearer …
 ```
+
+The path component is the order's `orderNumber` (the `SO-…YYYYMMDD…` string in the create-order response), not its `id` GUID.
 
 Response is `application/pdf`. The handler:
 

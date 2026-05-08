@@ -4,9 +4,11 @@
 
 **Use this when**: you want a record of an order placed with a vendor; you need supplier KPIs (on-time rate, fill rate); you need to flag overdue payments. The PO is the primary commercial record between you and a supplier.
 
-> ⚠ **Do NOT rely on the PO `/receive` endpoint to add stock to your shelves** — its inventory step is currently a `TODO` (see Step 4 below). Stock onboarding goes through `POST /api/inventory/shops/{shopId}/stock` instead. See [Recipe 3 in the cookbook](./08-data-model-and-recipes.md#recipe-3--receive-stock-from-a-purchase-order-current-reality).
+> ⚠ **The PO `/receive` endpoint now creates batches** (commit `c2d2315`) — but the first-receipt path is broken with an EF `Add`-then-`Update` bug that returns `500`. See **F-1** in [`99-known-gaps.md`](./99-known-gaps.md#f-1-po-receive-crashes-when-adding-the-first-batch-for-a-drug). Until the fix lands, prime the `(shopId, drugId)` inventory row first via `POST /api/inventory/shops/{shopId}/stock` (see [Recipe 3 in the cookbook](./08-data-model-and-recipes.md#recipe-3--receive-stock-from-a-purchase-order-current-reality)) — then `/receive` succeeds for every subsequent receipt of the same drug.
+>
+> ⚠ **All date fields require explicit UTC** (e.g. `"expectedDeliveryDate": "2026-05-15T00:00:00Z"`, `"expiryDate": "2028-05-01T00:00:00Z"`). A bare date literal like `"2026-05-15"` deserializes to `DateTime.Kind = Unspecified`, which Postgres rejects on save → `500`. See **F-5** in [`99-known-gaps.md`](./99-known-gaps.md#f-5-date-only-payloads-crash-with-cannot-write-datetime-with-kindunspecified). The examples below have been updated.
 
-A purchase order (PO) is the path stock *should* take from a **supplier** into a **shop's inventory**. Each receipt event records a `Receipt` on the PO line; the matching batch must currently be added on `ShopInventory` separately.
+A purchase order (PO) is the path stock takes from a **supplier** into a **shop's inventory**. Each receipt event records a `Receipt` on the PO line and (when F-1 is satisfied) appends a `Batch` to the matching `ShopInventory`.
 
 ## Endpoint summary
 
@@ -76,7 +78,7 @@ POST /api/purchaseorders
   "shopId": "SHOP-AB12CD34",
   "supplierId": "SUP-456def",
   "priority": "High",
-  "expectedDeliveryDate": "2026-05-15",
+  "expectedDeliveryDate": "2026-05-15T00:00:00Z",
   "paymentTerms": "Net30",
   "customPaymentTerms": null,
   "deliveryAddress": "Main warehouse, gate 2",
@@ -164,7 +166,7 @@ POST /api/purchaseorders/PO-9c8b7a6f/receive
       "itemId": "POITEM-xyz",
       "quantity": 50,
       "batchNumber": "BATCH-2026-001",
-      "expiryDate": "2028-05-01"
+      "expiryDate": "2028-05-01T00:00:00Z"
     }
   ]
 }
@@ -178,12 +180,12 @@ What happens server-side:
    - `PartiallyReceived` once any item has `receivedQuantity > 0`.
    - `Completed` when **every** item satisfies `IsFullyReceived()`. `completedAt` is stamped.
 
-> ⚠ **Reality check**: as of this writing, the handler's `UpdateInventoryAsync` method **does not actually create `Batch` records on `ShopInventory`** — it only logs the receipt and carries a `TODO` comment ("Integrate with StockAdjustment system to properly track batches, expiry dates, and update inventory totals"). So:
+> ⚠ **Reality check**: the handler **now creates `Batch` records on `ShopInventory`** (auto-creates a starter `ShopInventory` row if one doesn't exist), but the first-receipt path still hits an EF concurrency bug — the call returns `500 The database operation was expected to affect 1 row(s), but actually affected 0 row(s)` and the PO line is unchanged. Subsequent receipts for the same `(shopId, drugId)` pair work because the inventory row already exists. Until F-1 is fixed:
 >
-> - **The PO is the source of truth for *what was received*.**
-> - **Stock on `ShopInventory` is not raised by the receive endpoint.** Until that handler is finished, you must add the batch separately via `POST /api/inventory/shops/{shopId}/stock` (covered in [05 — Inventory](./05-inventory-and-stock.md)) — typically right after `/receive` succeeds.
+> - **For the *first* receipt of a drug into a shop**, prime the inventory row first via `POST /api/inventory/shops/{shopId}/stock` with `quantity = 0` (or with the actual receipt — at which point you can skip `/receive` for inventory bookkeeping entirely and just record the PO state separately).
+> - **For subsequent receipts**, `/receive` does the right thing end-to-end.
 >
-> Keep this in mind when building UIs: don't trust the till to see new stock just because a PO was marked `Completed`. Full details and the standard workaround in [`99-known-gaps.md#f-1`](./99-known-gaps.md#f-1-po-receive-does-not-create-a-batch-on-shopinventory).
+> Full details and the workaround in [`99-known-gaps.md#f-1`](./99-known-gaps.md#f-1-po-receive-crashes-when-adding-the-first-batch-for-a-drug).
 
 For how prices propagate from a newly-active batch into the shop's selling price, see [`../pricing/from-batch-guide.md`](../pricing/from-batch-guide.md).
 

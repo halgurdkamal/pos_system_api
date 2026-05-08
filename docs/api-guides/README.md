@@ -42,20 +42,18 @@ A full real-world cycle calls roughly this sequence:
 
 ```
 1. POST /api/auth/login                              → token
-2. POST /api/shops/create-own                        → shop
+2. POST /api/shops/create-own                        → shop (re-login to pick up the new shop claim)
 3. POST /api/shops/{shopId}/members                  → add cashier
 4. POST /api/categories                              → category
 5. POST /api/drugs                                   → drug + packaging
 6. POST /api/suppliers                               → supplier
 7. POST /api/purchaseorders                          → PO (Draft)
-   → /submit → /confirm → /receive                   → PO line records receipt
-                                                       (workaround: manually add the
-                                                        batch via /api/inventory/.../stock
-                                                        — see 99-known-gaps F-1)
+   → /submit → /confirm → /receive                   → PO line records receipt + appends Batch to ShopInventory
+                                                       (first-receipt-of-a-drug bug — see 99-known-gaps F-1)
 8. POST /api/salesorders                             → cashier opens order
-   → add items → /confirm → /payment → /complete     → order completed
-   → PUT /api/inventory/.../reduce per item          ← workaround for 99-known-gaps F-2
-9. GET  /api/pdf/receipt/{orderId}                   → PDF receipt
+   → add items → /confirm → /payment                 → stock auto-deducted FIFO (was F-2 — now closed)
+                          → /complete                → handover; no further inventory call needed
+9. GET  /api/pdf/receipt/{orderNumber}               → PDF receipt (key by orderNumber, not id — F-6)
 ```
 
-Each guide expands one of those rows.
+Each guide expands one of those rows. **All `DateTime` fields in the JSON bodies must be ISO-8601 with explicit UTC** (`"…T00:00:00Z"`) until F-5 is fixed — bare date literals trigger a Postgres `Kind=Unspecified` error.

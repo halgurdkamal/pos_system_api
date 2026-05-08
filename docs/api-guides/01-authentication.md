@@ -55,13 +55,13 @@ Response `201 Created`:
 ```
 
 Notes:
-- `role` is parsed against the `SystemRole` enum (`User`, `SuperAdmin`). The DTO's default is the literal `"Staff"`, which doesn't match any enum value and silently falls back to `User`. Pass `"SuperAdmin"` only when you really mean it.
-- ⚠ **The endpoint is public.** The register handler does **not** check whether the caller is already a SuperAdmin before honouring `role: "SuperAdmin"`. Lock down `/api/auth/register` (gateway, IP allowlist, or feature flag) in production, or treat the first SuperAdmin as a one-time bootstrap.
+- `role` is parsed against the `SystemRole` enum (`User`, `SuperAdmin`) but **the value never makes it onto the saved user** — empirically, sending `"role": "SuperAdmin"` returns a `User` row both in the response and in the DB. See **F-4** in [`99-known-gaps.md`](./99-known-gaps.md#f-4-post-apiauthregister-silently-ignores-role-superadmin). Treat `role` as a no-op field; bootstrap SuperAdmins via direct DB update (see "Bootstrapping the first SuperAdmin" below).
+- The endpoint is still public and does not require an existing SuperAdmin. The G-3 security gap is *partially* mitigated by F-4 (you can't actually elevate via this endpoint), but the surface is still exposed and should be locked down before production.
 - `shopId` is **only validated for existence** — it does **not** create a `ShopUser` membership. Use `POST /api/shops/{shopId}/members` after registration to actually grant shop access (see [02 — Shops](./02-shops-and-members.md)).
 - Register does not return a token. Call `/login` straight after.
 - Password is hashed with PBKDF2 server-side; never sent back.
 - Username and email are unique. The check is in `IUserRepository.ExistsAsync` and returns 400 on duplicates.
-- `id` is generated server-side as `USER-XXXXXXXX`.
+- `id` is generated server-side as a raw GUID (e.g. `2cb653f1-abc3-4b04-b3ad-ef41b7eb430a`), not the `USER-XXXXXXXX` form earlier examples in this guide use. See Q-11 in [`99-known-gaps.md`](./99-known-gaps.md#q-11-id-prefix-scheme-is-inconsistent-across-entities).
 - `createdBy` on the new user is hard-coded `"System"` for self-registration (see `RegisterCommandHandler`).
 
 ### Step 2 — Log in
@@ -113,6 +113,7 @@ Failure handling (`User.RecordFailedLogin`):
 Login response notes:
 - `expiresAt` is the **access token** expiry. The refresh token's expiry is not returned — it's stored on the user record (`RefreshTokenExpiryTime`) and silently rotated on each `/refresh`.
 - `user.shops` is populated from `User.ShopMemberships` filtered to `IsActive = true`. Each entry includes the entire `shopDetails` object (legal name, address, receipt config, hardware config) — handy for the till to render the storefront without a second round-trip.
+- A successful login mutates `User.LastLoginAt` in memory but the change is not persisted in this code path — the next `GET /api/auth/me` returns `lastLoginAt: null` even though the login just succeeded. See Q-12 in [`99-known-gaps.md`](./99-known-gaps.md#q-12-lastloginat-is-null-in-me-immediately-after-a-fresh-login). Don't drive UI off this field.
 
 ### Step 3 — Use the token
 
@@ -208,7 +209,23 @@ Granular permissions live in `src/Core/Domain/Auth/` and include `ProcessSales`,
 
 ## Bootstrapping the first SuperAdmin
 
-There is no public way to mint a SuperAdmin (intentional). For a fresh database see [`../auth/create-admin-user.md`](../auth/create-admin-user.md) — typical path is to call `POST /api/admin/seed-users` while the `AdminOnly` policy is briefly bypassed in dev, or to insert one row directly.
+There is no working endpoint that can mint a SuperAdmin against a fresh DB:
+
+- `POST /api/auth/register` accepts `role: "SuperAdmin"` but does not persist the elevation (F-4).
+- `POST /api/admin/seed-users` (which would create the documented `admin@possystem.com` / `Admin@123` account via `UserSeeder.SeedAsync`) is gated behind `[Authorize(Policy = "AdminOnly")]` — i.e. needs an existing SuperAdmin token.
+- `POST /api/admin/seed` is `[AllowAnonymous]` but only seeds categories / shops / suppliers / drugs / inventory — **not users**.
+
+So for a brand-new DB, bootstrap with a direct SQL update. The connection string is in `appsettings.Development.json`. The `SystemRole` column is the enum's int value: `0 = SuperAdmin`, `1 = User`.
+
+```sql
+-- 1. Register an ordinary user via POST /api/auth/register first (any password you'll remember)
+-- 2. Then promote that user to SuperAdmin:
+UPDATE "Users" SET "SystemRole" = 0 WHERE "Username" = '<your-bootstrap-user>';
+```
+
+Once that user exists you can log in, hit `POST /api/admin/seed-users` to create the seeded test accounts (`admin@possystem.com` / `Admin@123`, plus per-shop owners and cashiers — see `UserSeeder.cs` for the full list), and then optionally retire the bootstrap user.
+
+Older notes pointing at [`../auth/create-admin-user.md`](../auth/create-admin-user.md) describe the same approach.
 
 ## Best practices
 

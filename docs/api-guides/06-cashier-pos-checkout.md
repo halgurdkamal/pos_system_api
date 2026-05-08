@@ -4,11 +4,11 @@
 
 **Use this when**: ringing up a sale, parking an order to help another customer, refunding a previous transaction, or pulling up daily totals at the end of a shift.
 
-**Where this fits**: this guide is *commercial*. It writes `SalesOrder` records and runs analytics. It does **not** read or write `ShopInventory` directly — the till must call `PUT /api/inventory/.../reduce` after `/complete` to actually deplete stock (see warning below).
+**Where this fits**: this guide is *commercial*. It writes `SalesOrder` records and runs analytics. As of commit `56d03c0`, `/payment` also debits `ShopInventory` (and `/refund` / `/cancel` restore it) — the till no longer needs a follow-up `/reduce` call.
 
 The till workflow. A `SalesOrder` walks through five states — **Draft → Confirmed → Paid → Completed**, with **Cancelled** and **Refunded** as side branches.
 
-> ⚠ **Inventory deduction is NOT automatic** (gap F-2 — see [`99-known-gaps.md#f-2`](./99-known-gaps.md#f-2-sales-complete-does-not-deduct-stock)). The sales handlers persist the order and walk it through Draft → Confirmed → Paid → Completed, but never decrement `ShopInventory`. The till must call `PUT /api/inventory/shops/{shopId}/drugs/{drugId}/reduce` per item after `/complete` returns. The same gaps doc covers the refund variant (F-3).
+> ✅ **Inventory deduction is automatic on `/payment`** (the historical F-2 gap is closed — see [`99-known-gaps.md#f-2`](./99-known-gaps.md#f-2-sales-complete-does-not-deduct-stock--deduction-now-happens-on-payment-instead)). `/refund` and `/cancel` restore stock symmetrically (F-3). **Do not** keep the legacy `PUT /reduce` workaround in client code — it will double-decrement.
 
 All endpoints require `[Authorize(Policy = "ShopAccess")]`. The cashier's `userId` is taken from the JWT and stamped onto the order — you do **not** pass it in the body.
 
@@ -22,8 +22,8 @@ All endpoints require `[Authorize(Policy = "ShopAccess")]`. The cashier's `userI
 | GET  | `/api/salesorders/{id}` | Get full detail |
 | GET  | `/api/salesorders` | Paged list with filters |
 | POST | `/api/salesorders/{id}/confirm` | Draft → Confirmed |
-| POST | `/api/salesorders/{id}/payment` | Confirmed → Paid |
-| POST | `/api/salesorders/{id}/complete` | Paid → Completed (deducts stock) |
+| POST | `/api/salesorders/{id}/payment` | Confirmed → Paid (**deducts stock**) |
+| POST | `/api/salesorders/{id}/complete` | Paid → Completed (handover only — stock already deducted on payment) |
 | POST | `/api/salesorders/{id}/cancel` | Void with reason |
 | POST | `/api/salesorders/{id}/refund` | Reverse a Paid/Completed order |
 | POST | `/api/salesorders/{id}/save-draft` | Park current order |
@@ -50,6 +50,8 @@ Cashier scans a barcode; UI calls:
 ```http
 GET /api/inventory/shops/SHOP-AB12CD34/pos-items/by-barcode/8901234567890
 ```
+
+> ⚠ This endpoint currently 404s for stocked drugs whose only batches are still in `Storage` (i.e. before any `move-to-floor`). See [`99-known-gaps.md#f-7`](./99-known-gaps.md#f-7-get-apiinventoryshopsshopidpos-itemsby-barcodebarcode-404s-for-stocked-drugs). If your scan flow returns 404 unexpectedly, fall back to `GET /api/barcodes/search?barcode=…` to resolve the drug, then `GET /api/inventory/shops/{shopId}` to read price + stock.
 
 Returns a slim DTO with what the till needs:
 
@@ -175,7 +177,7 @@ Validation:
 - `amountPaid >= totalAmount`
 - Computes `changeGiven = amountPaid - totalAmount`
 
-Status → **Paid**, `paidAt` stamped.
+Status → **Paid**, `paidAt` stamped. **`ShopInventory` is debited in the same handler** (`SalesStockService.DeductForSaleAsync`) — FIFO across the drug's active batches in the order's shop. If the deduction fails, the order is still marked Paid (no DB transaction wraps both writes) — see the F-2 caveat in [`99-known-gaps.md`](./99-known-gaps.md#f-2-sales-complete-does-not-deduct-stock--deduction-now-happens-on-payment-instead).
 
 ### Step 4 — Complete the sale
 
@@ -189,23 +191,17 @@ What actually happens (from `CompleteSalesOrderCommandHandler`):
 2. Sets status → **Completed** and stamps `completedAt`.
 3. Saves and returns the DTO.
 
-That's it. **No inventory call**, no FIFO deduction, no propagation to analytics. The till must call `PUT /api/inventory/shops/{shopId}/drugs/{drugId}/reduce` for each item after this returns OK — using each line's `baseUnitsConsumed`:
+That's it. Stock has already been deducted by `/payment` (FIFO across batches by `receivedDate` — see [05 — Inventory: How FIFO works on outflows](./05-inventory-and-stock.md#how-fifo-works-on-outflows)). `/complete` is purely a handover signal: "the goods have left the counter, this transaction is final." Refunds are still allowed from `Completed`; cancels are not.
 
-```http
-# For every item in the completed order:
-PUT /api/inventory/shops/SHOP-AB12CD34/drugs/DRG-A1B2C3D4/reduce
-{ "quantity": 200 }   # = baseUnitsConsumed from the SalesOrderItem
-```
-
-That call walks `ShopInventory.ReduceStock`, which sorts active batches by `receivedDate` ascending and depletes them in order — see [05 — Inventory: How FIFO works on outflows](./05-inventory-and-stock.md#how-fifo-works-on-outflows).
-
-If you keep the till "minimal", you can chain confirm + payment + complete + N reduce-stock calls after a single button press.
+> ⚠ **Don't add a manual `PUT /reduce` call here** — older versions of this guide instructed clients to do that as a workaround for F-2. F-2 is now closed (deduction happens on `/payment`); a manual reduce will double-decrement and silently corrupt your stock counts.
 
 ### Step 5 — Print the receipt
 
 ```http
-GET /api/pdf/receipt/SO-uuid?language=en-US&paperType=Thermal80mm
+GET /api/pdf/receipt/SO-20260508063819-7292?language=en-US&paperType=Thermal80mm
 ```
+
+> ⚠ **The path parameter is the order's `orderNumber`, not its `id`.** The route is named `{orderId}` but the handler resolves against `OrderNumber` only — passing the GUID returns 404. See [`99-known-gaps.md#f-6`](./99-known-gaps.md#f-6-get-apipdfreceiptorderid-only-matches-ordernumber-not-the-orders-id).
 
 Returns a PDF binary stream. Receipt branding (logo, footer, VAT line) comes from the shop's `receiptConfig` (see [02 — Shops](./02-shops-and-members.md)). Details in [07 — PDF](./07-barcodes-and-pdf.md).
 
@@ -228,12 +224,12 @@ Terminal states: **Completed**, **Cancelled**, **Refunded**.
 | | Cancel | Refund |
 |---|--------|--------|
 | Allowed from | Draft / Confirmed / Paid | Paid / Completed |
-| Inventory | Not deducted yet (or rolled back if Paid pre-complete) | Already deducted — manual restoration via `StockAdjustment` of type `Return` |
+| Inventory | If cancelling a Paid order, stock is restored automatically (handler calls `SalesStockService.RestoreForReversalAsync`); cancelling a Draft/Confirmed order is a no-op for stock since nothing was deducted yet | Stock restored automatically (`SalesStockService.RestoreForReversalAsync`) |
 | Money | If Paid, refund issued out-of-band | Refund issued |
 | Final status | `Cancelled` | `Refunded` |
 | Body | `{ "reason": "…" }` | `{ "reason": "…" }` |
 
-> **Heads-up**: the `refund` endpoint flips status but does **not** automatically restore stock. The cashier (or a manager) must follow up with `POST /api/stock-adjustments/shops/{shopId}` `adjustmentType: "Return"` on the affected batch. Track the `referenceId` field of the adjustment with the order ID so the audit trail links them.
+The historical caveat — "refund flips status but doesn't restore stock" — was closed in commit `56d03c0`. No manual `StockAdjustment` follow-up is needed.
 
 ## Filtering & analytics
 
