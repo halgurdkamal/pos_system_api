@@ -43,12 +43,13 @@ public class SalesStockService : ISalesStockService
                 continue;
             }
 
-            inventory.ReduceStock(item.Quantity);
+            var unitsToDeduct = ResolveBaseUnits(item);
+            inventory.ReduceStock(unitsToDeduct);
             await _inventoryRepository.UpdateAsync(inventory, cancellationToken);
 
             _logger.LogInformation(
-                "Deducted {Quantity} of {DrugId} for order {OrderNumber} (shop {ShopId}); remaining stock {Remaining}",
-                item.Quantity, item.DrugId, order.OrderNumber, order.ShopId, inventory.TotalStock);
+                "Deducted {BaseUnits} base units of {DrugId} for order {OrderNumber} (shop {ShopId}); remaining stock {Remaining}",
+                unitsToDeduct, item.DrugId, order.OrderNumber, order.ShopId, inventory.TotalStock);
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -73,16 +74,27 @@ public class SalesStockService : ISalesStockService
                 continue;
             }
 
-            inventory.RestoreStock(item.Quantity, item.BatchNumber);
+            var unitsToRestore = ResolveBaseUnits(item);
+            inventory.RestoreStock(unitsToRestore, item.BatchNumber);
             await _inventoryRepository.UpdateAsync(inventory, cancellationToken);
 
             _logger.LogInformation(
-                "Restored {Quantity} of {DrugId} for reversal of order {OrderNumber} (shop {ShopId}); new stock {Stock}",
-                item.Quantity, item.DrugId, order.OrderNumber, order.ShopId, inventory.TotalStock);
+                "Restored {BaseUnits} base units of {DrugId} for reversal of order {OrderNumber} (shop {ShopId}); new stock {Stock}",
+                unitsToRestore, item.DrugId, order.OrderNumber, order.ShopId, inventory.TotalStock);
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
+
+    // BaseUnitsConsumed is the authoritative deduction unit (a sale of "1 Box" of 100
+    // tablets sets Quantity=1 and BaseUnitsConsumed=100; ShopInventory and Batch track
+    // base units, so we must deduct 100, not 1). SalesOrders predating the Nov-2025
+    // schema migration have BaseUnitsConsumed=0; falling back to Quantity preserves
+    // the (self-consistent) behaviour they were paid against.
+    private static int ResolveBaseUnits(SalesOrderItem item) =>
+        item.BaseUnitsConsumed > 0
+            ? (int)Math.Round(item.BaseUnitsConsumed, MidpointRounding.ToEven)
+            : item.Quantity;
 
     private async Task<IDictionary<string, Core.Domain.Inventory.Entities.ShopInventory>> LoadInventoriesAsync(
         SalesOrder order,

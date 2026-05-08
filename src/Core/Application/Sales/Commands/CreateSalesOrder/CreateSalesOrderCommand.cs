@@ -213,6 +213,21 @@ public class CreateSalesOrderCommandHandler : IRequestHandler<CreateSalesOrderCo
             return quantity;
         }
 
-        return level.CalculateBaseUnitsFromQuantity(quantity);
+        var baseUnits = level.CalculateBaseUnitsFromQuantity(quantity);
+
+        // Stock is tracked in whole base units (Batch.QuantityOnHand is int). A
+        // fractional result means the drug's packaging hierarchy multiplies down
+        // to a non-whole base-unit count, which would force silent rounding at
+        // deduction time and drift inventory over many sales. Reject up-front so
+        // the bad packaging config is fixed rather than masked.
+        if (baseUnits != Math.Truncate(baseUnits))
+        {
+            throw new InvalidOperationException(
+                $"Packaging level '{packagingLevel}' on drug {drugId} would yield a fractional " +
+                $"BaseUnitsConsumed ({baseUnits}) for quantity {quantity}; fix the packaging " +
+                "hierarchy so each level's baseUnitQuantity is a whole number.");
+        }
+
+        return baseUnits;
     }
 }

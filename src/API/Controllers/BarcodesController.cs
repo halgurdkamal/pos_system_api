@@ -131,12 +131,13 @@ public class SearchByBarcodeHandler : IRequestHandler<SearchByBarcodeQuery, Drug
         if (drug == null)
             return null;
 
-        // Generate images
-        var barcodeImage = _barcodeService.GenerateBarcode(drug.Barcode ?? drug.Id, 400, 120);
+        // drug.DrugId is the user-facing "DRG-XXXXXXXX" identifier; drug.Id is the
+        // raw GUID primary key and is not what clients should see.
+        var barcodeImage = _barcodeService.GenerateBarcode(drug.Barcode ?? drug.DrugId, 400, 120);
         var qrData = System.Text.Json.JsonSerializer.Serialize(new
         {
-            drugId = drug.Id,
-            barcode = drug.Barcode ?? drug.Id,
+            drugId = drug.DrugId,
+            barcode = drug.Barcode ?? drug.DrugId,
             brandName = drug.BrandName,
             genericName = drug.GenericName
         });
@@ -144,9 +145,9 @@ public class SearchByBarcodeHandler : IRequestHandler<SearchByBarcodeQuery, Drug
 
         return new DrugBarcodeDto
         {
-            DrugId = drug.Id,
+            DrugId = drug.DrugId,
             BrandName = drug.BrandName,
-            Barcode = drug.Barcode ?? drug.Id,
+            Barcode = drug.Barcode ?? drug.DrugId,
             BarcodeImageBase64 = Convert.ToBase64String(barcodeImage),
             QRCodeImageBase64 = Convert.ToBase64String(qrCodeImage)
         };

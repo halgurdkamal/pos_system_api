@@ -34,10 +34,12 @@ public class GetCashierItemByBarcodeQueryHandler : IRequestHandler<GetCashierIte
             return null;
         }
 
-        // Get inventory for this drug in the shop
+        // Get inventory for this drug in the shop. ShopInventory.DrugId stores the
+        // user-facing prefixed ID ("DRG-XXXXXXXX") that AddStock and CreateDrug both
+        // populate; drug.Id is the raw GUID primary key, which never matches.
         var shopInventory = await _inventoryRepository.GetByShopAndDrugAsync(
             request.ShopId,
-            drug.Id,
+            drug.DrugId,
             cancellationToken);
 
         if (shopInventory == null || shopInventory.TotalStock <= 0)
@@ -62,7 +64,7 @@ public class GetCashierItemByBarcodeQueryHandler : IRequestHandler<GetCashierIte
 
         return new CashierItemDto
         {
-            DrugId = drug.Id,
+            DrugId = drug.DrugId,
             BrandName = drug.BrandName,
             GenericName = drug.GenericName,
             Barcode = drug.Barcode,
