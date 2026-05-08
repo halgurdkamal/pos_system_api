@@ -211,25 +211,19 @@ After this the drug is sellable: `/pos-items/by-barcode/{barcode}` returns it wi
 
 > **Where the join happens**: `POST /api/inventory/shops/{shopId}/stock` is the bridge between the catalog (`Drug`) and the shelves (`ShopInventory.batches[]`). The handler validates both `drugId` and `supplierId` exist, then either creates a fresh `ShopInventory` row (with default `reorderPoint=50`, `currency="USD"`, `taxRate=0`) **or** appends a new `Batch` to the existing one.
 
-### Recipe 3 — Receive stock from a purchase order (current reality)
+### Recipe 3 — Receive stock from a purchase order
 
-In a fully-wired system, `/api/purchaseorders/{id}/receive` would create the batch on its own. As of today it doesn't (the handler has a `TODO` — see [04](./04-suppliers-and-purchase-orders.md#step-4--receive-stock)). Until that's fixed, do this:
+`/api/purchaseorders/{id}/receive` creates the `Batch` on `ShopInventory` directly — no manual mirror is needed. The first-receipt path (when no `ShopInventory` row exists yet for the `(shopId, drugId)` pair) lazily creates one (commits `c2d2315`, `fac79a2`, closing F-1).
 
 ```
 1. POST /api/purchaseorders                   → Draft PO with items
 2. POST /api/purchaseorders/{id}/submit       → Submitted
 3. POST /api/purchaseorders/{id}/confirm      → Confirmed (supplier acknowledged)
-4. POST /api/purchaseorders/{id}/receive      → records the receipt on the PO line
+4. POST /api/purchaseorders/{id}/receive      → records the receipt on the PO line AND
+                                                 appends a Batch to ShopInventory
                                                  (PO status flips to Completed/Partial)
-                                                 — but ShopInventory is NOT changed
-5. POST /api/inventory/shops/{shopId}/stock   ← MANUALLY mirror the same batch
-                                                 (drugId, supplierId, batchNumber,
-                                                  qty, expiry, purchasePrice all
-                                                  must match the PO line)
-6. POST /api/purchaseorders/{id}/mark-paid    → AP flag, when the invoice is paid
+5. POST /api/purchaseorders/{id}/mark-paid    → AP flag, when the invoice is paid
 ```
-
-When the PO handler is fixed, step 5 disappears.
 
 ### Recipe 4 — Daily till workflow (cashier point of view)
 

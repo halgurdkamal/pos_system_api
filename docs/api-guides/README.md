@@ -49,11 +49,11 @@ A full real-world cycle calls roughly this sequence:
 6. POST /api/suppliers                               → supplier
 7. POST /api/purchaseorders                          → PO (Draft)
    → /submit → /confirm → /receive                   → PO line records receipt + appends Batch to ShopInventory
-                                                       (first-receipt-of-a-drug bug — see 99-known-gaps F-1)
+                                                       (first-receipt path is fixed — F-1 closed)
 8. POST /api/salesorders                             → cashier opens order
    → add items → /confirm → /payment                 → stock auto-deducted FIFO (was F-2 — now closed)
                           → /complete                → handover; no further inventory call needed
-9. GET  /api/pdf/receipt/{orderNumber}               → PDF receipt (key by orderNumber, not id — F-6)
+9. GET  /api/pdf/receipt/{orderId}                   → PDF receipt; the path accepts either id or orderNumber
 ```
 
-Each guide expands one of those rows. **All `DateTime` fields in the JSON bodies must be ISO-8601 with explicit UTC** (`"…T00:00:00Z"`) until F-5 is fixed — bare date literals trigger a Postgres `Kind=Unspecified` error.
+Each guide expands one of those rows. Date fields accept either a bare literal (`"2026-05-15"`) or an ISO-8601 timestamp (`"2026-05-15T00:00:00Z"`) — the server now normalises to UTC at the boundary.

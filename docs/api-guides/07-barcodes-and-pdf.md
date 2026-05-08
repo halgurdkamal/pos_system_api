@@ -21,8 +21,8 @@ Two adjacent capabilities that close the loop between catalog, till, and custome
 
 | Method | Route | Auth | Purpose |
 |--------|-------|------|---------|
-| POST | `/api/barcodes/generate/barcode` | public | Render a one-off barcode PNG from arbitrary data |
-| POST | `/api/barcodes/generate/qrcode` | public | Render a one-off QR code PNG |
+| POST | `/api/barcodes/generate/barcode` | bearer | Render a one-off barcode PNG from arbitrary data |
+| POST | `/api/barcodes/generate/qrcode` | bearer | Render a one-off QR code PNG |
 | GET  | `/api/barcodes/drugs/{drugId}` | `ShopAccess` | Drug's barcode + QR (base64 PNGs) |
 | GET  | `/api/barcodes/drugs/{drugId}/download/barcode` | `ShopAccess` | Same but as PNG download |
 | GET  | `/api/barcodes/drugs/{drugId}/download/qrcode` | `ShopAccess` | QR PNG download |
@@ -106,10 +106,10 @@ This endpoint **only decodes**. It doesn't resolve the barcode to a drug. To mat
 
 | Method | Route | Auth | Purpose |
 |--------|-------|------|---------|
-| GET  | `/api/pdf/receipt/{orderNumber}?language=&paperType=` | bearer | Receipt for a real sales order |
-| POST | `/api/pdf/receipt/custom` | public (`AllowAnonymous`) | Render a receipt from a payload (e.g. previews) |
+| GET  | `/api/pdf/receipt/{orderId}?language=&paperType=` | bearer | Receipt for a real sales order; `{orderId}` accepts either the GUID `id` or the `SO-…` `orderNumber` |
+| POST | `/api/pdf/receipt/custom` | bearer | Render a receipt from a payload (e.g. previews) |
 
-> ⚠ The route's path parameter is named `{orderId}` in the controller, but the handler resolves it against `SalesOrder.OrderNumber` (e.g. `SO-20260508063819-7292`), **not** the order's GUID `id`. Passing the GUID returns 404. See **F-6** in [`99-known-gaps.md`](./99-known-gaps.md#f-6-get-apipdfreceiptorderid-only-matches-ordernumber-not-the-orders-id).
+The receipt route resolves the path parameter against either `SalesOrder.Id` or `SalesOrder.OrderNumber` (commit `6f50769`, closing F-6). `/receipt/custom` is no longer `[AllowAnonymous]` and `logoUrl` is rejected unless it's an absolute http(s) URL pointing to a public host (commit `0cbf902`, closing G-5).
 
 Defaults baked into `ReceiptDto`:
 - `paperType` defaults to **`A5`** (not Thermal80mm). Pass `?paperType=Thermal80mm` if your printer needs it.
@@ -206,17 +206,15 @@ For deeper architecture (component tree, rendering pipeline, how to add a new pa
 - **Wrong barcode endpoint at the till** — `/api/barcodes/search` returns catalog data only. Use the inventory POS-items endpoint to get current price and on-hand stock.
 - **Receipt missing logo / VAT line** — those are toggles in `receiptConfig`. Update via `PUT /api/shops/{id}/receipt-config` (see [02 — Shops](./02-shops-and-members.md)).
 - **Thermal printer truncating columns** — use `Thermal58mm` instead of `Thermal80mm`; 80mm assumes wider paper than some mobile printers ship with.
-- **Anonymous access on `/receipt/custom`** — designed for previews. Don't put a public-facing form in front of it that accepts arbitrary `shopName`/`logoUrl` without sanitisation.
+- **`/receipt/custom` is for previews** — even though it's now authenticated, don't put a public-facing form in front of it that accepts arbitrary `shopName`/`logoUrl` without sanitisation. The server-side `logoUrl` check rejects loopback/RFC1918/link-local hosts but does not enforce a CDN allow-list.
 
 ---
 
 ## Best practices
 
 ### Security
-- **Put `[Authorize]` on `/api/barcodes/generate/barcode` and `/qrcode`** before exposing the API to the internet. They're CPU-intensive image generators that accept arbitrary data — a perfect denial-of-service target.
-- **Lock down `POST /api/pdf/receipt/custom`.** It's `[AllowAnonymous]` for "testing purposes" — fine in dev, dangerous in prod. An attacker can render arbitrary text claiming to be a real shop, complete with logo URL of their choice.
-- **Validate `logoUrl` before rendering.** It's fetched server-side by QuestPDF; an attacker-controlled URL is a server-side request forgery (SSRF) primitive. At minimum, restrict to a known CDN host pattern.
-- **Rate-limit barcode generation per IP/user.** PNG encoding is expensive; a small loop will saturate a CPU.
+- **Auth is in place** for `/api/barcodes/generate/{barcode,qrcode}` (G-4 closed) and `/api/pdf/receipt/custom` (G-5 closed). Add a per-user / per-IP rate limit on top — PNG encoding is expensive and a small loop will still saturate a CPU even with auth.
+- **Server-side `logoUrl` validation** rejects loopback, RFC1918, link-local, and cloud-metadata IPs (G-5). For higher assurance, restrict further to a known CDN host pattern in your gateway.
 - **Don't include full prescription details in receipts** that may be photographed and shared. Use just enough to satisfy compliance (drug name, qty, Rx flag) — `requiresPrescription` toggles the visual mark.
 
 ### Performance

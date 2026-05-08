@@ -201,7 +201,7 @@ That's it. Stock has already been deducted by `/payment` (FIFO across batches by
 GET /api/pdf/receipt/SO-20260508063819-7292?language=en-US&paperType=Thermal80mm
 ```
 
-> ⚠ **The path parameter is the order's `orderNumber`, not its `id`.** The route is named `{orderId}` but the handler resolves against `OrderNumber` only — passing the GUID returns 404. See [`99-known-gaps.md#f-6`](./99-known-gaps.md#f-6-get-apipdfreceiptorderid-only-matches-ordernumber-not-the-orders-id).
+The path parameter accepts either the order's `id` (GUID) or its `orderNumber` (`SO-…`). The handler resolves both forms (commit `6f50769`, closing F-6).
 
 Returns a PDF binary stream. Receipt branding (logo, footer, VAT line) comes from the shop's `receiptConfig` (see [02 — Shops](./02-shops-and-members.md)). Details in [07 — PDF](./07-barcodes-and-pdf.md).
 

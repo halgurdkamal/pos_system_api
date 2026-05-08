@@ -46,14 +46,14 @@ ShopInventory (per shop+drug)
 
 ## Endpoint summary
 
-> ⚠ **Security gap G-1 — the most important fix in the project.** `InventoryController` is missing a class-level `[Authorize]`. Only the two cashier `pos-items` lookups carry `[Authorize(Policy = "ShopAccess")]`. **Every other endpoint here — including `AddStock`, `ReduceStock`, pricing changes — is currently reachable without a token.** Full details in [`99-known-gaps.md#g-1`](./99-known-gaps.md#g-1-inventorycontroller-lacks-class-level-authorize).
+All endpoints in this controller require `[Authorize(Policy = "ShopAccess")]` — the caller must hold a token with access to the target `shopId` (commit `5acc1fa`, closing G-1).
 
 | Method | Route | Purpose |
 |--------|-------|---------|
 | GET  | `/shops/{shopId}` | Paged list (`isAvailable=` optional) |
 | GET  | `/shops/{shopId}/low-stock` | Below reorder point |
 | GET  | `/shops/{shopId}/expiring?days=30` | Batches expiring soon |
-| GET  | `/shops/{shopId}/value` | Total stock value — returns `{ "shopId", "totalValue", "currency": "USD" }` (currency hard-coded) |
+| GET  | `/shops/{shopId}/value` | Total stock value — returns `{ "shopId", "totalValue", "currency" }`; `currency` reflects the shop's configured currency |
 | GET  | `/shops/{shopId}/pos-items?searchTerm=&category=&page=&limit=50` | Cashier-friendly listing (`ShopAccess`) |
 | GET  | `/shops/{shopId}/pos-items/by-barcode/{barcode}` | Single till lookup (`ShopAccess`) |
 | POST | `/shops/{shopId}/stock` | Add a new batch (free-form, not via PO) |
@@ -122,7 +122,7 @@ Response (paginated):
 Quick-glance variants:
 - `GET /shops/{shopId}/low-stock` — rows where `totalStock < reorderPoint`.
 - `GET /shops/{shopId}/expiring?days=30` — rows with at least one batch in the window.
-- `GET /shops/{shopId}/value` — `{ shopId, totalValue, currency: "USD" }`.
+- `GET /shops/{shopId}/value` — `{ shopId, totalValue, currency }` (currency comes from the shop record).
 
 ### B. Add stock (create a batch)
 
@@ -147,7 +147,7 @@ POST /api/inventory/shops/SHOP-AB12CD34/stock
 Server-side rules (from `AddStockCommandHandler`):
 - `drugId` must exist (`Drug` table) — else `400 "Drug … does not exist"`.
 - `supplierId` must exist — else `400 "Supplier … does not exist"`.
-- If no `ShopInventory` exists for `(shopId, drugId)`, one is created with the given values, plus defaults: `currency = "USD"`, `taxRate = 0`, `reorderPoint = 50` if not provided.
+- If no `ShopInventory` exists for `(shopId, drugId)`, one is created with the given values, plus defaults: `currency = "USD"`, `taxRate = 0`, `reorderPoint = 50` if `reorderPoint` is omitted (the field is honoured on first create — Q-15 closed in `ba3e4d7`).
 - The `Batch` is always added with `status = Active`, `location = Storage`, `receivedDate = now`.
 
 Returns the full `InventoryDto` with the new batch in `batches[]`.

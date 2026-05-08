@@ -18,10 +18,10 @@ A **shop** is the multi-tenant boundary: inventory, pricing, sales orders, and s
 | GET  | `/api/shops/{id}` | bearer | One shop |
 | GET  | `/api/shops/search?q=...` | bearer | Search by name |
 | PUT  | `/api/shops/{id}` | `ShopOwnerOrAdmin` | Update profile |
-| PUT  | `/api/shops/{id}/receipt-config` | bearer ⚠ | Receipt branding & layout |
-| PUT  | `/api/shops/{id}/hardware-config` | bearer ⚠ | Printer / scanner settings |
+| PUT  | `/api/shops/{id}/receipt-config` | `ShopOwnerOrAdmin` | Receipt branding & layout |
+| PUT  | `/api/shops/{id}/hardware-config` | `ShopOwnerOrAdmin` | Printer / scanner settings |
 
-> ⚠ **Security gap G-2** — `receipt-config` and `hardware-config` are protected only by `[Authorize]` (any logged-in user); the `ShopOwnerOrAdmin` policy is missing. Full details and fix in [`99-known-gaps.md#g-2`](./99-known-gaps.md#g-2-shopupdatereceiptconfig-and-updatehardwareconfig-lack-the-shopowneroradmin-policy).
+`receipt-config` and `hardware-config` are gated behind the `ShopOwnerOrAdmin` policy (commit `40f6556`, closing G-2) — only the shop's owner or a SuperAdmin can rewrite them.
 
 ### Members
 

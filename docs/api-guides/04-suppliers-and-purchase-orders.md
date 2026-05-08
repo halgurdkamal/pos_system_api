@@ -4,11 +4,9 @@
 
 **Use this when**: you want a record of an order placed with a vendor; you need supplier KPIs (on-time rate, fill rate); you need to flag overdue payments. The PO is the primary commercial record between you and a supplier.
 
-> ⚠ **The PO `/receive` endpoint now creates batches** (commit `c2d2315`) — but the first-receipt path is broken with an EF `Add`-then-`Update` bug that returns `500`. See **F-1** in [`99-known-gaps.md`](./99-known-gaps.md#f-1-po-receive-crashes-when-adding-the-first-batch-for-a-drug). Until the fix lands, prime the `(shopId, drugId)` inventory row first via `POST /api/inventory/shops/{shopId}/stock` (see [Recipe 3 in the cookbook](./08-data-model-and-recipes.md#recipe-3--receive-stock-from-a-purchase-order-current-reality)) — then `/receive` succeeds for every subsequent receipt of the same drug.
->
-> ⚠ **All date fields require explicit UTC** (e.g. `"expectedDeliveryDate": "2026-05-15T00:00:00Z"`, `"expiryDate": "2028-05-01T00:00:00Z"`). A bare date literal like `"2026-05-15"` deserializes to `DateTime.Kind = Unspecified`, which Postgres rejects on save → `500`. See **F-5** in [`99-known-gaps.md`](./99-known-gaps.md#f-5-date-only-payloads-crash-with-cannot-write-datetime-with-kindunspecified). The examples below have been updated.
+**`/receive` is fully wired**: the handler creates a `Batch` on `ShopInventory`, lazily creating the inventory row on first receipt of a drug into a shop (commits `c2d2315`, `fac79a2`, closing F-1). Date fields accept either a bare literal (`"2026-05-15"`) or an ISO-8601 timestamp — the server coerces to UTC at the boundary (commit `d44f3df`, closing F-5).
 
-A purchase order (PO) is the path stock takes from a **supplier** into a **shop's inventory**. Each receipt event records a `Receipt` on the PO line and (when F-1 is satisfied) appends a `Batch` to the matching `ShopInventory`.
+A purchase order (PO) is the path stock takes from a **supplier** into a **shop's inventory**. Each receipt event records a `Receipt` on the PO line and appends a `Batch` to the matching `ShopInventory`.
 
 ## Endpoint summary
 
@@ -180,12 +178,7 @@ What happens server-side:
    - `PartiallyReceived` once any item has `receivedQuantity > 0`.
    - `Completed` when **every** item satisfies `IsFullyReceived()`. `completedAt` is stamped.
 
-> ⚠ **Reality check**: the handler **now creates `Batch` records on `ShopInventory`** (auto-creates a starter `ShopInventory` row if one doesn't exist), but the first-receipt path still hits an EF concurrency bug — the call returns `500 The database operation was expected to affect 1 row(s), but actually affected 0 row(s)` and the PO line is unchanged. Subsequent receipts for the same `(shopId, drugId)` pair work because the inventory row already exists. Until F-1 is fixed:
->
-> - **For the *first* receipt of a drug into a shop**, prime the inventory row first via `POST /api/inventory/shops/{shopId}/stock` with `quantity = 0` (or with the actual receipt — at which point you can skip `/receive` for inventory bookkeeping entirely and just record the PO state separately).
-> - **For subsequent receipts**, `/receive` does the right thing end-to-end.
->
-> Full details and the workaround in [`99-known-gaps.md#f-1`](./99-known-gaps.md#f-1-po-receive-crashes-when-adding-the-first-batch-for-a-drug).
+4. The handler creates `Batch` records on `ShopInventory` and lazily creates the inventory row on the first receipt of a drug into a shop (F-1 fixed in `fac79a2`). No priming step is needed — `/receive` is the canonical path from PO → stock.
 
 For how prices propagate from a newly-active batch into the shop's selling price, see [`../pricing/from-batch-guide.md`](../pricing/from-batch-guide.md).
 

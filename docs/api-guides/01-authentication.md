@@ -33,8 +33,7 @@ Content-Type: application/json
   "password": "S3cret!Pa$$word",
   "fullName": "Jane Doe",
   "phone": "+9647500000001",
-  "shopId": null,
-  "role": "Staff"
+  "shopId": null
 }
 ```
 
@@ -55,8 +54,8 @@ Response `201 Created`:
 ```
 
 Notes:
-- `role` is parsed against the `SystemRole` enum (`User`, `SuperAdmin`) but **the value never makes it onto the saved user** — empirically, sending `"role": "SuperAdmin"` returns a `User` row both in the response and in the DB. See **F-4** in [`99-known-gaps.md`](./99-known-gaps.md#f-4-post-apiauthregister-silently-ignores-role-superadmin). Treat `role` as a no-op field; bootstrap SuperAdmins via direct DB update (see "Bootstrapping the first SuperAdmin" below).
-- The endpoint is still public and does not require an existing SuperAdmin. The G-3 security gap is *partially* mitigated by F-4 (you can't actually elevate via this endpoint), but the surface is still exposed and should be locked down before production.
+- The endpoint always creates a `SystemRole.User` account. The historical `role` field has been removed from the request DTO (commit `0832062`, closing G-3 / F-4) — privilege escalation is intentionally not exposed here. Bootstrap a SuperAdmin via direct DB update (see "Bootstrapping the first SuperAdmin" below) and then promote/demote users via an authenticated admin route.
+- The endpoint is still public. Lock it down behind a gateway feature flag, IP allow-list, or remove the route entirely in non-dev environments if you don't want open self-registration.
 - `shopId` is **only validated for existence** — it does **not** create a `ShopUser` membership. Use `POST /api/shops/{shopId}/members` after registration to actually grant shop access (see [02 — Shops](./02-shops-and-members.md)).
 - Register does not return a token. Call `/login` straight after.
 - Password is hashed with PBKDF2 server-side; never sent back.
@@ -113,7 +112,7 @@ Failure handling (`User.RecordFailedLogin`):
 Login response notes:
 - `expiresAt` is the **access token** expiry. The refresh token's expiry is not returned — it's stored on the user record (`RefreshTokenExpiryTime`) and silently rotated on each `/refresh`.
 - `user.shops` is populated from `User.ShopMemberships` filtered to `IsActive = true`. Each entry includes the entire `shopDetails` object (legal name, address, receipt config, hardware config) — handy for the till to render the storefront without a second round-trip.
-- A successful login mutates `User.LastLoginAt` in memory but the change is not persisted in this code path — the next `GET /api/auth/me` returns `lastLoginAt: null` even though the login just succeeded. See Q-12 in [`99-known-gaps.md`](./99-known-gaps.md#q-12-lastloginat-is-null-in-me-immediately-after-a-fresh-login). Don't drive UI off this field.
+- `LastLoginAt` is persisted on every successful login (commit `a0414ec`, closing Q-12). `GET /api/auth/me` issued straight after the login returns the just-stamped timestamp.
 
 ### Step 3 — Use the token
 
@@ -209,9 +208,9 @@ Granular permissions live in `src/Core/Domain/Auth/` and include `ProcessSales`,
 
 ## Bootstrapping the first SuperAdmin
 
-There is no working endpoint that can mint a SuperAdmin against a fresh DB:
+There is no endpoint that can mint a SuperAdmin against a fresh DB:
 
-- `POST /api/auth/register` accepts `role: "SuperAdmin"` but does not persist the elevation (F-4).
+- `POST /api/auth/register` always creates `SystemRole.User`. The `role` field that previously promised elevation has been removed from the request DTO (commit `0832062`).
 - `POST /api/admin/seed-users` (which would create the documented `admin@possystem.com` / `Admin@123` account via `UserSeeder.SeedAsync`) is gated behind `[Authorize(Policy = "AdminOnly")]` — i.e. needs an existing SuperAdmin token.
 - `POST /api/admin/seed` is `[AllowAnonymous]` but only seeds categories / shops / suppliers / drugs / inventory — **not users**.
 
@@ -231,7 +230,7 @@ Older notes pointing at [`../auth/create-admin-user.md`](../auth/create-admin-us
 
 ### Security
 - **Run only over HTTPS.** Bearer tokens are credentials; on plain HTTP they're stolen by every middlebox between client and server.
-- **Lock down `/api/auth/register` in production.** It's public *and* the handler doesn't enforce "only existing SuperAdmins can mint a SuperAdmin." Put it behind a gateway feature flag, IP allow-list, or remove the route in non-dev environments. Bootstrap the first SuperAdmin by inserting the row in the DB.
+- **Lock down `/api/auth/register` in production.** The endpoint is public; while it can no longer mint a SuperAdmin (the `role` field is gone), open self-registration is still rarely what you want. Put it behind a gateway feature flag, IP allow-list, or remove the route in non-dev environments. Bootstrap the first SuperAdmin by updating the DB row directly.
 - **Rotate `Jwt:SecretKey` periodically.** Use ≥ 64 random bytes (`openssl rand -base64 64`). Rotation invalidates every issued token — schedule it.
 - **Never log tokens, refresh tokens, or password hashes.** Serilog enrichers are easy to misconfigure; review log output for accidental leaks.
 - **Don't put tokens in URLs or query strings.** They land in browser history, server logs, and referrer headers.
