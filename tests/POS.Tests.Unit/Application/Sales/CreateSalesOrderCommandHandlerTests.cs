@@ -155,6 +155,9 @@ public class CreateSalesOrderCommandHandlerTests
         public Task<ShopInventory?> GetByShopAndDrugAsync(string shopId, string drugId, CancellationToken cancellationToken = default) =>
             Task.FromResult(_inv);
 
+        public Task<ShopInventory?> GetByShopAndDrugForUpdateAsync(string shopId, string drugId, CancellationToken cancellationToken = default) =>
+            GetByShopAndDrugAsync(shopId, drugId, cancellationToken);
+
         public Task<ShopInventory?> GetByIdAsync(string id, CancellationToken cancellationToken = default) => throw new NotImplementedException();
         public Task<IReadOnlyList<ShopInventory>> GetByShopAndDrugsAsync(string shopId, IReadOnlyCollection<string> drugIds, CancellationToken cancellationToken = default) => throw new NotImplementedException();
         public Task<(IEnumerable<ShopInventory> Items, int TotalCount)> GetByShopAsync(string shopId, int page, int limit, bool? isAvailable = null, CancellationToken cancellationToken = default) => throw new NotImplementedException();

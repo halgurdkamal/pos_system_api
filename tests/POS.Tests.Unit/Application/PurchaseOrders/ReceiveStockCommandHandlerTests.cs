@@ -198,6 +198,10 @@ public class ReceiveStockCommandHandlerTests
             string shopId, string drugId, CancellationToken cancellationToken = default) =>
             Task.FromResult(_store.TryGetValue((shopId, drugId), out var inv) ? inv : null);
 
+        public Task<ShopInventory?> GetByShopAndDrugForUpdateAsync(
+            string shopId, string drugId, CancellationToken cancellationToken = default) =>
+            GetByShopAndDrugAsync(shopId, drugId, cancellationToken);
+
         public Task<ShopInventory> AddAsync(ShopInventory inventory, CancellationToken cancellationToken = default)
         {
             AddCount++;

@@ -22,6 +22,18 @@ public interface IInventoryRepository
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Same as <see cref="GetByShopAndDrugAsync"/> but acquires a row-level lock
+    /// (<c>SELECT ... FOR UPDATE</c>) on the matching <c>ShopInventory</c> row.
+    /// MUST be called inside an <see cref="IUnitOfWork.BeginTransactionAsync"/>
+    /// transaction; the lock is released when the transaction commits or rolls back.
+    /// Returns a tracked entity so subsequent <see cref="UpdateAsync"/> works.
+    /// </summary>
+    Task<ShopInventory?> GetByShopAndDrugForUpdateAsync(
+        string shopId,
+        string drugId,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Batch-fetch inventory rows for a single shop and a set of drug IDs in one query.
     /// Used to avoid N+1 patterns. Missing (shopId, drugId) pairs are silently skipped.
     /// </summary>

@@ -36,8 +36,13 @@ public class ReduceStockCommandHandler : IRequestHandler<ReduceStockCommand, Inv
 
     public async Task<InventoryDto> Handle(ReduceStockCommand request, CancellationToken cancellationToken)
     {
-        // Get inventory
-        var inventory = await _inventoryRepository.GetByShopAndDrugAsync(
+        // Q-6: open a transaction and SELECT ... FOR UPDATE the row so two
+        // concurrent reducers serialise on (ShopId, DrugId). Without this lock,
+        // simultaneous sales of the last unit can both pass the TotalStock check
+        // and drive stock negative.
+        await using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
+
+        var inventory = await _inventoryRepository.GetByShopAndDrugForUpdateAsync(
             request.ShopId,
             request.DrugId,
             cancellationToken
@@ -174,6 +179,7 @@ public class ReduceStockCommandHandler : IRequestHandler<ReduceStockCommand, Inv
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
 
         // Map to DTO
         return InventoryMapper.MapToDto(updatedInventory);

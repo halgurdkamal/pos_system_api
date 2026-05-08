@@ -33,6 +33,22 @@ public class InventoryRepository : IInventoryRepository
             .FirstOrDefaultAsync(i => i.ShopId == shopId && i.DrugId == drugId, cancellationToken);
     }
 
+    public async Task<ShopInventory?> GetByShopAndDrugForUpdateAsync(
+        string shopId,
+        string drugId,
+        CancellationToken cancellationToken = default)
+    {
+        // Q-6: Postgres row-level lock held until the surrounding transaction
+        // commits or rolls back, so concurrent reducers serialise on (ShopId,
+        // DrugId) and can't race past the TotalStock validation. Returns a
+        // tracked entity so the caller's UpdateAsync + SaveChanges flow works
+        // unchanged.
+        return await _context.ShopInventory
+            .FromSqlInterpolated(
+                $"SELECT * FROM \"ShopInventory\" WHERE \"ShopId\" = {shopId} AND \"DrugId\" = {drugId} FOR UPDATE")
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<IReadOnlyList<ShopInventory>> GetByShopAndDrugsAsync(
         string shopId,
         IReadOnlyCollection<string> drugIds,

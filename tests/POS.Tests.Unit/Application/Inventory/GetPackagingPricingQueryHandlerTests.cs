@@ -93,6 +93,10 @@ public class GetPackagingPricingQueryHandlerTests
             string shopId, string drugId, CancellationToken cancellationToken = default) =>
             Task.FromResult(_store.TryGetValue((shopId, drugId), out var inv) ? inv : null);
 
+        public Task<ShopInventory?> GetByShopAndDrugForUpdateAsync(
+            string shopId, string drugId, CancellationToken cancellationToken = default) =>
+            GetByShopAndDrugAsync(shopId, drugId, cancellationToken);
+
         // Unused interface members — throw to surface accidental usage.
         public Task<ShopInventory?> GetByIdAsync(string id, CancellationToken cancellationToken = default) => throw new NotImplementedException();
         public Task<IReadOnlyList<ShopInventory>> GetByShopAndDrugsAsync(string shopId, IReadOnlyCollection<string> drugIds, CancellationToken cancellationToken = default) => throw new NotImplementedException();

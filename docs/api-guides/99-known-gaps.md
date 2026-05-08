@@ -34,6 +34,7 @@ These were live gaps in earlier revisions of this guide. The fixes have landed o
 | **Q-15** | `POST /api/inventory/shops/{shopId}/stock` accepts `reorderPoint` on the wire (it was missing from `AddStockDto`). The first-create path honours the supplied value. | `ba3e4d7` |
 | **F-7** | `GET /api/inventory/shops/{shopId}/pos-items/by-barcode/{barcode}` now resolves the inventory join against either `drug.DrugId` (prefixed, from AddStock/CreateDrug) or `drug.Id` (raw GUID PK, from PO `/receive` paths) — matching the listing endpoint's dual-key behaviour. | (this session) |
 | **F-2 / F-3** | Sales `/payment`, `/refund`, and `/cancel` now make their order-status flip and the per-batch inventory writes atomic. `SalesStockService` no longer calls `SaveChangesAsync`; the handler commits once at the end and EF wraps it in a single transaction. The misleading "transactional outbox" comment in `ProcessPaymentCommandHandler` was stale and is gone. | (this session) |
+| **Q-6** | `PUT /api/inventory/.../reduce` is now serialised by a Postgres row-level lock. The handler opens an explicit transaction and `IInventoryRepository.GetByShopAndDrugForUpdateAsync` issues a `SELECT … FOR UPDATE`, so concurrent reducers can no longer both pass the `TotalStock` validation. Verified live: 5 parallel 30-unit reductions against 98 stock yielded 3×200 + 2×400 ("Insufficient stock. Available: 8") with final stock = 8. | (this session) |
 
 ---
 
@@ -69,9 +70,9 @@ If the omitted `licenseNumber` is missing, a placeholder `TEMP-{8-char-guid}` is
 
 Inconsistent pagination param name across the API: most endpoints use `?page=&limit=`, but PO and Sales listings use `?page=&pageSize=`. Centralise in your client API layer.
 
-### Q-6. `PUT /reduce` is not application-locked against concurrent calls
+### Q-6. ~~`PUT /reduce` is not application-locked against concurrent calls~~ *(closed)*
 
-Two simultaneous sales of the last unit of a drug can both succeed and drive stock negative. The handler doesn't take a row lock. Mitigate at DB level (`SELECT … FOR UPDATE` in the repository).
+The handler now opens a transaction and uses `SELECT … FOR UPDATE` to serialise concurrent reducers. Tracked in the **Recently closed** table.
 
 ### Q-7. ~~`RegisterRequestDto.Role` is effectively ignored~~ *(closed)*
 
@@ -131,7 +132,6 @@ If you're building a client:
 - **Plan around the missing features** above — they may need separate tickets.
 
 If you're maintaining the API:
-- **Q-6 (`/reduce` row lock)** is a real correctness bug despite the "quirk" classification — concurrent last-unit sales can drive stock negative.
 - **The behavioural quirks are *documented behaviour* now.** Fixing them is a breaking change — coordinate with API consumers.
 
 ---
