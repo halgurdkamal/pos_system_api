@@ -84,7 +84,10 @@ public class ReceiveStockCommandHandlerTests
         }, CancellationToken.None);
 
         invRepo.AddCount.Should().Be(1, "first receipt should auto-create the inventory row");
-        invRepo.UpdateCount.Should().Be(1, "and then update it with the new batch");
+        invRepo.UpdateCount.Should().Be(0,
+            "F-1: a freshly AddAsync-ed entity is already tracked as Added; calling Update would re-mark it Modified " +
+            "and EF would issue an UPDATE for a row that was never INSERTed. The AddBatch mutation rides along " +
+            "with the pending INSERT on SaveChanges.");
         var inv = invRepo.GetSingle("shop-1", "drug-1");
         inv.Should().NotBeNull();
         inv!.Batches.Should().HaveCount(1);
