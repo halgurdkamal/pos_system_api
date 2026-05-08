@@ -174,7 +174,15 @@ public static class ServiceCollectionExtensions
         IConfiguration configuration
     )
     {
-        services.AddControllers();
+        services
+            .AddControllers()
+            .AddJsonOptions(options =>
+            {
+                // Coerce all incoming DateTimes to UTC so Npgsql accepts them
+                // for `timestamp with time zone` columns (F-5).
+                options.JsonSerializerOptions.Converters.Add(new pos_system_api.API.Json.UtcDateTimeJsonConverter());
+                options.JsonSerializerOptions.Converters.Add(new pos_system_api.API.Json.UtcNullableDateTimeJsonConverter());
+            });
         services.AddEndpointsApiExplorer();
 
         // Configure JWT Authentication
