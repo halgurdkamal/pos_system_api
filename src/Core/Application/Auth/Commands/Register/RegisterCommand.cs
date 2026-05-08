@@ -9,6 +9,5 @@ public record RegisterCommand(
     string Password,
     string FullName,
     string? ShopId,
-    string Role,
     string? Phone
 ) : IRequest<UserDto>;

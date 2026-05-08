@@ -32,7 +32,6 @@ public class AuthController : BaseApiController
             request.Password,
             request.FullName,
             request.ShopId,
-            request.Role,
             request.Phone
         );
 

@@ -34,13 +34,11 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, UserDto>
             throw new InvalidOperationException("Username or email already exists");
         }
 
-        // Parse system role (default to User, only SuperAdmins can create other SuperAdmins)
+        // SystemRole is fixed to User on self-registration. Privilege escalation
+        // (e.g. SuperAdmin) is intentionally not exposed on this endpoint —
+        // bootstrap the first SuperAdmin out-of-band, then promote/demote via
+        // an authenticated admin route.
         var systemRole = SystemRole.User;
-        if (!string.IsNullOrWhiteSpace(request.Role) &&
-            Enum.TryParse<SystemRole>(request.Role, true, out var parsedRole))
-        {
-            systemRole = parsedRole;
-        }
 
         // Validate ShopId if provided (for backward compatibility)
         // Note: In the new system, shop assignment should be done via ShopUser management
