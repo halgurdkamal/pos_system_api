@@ -29,9 +29,13 @@ public class ShopUserConfiguration : IEntityTypeConfiguration<ShopUser>
             .HasMaxLength(50)
             .IsRequired();
 
+        // No HasDefaultValue here: ShopRole.Owner = 0 collides with EF's
+        // "skip CLR-default values on insert" sentinel behavior, so a row that
+        // genuinely set Role = Owner would otherwise fall back to the DB default
+        // (Custom). The CLR initializer on ShopUser.Role still defaults to Custom
+        // for callers that don't set a role explicitly.
         builder.Property(su => su.Role)
             .HasConversion<int>()
-            .HasDefaultValue(ShopRole.Custom)
             .IsRequired();
 
         // Store Permissions as JSON array

@@ -98,53 +98,17 @@ public class CreateOwnShopCommandHandler : IRequestHandler<CreateOwnShopCommand,
             // Save shop
             var createdShop = await _shopRepository.AddAsync(shop, cancellationToken);
 
-            // Create ShopUser membership with Owner role
+            // Create ShopUser membership with Owner role and the canonical
+            // Owner permission set. SetRole assigns both Role and Permissions
+            // from ShopRolePermissions.GetPermissionsForRole.
             var shopUser = new ShopUser();
             shopUser.ShopId = createdShop.Id;
             shopUser.UserId = request.UserId;
-            shopUser.Role = ShopRole.Owner;
+            shopUser.SetRole(ShopRole.Owner);
             shopUser.IsOwner = true;
             shopUser.JoinedDate = DateTime.UtcNow;
             shopUser.IsActive = true;
             shopUser.CreatedAt = DateTime.UtcNow;
-
-            // Grant all essential permissions to owner
-            shopUser.AddPermission(Permission.ProcessSales);
-            shopUser.AddPermission(Permission.ViewSales);
-            shopUser.AddPermission(Permission.RefundSales);
-            shopUser.AddPermission(Permission.ApplyDiscounts);
-            shopUser.AddPermission(Permission.ViewInventory);
-            shopUser.AddPermission(Permission.AddStock);
-            shopUser.AddPermission(Permission.ReduceStock);
-            shopUser.AddPermission(Permission.UpdatePricing);
-            shopUser.AddPermission(Permission.ManageProducts);
-            shopUser.AddPermission(Permission.StockAudit);
-            shopUser.AddPermission(Permission.ViewOrders);
-            shopUser.AddPermission(Permission.CreateOrders);
-            shopUser.AddPermission(Permission.ApproveOrders);
-            shopUser.AddPermission(Permission.ReceiveOrders);
-            shopUser.AddPermission(Permission.CancelOrders);
-            shopUser.AddPermission(Permission.ViewSuppliers);
-            shopUser.AddPermission(Permission.ManageSuppliers);
-            shopUser.AddPermission(Permission.ViewCustomers);
-            shopUser.AddPermission(Permission.ManageCustomers);
-            shopUser.AddPermission(Permission.ViewStaff);
-            shopUser.AddPermission(Permission.InviteStaff);
-            shopUser.AddPermission(Permission.RemoveStaff);
-            shopUser.AddPermission(Permission.UpdateStaffPermissions);
-            shopUser.AddPermission(Permission.ViewReports);
-            shopUser.AddPermission(Permission.ExportReports);
-            shopUser.AddPermission(Permission.ViewAnalytics);
-            shopUser.AddPermission(Permission.UpdateShopInfo);
-            shopUser.AddPermission(Permission.UpdateReceiptConfig);
-            shopUser.AddPermission(Permission.UpdateHardwareConfig);
-            shopUser.AddPermission(Permission.ManagePaymentMethods);
-            shopUser.AddPermission(Permission.ManageTaxes);
-            shopUser.AddPermission(Permission.ViewFinancials);
-            shopUser.AddPermission(Permission.RecordExpenses);
-            shopUser.AddPermission(Permission.CloseCashRegister);
-            shopUser.AddPermission(Permission.ViewAuditLogs);
-            shopUser.AddPermission(Permission.BackupData);
 
             // Save shop user membership
             await _shopUserRepository.CreateAsync(shopUser, cancellationToken);
