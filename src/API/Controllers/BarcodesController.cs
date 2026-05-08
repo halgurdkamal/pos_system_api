@@ -173,6 +173,7 @@ public class BarcodesController : BaseApiController
     /// Generate a barcode image from text/data
     /// </summary>
     [HttpPost("generate/barcode")]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public IActionResult GenerateBarcode([FromBody] BarcodeRequestDto request)
     {
@@ -184,6 +185,7 @@ public class BarcodesController : BaseApiController
     /// Generate a QR code image from text/data
     /// </summary>
     [HttpPost("generate/qrcode")]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public IActionResult GenerateQRCode([FromBody] QRCodeRequestDto request)
     {
