@@ -112,6 +112,7 @@ public class ReceiveStockCommandHandler : IRequestHandler<ReceiveStockCommand, P
         var drugId = orderItem.DrugId;
 
         var inventory = await _inventoryRepository.GetByShopAndDrugAsync(shopId, drugId, cancellationToken);
+        var isNewInventory = inventory == null;
 
         // First time receiving this drug into this shop — create a starter
         // inventory row so the batch has somewhere to live. The shop can fine-tune
@@ -149,7 +150,15 @@ public class ReceiveStockCommandHandler : IRequestHandler<ReceiveStockCommand, P
             storageLocation: inventory.StorageLocation);
 
         inventory.AddBatch(batch);
-        await _inventoryRepository.UpdateAsync(inventory, cancellationToken);
+
+        // GetByShopAndDrugAsync uses AsNoTracking, so an existing row needs an
+        // explicit Update to be persisted. A row we just AddAsync-ed is already
+        // tracked as Added — calling Update re-marks it Modified and EF then
+        // issues an UPDATE for a row that was never INSERTed.
+        if (!isNewInventory)
+        {
+            await _inventoryRepository.UpdateAsync(inventory, cancellationToken);
+        }
 
         _logger.LogInformation(
             "Added batch {BatchNumber} ({Quantity} units of {DrugId}, expires {ExpiryDate:yyyy-MM-dd}) " +
