@@ -34,6 +34,11 @@ public class CancelSalesOrderCommandHandler
         CancelSalesOrderCommand request,
         CancellationToken cancellationToken)
     {
+        // Q-6: open a transaction so the stock-restore path (only taken for Paid
+        // orders) can SELECT ... FOR UPDATE. Cheap to open even when no stock work
+        // is needed — the transaction just commits the order-status flip.
+        await using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
+
         var salesOrder = await _repository.GetByIdAsync(request.OrderId, cancellationToken);
         if (salesOrder == null)
         {
@@ -58,6 +63,7 @@ public class CancelSalesOrderCommandHandler
             salesOrder.OrderNumber, request.CancelledBy, request.Reason, previouslyDeducted);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
 
         return SalesOrderMappers.ToDto(salesOrder);
     }

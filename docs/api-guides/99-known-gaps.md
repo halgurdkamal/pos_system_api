@@ -35,6 +35,7 @@ These were live gaps in earlier revisions of this guide. The fixes have landed o
 | **F-7** | `GET /api/inventory/shops/{shopId}/pos-items/by-barcode/{barcode}` now resolves the inventory join against either `drug.DrugId` (prefixed, from AddStock/CreateDrug) or `drug.Id` (raw GUID PK, from PO `/receive` paths) — matching the listing endpoint's dual-key behaviour. | (this session) |
 | **F-2 / F-3** | Sales `/payment`, `/refund`, and `/cancel` now make their order-status flip and the per-batch inventory writes atomic. `SalesStockService` no longer calls `SaveChangesAsync`; the handler commits once at the end and EF wraps it in a single transaction. The misleading "transactional outbox" comment in `ProcessPaymentCommandHandler` was stale and is gone. | (this session) |
 | **Q-6** | `PUT /api/inventory/.../reduce` is now serialised by a Postgres row-level lock. The handler opens an explicit transaction and `IInventoryRepository.GetByShopAndDrugForUpdateAsync` issues a `SELECT … FOR UPDATE`, so concurrent reducers can no longer both pass the `TotalStock` validation. Verified live: 5 parallel 30-unit reductions against 98 stock yielded 3×200 + 2×400 ("Insufficient stock. Available: 8") with final stock = 8. | (this session) |
+| **Q-6 (sales path)** | `POST /api/salesorders/{id}/payment`, `…/refund`, and `…/cancel` now open a transaction and `SalesStockService` loads inventories with the new `GetByShopAndDrugsForUpdateAsync` (`SELECT … FOR UPDATE` over the basket's drug IDs, in deterministic `Id` order to avoid deadlocks). Concurrent payments can no longer race the read and produce inconsistent batch state. | (this session) |
 
 ---
 
@@ -46,7 +47,17 @@ These were live gaps in earlier revisions of this guide. The fixes have landed o
 
 ## Functional TODOs
 
-*(none open at the moment — see the **Recently closed** table above)*
+### F-8. `POST /api/salesorders/{id}/payment` silently oversells when stock is insufficient
+
+**Affected**: `POST /api/salesorders/{id}/payment` — and indirectly `…/refund` if the original sale was partial.
+
+**Where it breaks**: `SalesStockService.DeductForSaleAsync` calls `inventory.ReduceStock(units)`, which is a domain method that **silently caps** when stock runs out — it deducts whatever's available and stops, without throwing. So a payment for 3 units against a row with `TotalStock = 1` returns `200 Paid` with `amountPaid: 36`, the customer is charged for 3, but only 1 unit's worth of inventory is debited.
+
+**Symptom (observed)**: 5 parallel `/payment` calls for 3 units each against `TotalStock = 8` returned 5×200 (charging 5×$36 = $180) but only 8 units of inventory were dispensed. Final stock landed at 0, never negative — but the till took money for goods that don't exist.
+
+**Workaround**: validate `inventory.TotalStock >= demand` for every line in the basket *before* calling `/payment` (the till should hit `GET /api/inventory/shops/{shopId}` and check). Alternatively, accept the overselling as a business decision (some pharmacies tolerate it for backorder workflows).
+
+**Fix when ready**: in `SalesStockService.DeductForSaleAsync`, validate `inventory.TotalStock >= unitsToDeduct` before calling `inventory.ReduceStock(...)` and throw `InvalidOperationException("Insufficient stock for drug X: available Y, requested Z")` on mismatch. The transaction (now in place per Q-6 sales path) will roll back the order status flip automatically.
 
 ## Behavioural quirks
 

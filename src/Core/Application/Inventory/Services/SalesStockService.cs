@@ -112,6 +112,10 @@ public class SalesStockService : ISalesStockService
             ? (int)Math.Round(item.BaseUnitsConsumed, MidpointRounding.ToEven)
             : item.Quantity;
 
+    // Q-6: Loads with SELECT ... FOR UPDATE so concurrent payment / refund / cancel
+    // handlers serialise on the same (shop, drug) rows and can't race past stock
+    // checks. The caller MUST be inside an IUnitOfWork transaction; the three
+    // sales handlers (ProcessPayment / Refund / Cancel) all open one.
     private async Task<IDictionary<string, Core.Domain.Inventory.Entities.ShopInventory>> LoadInventoriesAsync(
         SalesOrder order,
         CancellationToken cancellationToken)
@@ -121,7 +125,7 @@ public class SalesStockService : ISalesStockService
             .Distinct()
             .ToList();
 
-        var rows = await _inventoryRepository.GetByShopAndDrugsAsync(
+        var rows = await _inventoryRepository.GetByShopAndDrugsForUpdateAsync(
             order.ShopId, drugIds, cancellationToken);
 
         return rows.ToDictionary(i => i.DrugId, StringComparer.OrdinalIgnoreCase);

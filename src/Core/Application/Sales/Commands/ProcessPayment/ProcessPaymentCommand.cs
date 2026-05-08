@@ -36,6 +36,11 @@ public class ProcessPaymentCommandHandler : IRequestHandler<ProcessPaymentComman
 
     public async Task<SalesOrderDto> Handle(ProcessPaymentCommand request, CancellationToken cancellationToken)
     {
+        // Q-6: open a transaction so SalesStockService.DeductForSaleAsync can
+        // SELECT ... FOR UPDATE the inventory rows. Without this, two concurrent
+        // payments for the last unit can both pass the stock check and oversell.
+        await using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
+
         var salesOrder = await _repository.GetByIdAsync(request.OrderId, cancellationToken);
         if (salesOrder == null)
             throw new KeyNotFoundException($"Sales order {request.OrderId} not found");
@@ -53,13 +58,14 @@ public class ProcessPaymentCommandHandler : IRequestHandler<ProcessPaymentComman
 
         // Stage the inventory deductions; the service does NOT commit. The single
         // SaveChangesAsync below persists the order status flip and every per-batch
-        // inventory write together inside EF's implicit transaction — F-2 closed.
+        // inventory write together inside the transaction — F-2 closed.
         await _salesStockService.DeductForSaleAsync(salesOrder, cancellationToken);
 
         _logger.LogInformation("Payment processed for order {OrderNumber}: {PaymentMethod} - {AmountPaid:C}",
             salesOrder.OrderNumber, paymentMethod, request.AmountPaid);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
 
         return MapToDto(salesOrder);
     }

@@ -65,6 +65,30 @@ public class InventoryRepository : IInventoryRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<IReadOnlyList<ShopInventory>> GetByShopAndDrugsForUpdateAsync(
+        string shopId,
+        IReadOnlyCollection<string> drugIds,
+        CancellationToken cancellationToken = default)
+    {
+        if (drugIds == null || drugIds.Count == 0)
+        {
+            return Array.Empty<ShopInventory>();
+        }
+
+        // Q-6: lock every matching row, in deterministic Id order to avoid
+        // deadlocks between concurrent payment / refund / cancel handlers
+        // touching overlapping baskets. Tracked entities so callers' UpdateAsync
+        // + SaveChanges flow continues to work.
+        var ids = drugIds.ToArray();
+        return await _context.ShopInventory
+            .FromSqlInterpolated(
+                $@"SELECT * FROM ""ShopInventory""
+                   WHERE ""ShopId"" = {shopId} AND ""DrugId"" = ANY({ids})
+                   ORDER BY ""Id""
+                   FOR UPDATE")
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<(IEnumerable<ShopInventory> Items, int TotalCount)> GetByShopAsync(
         string shopId,
         int page,

@@ -43,6 +43,18 @@ public interface IInventoryRepository
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Same as <see cref="GetByShopAndDrugsAsync"/> but acquires row-level locks
+    /// (<c>SELECT ... FOR UPDATE</c>) on every matching <c>ShopInventory</c> row,
+    /// in deterministic <c>Id</c> order to avoid deadlocks between concurrent callers.
+    /// MUST be called inside an <see cref="IUnitOfWork.BeginTransactionAsync"/>
+    /// transaction; locks are held until commit/rollback. Returns tracked entities.
+    /// </summary>
+    Task<IReadOnlyList<ShopInventory>> GetByShopAndDrugsForUpdateAsync(
+        string shopId,
+        IReadOnlyCollection<string> drugIds,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Get all inventory items for a shop with pagination
     /// </summary>
     Task<(IEnumerable<ShopInventory> Items, int TotalCount)> GetByShopAsync(

@@ -33,6 +33,10 @@ public class RefundSalesOrderCommandHandler
         RefundSalesOrderCommand request,
         CancellationToken cancellationToken)
     {
+        // Q-6: lock the inventory rows we'll restore to so we don't race a
+        // concurrent payment (or another reversal) on the same (shop, drug) keys.
+        await using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
+
         var salesOrder = await _repository.GetByIdAsync(request.OrderId, cancellationToken);
         if (salesOrder == null)
         {
@@ -52,6 +56,7 @@ public class RefundSalesOrderCommandHandler
             salesOrder.OrderNumber, request.RefundedBy, request.Reason);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
 
         return SalesOrderMappers.ToDto(salesOrder);
     }

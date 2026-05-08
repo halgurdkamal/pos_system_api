@@ -232,6 +232,10 @@ public class SalesStockServiceTests
             return Task.FromResult(rows);
         }
 
+        public Task<IReadOnlyList<ShopInventory>> GetByShopAndDrugsForUpdateAsync(
+            string shopId, IReadOnlyCollection<string> drugIds, CancellationToken cancellationToken = default) =>
+            GetByShopAndDrugsAsync(shopId, drugIds, cancellationToken);
+
         public Task<ShopInventory> UpdateAsync(ShopInventory inventory, CancellationToken cancellationToken = default)
         {
             UpdateCount++;
